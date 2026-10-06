@@ -14,6 +14,7 @@ túneles, carteles y papeles— donde las canciones esconden referencias y carta
 visitante va encontrando y guardando en un diario propio. El progreso es narrativo: se
 cuentan hallazgos, nunca puntos ni tiempos.
 
+
 ## Qué hay en este repositorio
 
 | Archivo | Qué es |
