@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discos y Canciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
+<style>
+/* ===========================================================
+   TOKENS — leídos del Figma (variables + contexto de diseño)
+   =========================================================== */
+:root{
+  --azul:#2c61b2;        /* azul sueter */
+  --azul-dot:#24539b;    /* medios tonos */
+  --rojo:#c9452c;        /* rojo de botones */
+  --rojo-var:#d24426;    /* rojo sueter (variable) */
+  --amarillo:#e8c340;
+  --crema:#fffdf9;
+  --crema-2:#efe9de;     /* crema sueter (variable) */
+  --tinta:#141414;
+  --tinta-2:#202020;
+  --gris:#333;
+  --display:"Bebas Neue","Haettenschweiler","Arial Narrow",sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:#1b1b1b;color:var(--crema);font-family:var(--mono);font-size:14px}
+
+.shell{max-width:1360px;margin:0 auto;padding:26px 20px 70px}
+
+.bar{display:flex;align-items:baseline;gap:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,253,249,.18);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,253,249,.55);flex-wrap:wrap}
+.bar b{color:var(--crema);font-weight:700;letter-spacing:.06em}
+.bar .r{margin-left:auto;color:var(--amarillo)}
+
+.stage{margin-top:22px;display:flex;justify-content:center}
+
+/* ===========================================================
+   PANTALLA 1920 × 1080
+   =========================================================== */
+.screen{
+  position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;
+  transform-origin:top center;
+  background:var(--azul);
+  font-family:var(--mono);color:var(--tinta);
+}
+/* medios tonos: puntos más densos en los bordes */
+.screen::before,.screen::after{content:"";position:absolute;inset:0;pointer-events:none}
+.screen::before{
+  background-image:radial-gradient(var(--azul-dot) 2.6px, transparent 2.9px);
+  background-size:16px 16px;background-position:0 0;
+  -webkit-mask-image:linear-gradient(115deg, #000 0%, transparent 34%);
+          mask-image:linear-gradient(115deg, #000 0%, transparent 34%);
+}
+.screen::after{
+  background-image:radial-gradient(var(--azul-dot) 2.6px, transparent 2.9px);
+  background-size:16px 16px;background-position:8px 8px;
+  -webkit-mask-image:radial-gradient(ellipse 48% 62% at 102% 86%, #000 0%, transparent 72%);
+          mask-image:radial-gradient(ellipse 48% 62% at 102% 86%, #000 0%, transparent 72%);
+}
+.screen > *{position:relative;z-index:2}
+
+/* ---------- navegación ---------- */
+.nav{position:absolute;top:44px;right:56px;display:flex;gap:10px}
+.nav a{
+  font-family:var(--display);font-size:20px;letter-spacing:.09em;text-transform:uppercase;
+  background:var(--rojo);color:var(--crema);text-decoration:none;
+  padding:7px 20px 4px;border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta);
+  line-height:1.15;
+}
+.nav a.on{background:var(--amarillo);color:var(--tinta)}
+
+/* ---------- flecha ---------- */
+.flecha{position:absolute;left:62px;top:36px;width:72px;height:30px}
+
+/* ---------- títulos ---------- */
+.titulo{position:absolute;left:58px;top:70px}
+.titulo .uno{
+  display:inline-block;background:var(--amarillo);color:var(--tinta);
+  font-family:var(--display);font-size:112px;line-height:.82;letter-spacing:.012em;
+  padding:22px 30px 12px;transform:rotate(-2.2deg);border:3px solid var(--tinta);
+  box-shadow:7px 7px 0 rgba(20,20,20,.9);
+}
+.titulo .dos{
+  display:inline-block;background:var(--tinta);color:var(--crema);
+  font-family:var(--display);font-size:52px;line-height:1;letter-spacing:.05em;
+  padding:12px 22px 7px;transform:rotate(-1deg) translate(-26px, 26px);
+}
+
+/* ---------- bloque de la tapa ---------- */
+.tapa{position:absolute;left:84px;top:250px;width:620px;height:330px}
+.lomo{
+  position:absolute;left:0;top:8px;width:62px;height:312px;background:var(--azul);
+  border:2.5px solid var(--tinta);z-index:3;
+  display:flex;align-items:center;justify-content:center;
+}
+.lomo span{
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:var(--mono);font-size:9px;line-height:1.5;letter-spacing:.04em;color:var(--crema);
+  height:94%;overflow:hidden;
+}
+.lomo .pills{position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:5px}
+.lomo .pills i{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--tinta);display:block}
+
+.arte{
+  position:absolute;left:52px;top:0;width:300px;height:330px;background:var(--crema);
+  border:2.5px solid var(--tinta);z-index:2;display:grid;place-items:center;padding:14px;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(20,20,20,.07) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(0deg, rgba(20,20,20,.05) 0 1px, transparent 1px 9px);
+}
+.hueco{
+  width:100%;height:100%;border:2px dashed var(--rojo);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:7px;text-align:center;padding:10px;background:rgba(201,69,44,.05);
+}
+.hueco b{font-family:var(--display);font-size:22px;letter-spacing:.05em;color:var(--rojo);line-height:1}
+.hueco span{font-family:var(--mono);font-size:10px;line-height:1.45;color:var(--gris);letter-spacing:.02em}
+
+.vinilo{
+  position:absolute;left:286px;top:16px;width:298px;height:298px;border-radius:50%;z-index:1;
+  background:
+    radial-gradient(circle at 50% 50%, var(--amarillo) 0 60px, transparent 60px),
+    repeating-radial-gradient(circle at 50% 50%, #1d1d1d 0 1.5px, #0d0d0d 1.5px 4px),
+    #111;
+  border:2.5px solid var(--tinta);box-shadow:6px 6px 0 rgba(20,20,20,.55);
+  display:grid;place-items:center;
+}
+.vinilo .label{width:120px;height:120px;border-radius:50%;background:var(--amarillo);border:2px solid var(--tinta);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:10px}
+.vinilo .label b{font-family:var(--display);font-size:34px;line-height:.9;letter-spacing:.03em}
+.vinilo .label span{font-family:var(--mono);font-size:6.5px;font-weight:700;line-height:1.35;letter-spacing:.02em}
+.vinilo .hole{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
+  width:12px;height:12px;border-radius:50%;background:var(--azul);border:1.5px solid var(--tinta)}
+
+/* cintas */
+.cinta{position:absolute;width:74px;height:26px;background:rgba(255,253,249,.72);border:1px solid rgba(20,20,20,.35);z-index:5;
+  box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.cinta.a{left:28px;top:-12px;transform:rotate(-24deg)}
+.cinta.b{left:300px;top:-14px;transform:rotate(9deg)}
+.cinta.c{left:34px;bottom:-12px;transform:rotate(7deg)}
+
+/* ---------- ficha del disco ---------- */
+.ficha{
+  position:absolute;left:770px;top:238px;width:1070px;
+  background:var(--crema);border:3px solid var(--tinta);box-shadow:10px 10px 0 rgba(20,20,20,.85);
+  padding:30px 36px 28px;
+}
+.ficha .top{display:flex;gap:26px;align-items:flex-start}
+.anio{background:var(--tinta);color:var(--crema);padding:14px 20px 11px;text-align:center;flex:none}
+.anio b{display:block;font-family:var(--display);font-size:46px;line-height:.85;letter-spacing:.02em}
+.anio span{display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;margin-top:5px}
+
+.ficha h1{font-family:var(--display);font-size:46px;line-height:.94;letter-spacing:.015em;margin:0;color:var(--tinta)}
+.ficha .meta{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--tinta);margin:9px 0 0}
+.ficha .desc{font-family:var(--mono);font-size:13.5px;line-height:1.6;color:var(--gris);margin:7px 0 0;max-width:46ch}
+
+.rule{height:0;border-top:2px dashed rgba(20,20,20,.35);margin:20px 0 14px}
+
+.temas{display:grid;grid-template-columns:1fr 1fr;gap:0 46px}
+.tema{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:baseline;padding:6px 8px;font-size:17px}
+.tema .n{font-family:var(--mono);font-weight:700;color:var(--rojo);font-size:14px}
+.tema .t{font-family:var(--mono);color:var(--tinta)}
+.tema .d{font-family:var(--mono);font-size:14px;color:var(--gris);font-variant-numeric:tabular-nums}
+.tema.act{background:var(--amarillo)}
+.tema.act .t{font-weight:700}
+.tema.act .d{color:var(--tinta)}
+
+.acciones{display:flex;align-items:center;gap:14px;margin-top:20px}
+.btn{
+  font-family:var(--display);font-size:26px;letter-spacing:.07em;text-transform:uppercase;
+  padding:12px 26px 8px;border:2.5px solid var(--tinta);display:inline-flex;align-items:center;gap:11px;line-height:1;
+  box-shadow:4px 4px 0 var(--tinta);cursor:default;
+}
+.btn.primario{background:var(--azul);color:var(--crema)}
+.btn.secundario{background:var(--crema);color:var(--tinta)}
+.plats{font-family:var(--mono);font-size:12px;color:var(--gris);margin-left:auto;letter-spacing:.04em}
+.onda{margin-left:10px}
+
+.sello{
+  position:absolute;right:-46px;top:-54px;width:150px;height:150px;border-radius:50%;
+  background:var(--crema);border:2.5px solid var(--tinta);display:grid;place-items:center;text-align:center;
+  transform:rotate(-7deg);box-shadow:5px 5px 0 rgba(20,20,20,.5);
+}
+.sello span{font-family:var(--mono);font-size:10px;font-weight:700;line-height:1.6;letter-spacing:.11em;color:var(--tinta)}
+
+/* ---------- otros lanzamientos ---------- */
+.otros-lbl{
+  position:absolute;left:84px;top:782px;background:var(--tinta);color:var(--crema);
+  font-family:var(--display);font-size:26px;letter-spacing:.09em;padding:9px 20px 5px;line-height:1;
+}
+.otros{position:absolute;left:84px;top:832px;right:84px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.lanz{
+  background:var(--crema);border:2.5px solid var(--tinta);box-shadow:6px 6px 0 rgba(20,20,20,.8);
+  padding:16px 18px;display:grid;grid-template-columns:72px 1fr auto;gap:16px;align-items:center;position:relative;
+}
+.lanz .mini{width:72px;height:72px;border:2px solid var(--tinta);background:var(--crema-2);
+  display:grid;place-items:center;text-align:center;padding:5px}
+.lanz .mini span{font-family:var(--mono);font-size:7.5px;line-height:1.3;color:var(--rojo);letter-spacing:.03em}
+.lanz h3{font-family:var(--display);font-size:30px;line-height:.95;letter-spacing:.02em;margin:0;color:var(--tinta)}
+.lanz p{font-family:var(--mono);font-size:12px;color:var(--gris);margin:5px 0 0;letter-spacing:.03em}
+.lanz .esc{font-family:var(--display);font-size:18px;letter-spacing:.08em;padding:7px 15px 4px;
+  border:2px solid var(--tinta);background:var(--crema);color:var(--tinta);line-height:1}
+.lanz .cinta-s{position:absolute;left:-10px;top:-11px;width:58px;height:20px;background:rgba(255,253,249,.8);
+  border:1px solid rgba(20,20,20,.3);transform:rotate(-18deg)}
+
+/* ---------- notas de la lámina ---------- */
+.faltan{margin-top:30px;border:1px solid rgba(255,253,249,.2);padding:20px 22px;background:rgba(255,253,249,.04)}
+.faltan h2{font-family:var(--display);font-size:24px;letter-spacing:.05em;margin:0 0 4px;color:var(--crema)}
+.faltan .sub{font-size:12.5px;color:rgba(255,253,249,.6);margin:0 0 16px;line-height:1.55;max-width:74ch}
+.faltan ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 30px}
+@media (max-width:820px){.faltan ol{grid-template-columns:1fr}}
+.faltan li{display:grid;grid-template-columns:22px 1fr;gap:11px;font-size:12.5px;line-height:1.5;
+  color:rgba(255,253,249,.66);padding-top:9px;border-top:1px solid rgba(255,253,249,.13)}
+.faltan li b.n{width:22px;height:22px;border-radius:50%;background:var(--amarillo);color:var(--tinta);
+  font-family:var(--mono);font-size:10px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.faltan li strong{display:block;color:var(--crema);font-weight:700;font-size:13px}
+.faltan code{font-family:var(--mono);font-size:11.5px;color:var(--amarillo)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="bar">
+    <b>sueter7 — Discos y Canciones</b>
+    <span>MVP construido desde Figma · nodo 1045:2760</span>
+    <span class="r">1920 × 1080</span>
+  </div>
+
+  <div class="stage">
+    <div class="screen" id="screen">
+
+      <svg class="flecha" viewBox="0 0 72 30" fill="none" aria-hidden="true">
+        <path d="M2 15h64M52 3l15 12-15 12" stroke="#fffdf9" stroke-width="4" stroke-linecap="square"/>
+      </svg>
+
+      <nav class="nav">
+        <a href="#">Inicio</a>
+        <a href="#">Sueter 7</a>
+        <a href="#">Diario</a>
+        <a href="#" class="on">Discos</a>
+        <a href="#">Tienda</a>
+        <a href="#">Fechas</a>
+      </nav>
+
+      <div class="titulo">
+        <div class="uno">Discos</div><div class="dos">&amp; Canciones</div>
+      </div>
+
+      <!-- tapa + vinilo -->
+      <div class="tapa">
+        <div class="vinilo">
+          <div class="label">
+            <b>S7</b>
+            <span>TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN</span>
+          </div>
+          <span class="hole"></span>
+        </div>
+
+        <div class="lomo">
+          <div class="pills"><i style="background:var(--crema)"></i><i style="background:var(--rojo)"></i><i style="background:var(--tinta)"></i></div>
+          <span>sueter7 · Todo salió bien en la Sencilla Villa Quién · (1) Escritorio · (2) Confluencias · (3) Enero Cuervo · (4) De Chungking a Mendoza · (5) Mapache · (6) Almohadas · (7) Miedos de Transporte · (8) Todo Salió Bien</span>
+        </div>
+
+        <div class="arte">
+          <div class="hueco">
+            <b>Falta el dibujo</b>
+            <span>Ilustración de tapa<br>exportar PNG a 2×</span>
+          </div>
+        </div>
+
+        <span class="cinta a"></span>
+        <span class="cinta b"></span>
+        <span class="cinta c"></span>
+      </div>
+
+      <!-- ficha -->
+      <div class="ficha">
+        <div class="sello"><span>DISPONIBLE<br>EN TODAS LAS<br>PLATAFORMAS</span></div>
+
+        <div class="top">
+          <div class="anio"><b>2026</b><span>8 TEMAS</span></div>
+          <div>
+            <h1>Todo salió bien en la Sencilla Villa Quién</h1>
+            <p class="meta">SUETER 7 · 2026 · 45 MIN</p>
+            <p class="desc">Canciones escritas entre caminatas, cuadernos y el ruido del tren de las seis.</p>
+          </div>
+        </div>
+
+        <div class="rule"></div>
+
+        <div class="temas">
+          <div class="tema act"><span class="n">01</span><span class="t">Escritorio</span><span class="d">6:38</span></div>
+          <div class="tema"><span class="n">06</span><span class="t">Almohadas</span><span class="d">5:11</span></div>
+          <div class="tema"><span class="n">02</span><span class="t">Confluencias</span><span class="d">3:40</span></div>
+          <div class="tema"><span class="n">07</span><span class="t">Miedos de Transporte</span><span class="d">5:08</span></div>
+          <div class="tema"><span class="n">03</span><span class="t">Enero Cuervo</span><span class="d">5:33</span></div>
+          <div class="tema"><span class="n">08</span><span class="t">Todo Salió Bien (Carta p…)</span><span class="d">9:14</span></div>
+          <div class="tema"><span class="n">04</span><span class="t">De Chungking a Mendoza</span><span class="d">5:22</span></div>
+          <div class="tema"></div>
+          <div class="tema"><span class="n">05</span><span class="t">Mapache</span><span class="d">4:12</span></div>
+        </div>
+
+        <div class="acciones">
+          <span class="btn primario">
+            <svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M1 1v16l14-8z" fill="currentColor"/></svg>
+            Escuchar disco
+          </span>
+          <span class="btn secundario">Comprar vinilo</span>
+          <span class="plats">Spotify · YouTube · Bandcamp</span>
+          <svg class="onda" width="58" height="26" viewBox="0 0 58 26" fill="none" aria-hidden="true">
+            <path d="M1 25c4-1 5-22 9-22s5 21 9 21 5-18 9-18 5 19 9 19 5-16 9-16 5 14 9 14"
+                  stroke="#141414" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- otros lanzamientos -->
+      <div class="otros-lbl">Otros lanzamientos</div>
+      <div class="otros">
+        <div class="lanz">
+          <span class="cinta-s"></span>
+          <div class="mini"><span>falta<br>tapa</span></div>
+          <div><h3>Diario</h3><p>16 min · 2025 · 5 canciones</p></div>
+          <span class="esc">Escuchar</span>
+        </div>
+        <div class="lanz">
+          <span class="cinta-s"></span>
+          <div class="mini"><span>falta<br>tapa</span></div>
+          <div><h3>BTS (Sueter 7 — Remix)</h3><p>Anabel G. · 2026 · 1 canción</p></div>
+          <span class="esc">Escuchar</span>
+        </div>
+        <div class="lanz">
+          <span class="cinta-s"></span>
+          <div class="mini"><span>falta<br>tapa</span></div>
+          <div><h3>Las Flores</h3><p>Bautibit · 2026 · 1 canción</p></div>
+          <span class="esc">Escuchar</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="faltan">
+    <h2>Los cuatro huecos</h2>
+    <p class="sub">
+      Todo lo demás salió del Figma: colores, tipografías, escala tipográfica, textos y tracklist.
+      Estas cuatro piezas son imágenes y mi entorno no puede descargarlas de figma.com, así que las dejé marcadas.
+      Exportalas y las pongo en su lugar.
+    </p>
+    <ol>
+      <li><b class="n">1</b><span><strong>Ilustración de tapa</strong>
+        El dibujo de línea del disco. <code>PNG a 2× · 600 × 660 px</code></span></li>
+      <li><b class="n">2</b><span><strong>Tres tapas chicas</strong>
+        Diario, BTS Remix y Las Flores. <code>PNG a 2× · 144 × 144 px c/u</code></span></li>
+      <li><b class="n">3</b><span><strong>Flecha y garabatos</strong>
+        La flecha de arriba y los trazos a mano. Los dibujé aproximados. <code>SVG</code></span></li>
+      <li><b class="n">4</b><span><strong>Medios tonos y cintas</strong>
+        Los hice en CSS, que pesa menos y escala solo. Si el patrón del Figma tiene una trama particular, pasame el <code>SVG</code> y lo cambio.</span></li>
+    </ol>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* la pantalla se dibuja a 1920 × 1080 y se escala para entrar en el ancho disponible */
+function fit(){
+  const s = document.getElementById("screen");
+  const stage = s.parentElement;
+  const avail = stage.parentElement.clientWidth;
+  const k = Math.min(1, avail / 1920);
+  s.style.transform = "scale(" + k + ")";
+  stage.style.height = (1080 * k) + "px";
+}
+window.addEventListener("resize", fit);
+fit();
+</script>
+<a href="index.html" style="position:fixed;left:14px;bottom:14px;z-index:9999;font-family:'Bebas Neue',Arial,sans-serif;font-size:17px;letter-spacing:.08em;background:#e8c340;color:#141414;border:2px solid #141414;box-shadow:3px 3px 0 #141414;padding:7px 15px 4px;text-decoration:none;line-height:1">&larr; Volver al proyecto</a>
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reproductor Villa Quién</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Chivo:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* ============================================================
+   PALETA — mundo de papel, tinta de sello y señal ferroviaria
+   ============================================================ */
+:root{
+  --mesa:#3A342C;        /* la mesa de trabajo donde está apoyado */
+  --mesa2:#2E2922;
+  --boleto:#F0E6D2;      /* papel de boleto */
+  --boleto2:#E3D5B8;     /* cartón, talón */
+  --tinta:#1E1A15;
+  --tinta2:#6B6154;
+  --tinta3:#A2957F;
+  --sello:#C4391A;       /* bermellón de tampón */
+  --senal:#2D5C4E;       /* verde de señalética ferroviaria */
+  --azul:#27334F;        /* tinta de líneas técnicas */
+  --noche:#181510;
+
+  --sign:"Chivo","Helvetica Neue",Arial,sans-serif;
+  --tip:"Courier Prime","Courier New",monospace;
+  --ui:"Archivo","Helvetica Neue",Arial,sans-serif;
+
+  --grano:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse 120% 90% at 50% 0%, #443D33 0%, var(--mesa) 45%, var(--mesa2) 100%);
+  color:var(--boleto);
+  font-family:var(--ui);
+  font-size:14px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:var(--grano);opacity:.9;
+}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:46px 28px 90px}
+
+/* ---------- encabezado de lámina ---------- */
+.plate{border-bottom:1px solid rgba(240,230,210,.22);padding-bottom:20px;display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap}
+.eyebrow{font-family:var(--tip);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinta3);margin:0 0 8px}
+h1{font-family:var(--sign);font-weight:900;font-size:46px;line-height:.98;letter-spacing:-.03em;margin:0;text-wrap:balance;color:var(--boleto)}
+h1 em{font-style:normal;color:var(--sello)}
+.plate .lead{margin:0 0 3px auto;max-width:44ch;font-size:13px;line-height:1.6;color:rgba(240,230,210,.62)}
+.plate .lead b{color:var(--boleto);font-weight:600}
+
+h2{font-family:var(--sign);font-weight:900;font-size:19px;letter-spacing:-.01em;margin:0;color:var(--boleto)}
+.sec{margin-top:64px}
+.sechead{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+.sechead .n{font-family:var(--tip);font-size:11px;color:var(--sello);letter-spacing:.14em}
+.sechead .aside{margin-left:auto;font-family:var(--tip);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3)}
+
+/* ============================================================
+   EL BOLETO — reproductor persistente 980 × 136
+   ============================================================ */
+.stage{display:flex;justify-content:center;padding:6px 0}
+.ticket{
+  position:relative;width:1040px;max-width:100%;height:136px;
+  background:linear-gradient(180deg,#F4EBD9 0%, var(--boleto) 38%, #EADFC7 100%);
+  background-image:var(--grano),linear-gradient(180deg,#F4EBD9 0%, var(--boleto) 38%, #EADFC7 100%);
+  color:var(--tinta);
+  display:grid;grid-template-columns:112px 1fr;
+  box-shadow:0 2px 0 rgba(0,0,0,.18), 0 26px 44px -26px rgba(0,0,0,.75);
+  border-radius:2px;
+}
+/* muescas del troquel */
+.ticket::before,.ticket::after{
+  content:"";position:absolute;left:112px;width:15px;height:15px;border-radius:50%;
+  background:var(--mesa);transform:translateX(-50%);
+}
+.ticket::before{top:-7.5px}
+.ticket::after{bottom:-7.5px}
+
+/* --- talón --- */
+.stub{
+  position:relative;background:linear-gradient(180deg,#E8DBBF,#DCCDAC);
+  border-right:1px dashed rgba(30,26,21,.42);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:12px 8px;
+}
+.stub .lbl{font-family:var(--tip);font-size:8.5px;letter-spacing:.24em;color:var(--tinta2);text-transform:uppercase}
+.stub .num{
+  position:relative;font-family:var(--sign);font-weight:900;font-size:50px;line-height:.86;letter-spacing:-.04em;margin-top:2px;
+}
+/* error de registro: el fantasma bermellón corrido 2 px */
+.stub .num{text-shadow:-2.5px 1.5px 0 rgba(196,57,26,.52)}
+.ticket.noche .stub .num{text-shadow:-2.5px 1.5px 0 rgba(228,85,44,.6)}
+.stub .de{font-family:var(--tip);font-size:9.5px;letter-spacing:.16em;color:var(--tinta2);margin-top:1px}
+.stub .serial{
+  position:absolute;bottom:9px;font-family:var(--tip);font-size:8px;letter-spacing:.12em;color:rgba(30,26,21,.45);
+}
+.stub .rot{
+  position:absolute;top:50%;left:7px;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;
+  font-family:var(--tip);font-size:7.5px;letter-spacing:.3em;color:rgba(30,26,21,.34);text-transform:uppercase;
+}
+
+/* --- cuerpo --- */
+.main{
+  display:grid;grid-template-columns:66px 200px minmax(240px,1fr) 146px 86px;
+  gap:16px;align-items:center;padding:0 26px 0 22px;position:relative;
+}
+
+/* tapa pegada con esquineros */
+.art{position:relative;width:66px;height:66px;transform:rotate(-1.8deg)}
+.art .img{
+  position:absolute;inset:0;background:var(--senal);overflow:hidden;
+  box-shadow:0 1px 0 rgba(0,0,0,.22), 0 6px 10px -6px rgba(0,0,0,.5);
+}
+.art .img::before{ /* sol / disco impreso */
+  content:"";position:absolute;left:50%;top:54%;width:34px;height:34px;border-radius:50%;
+  transform:translate(-50%,-50%);background:#EBDFC4;
+}
+.art .img::after{ /* vías cruzando la tapa */
+  content:"";position:absolute;left:-10%;right:-10%;top:62%;height:12px;
+  background:repeating-linear-gradient(90deg, rgba(30,26,21,.5) 0 1.5px, transparent 1.5px 7px);
+}
+.art .band{position:absolute;left:0;right:0;top:12px;height:3px;background:var(--sello);opacity:.9}
+.art .corner{position:absolute;width:13px;height:13px;border:0}
+.art .corner.tl{left:-3px;top:-3px;border-top:7px solid rgba(30,26,21,.55);border-right:7px solid transparent}
+.art .corner.br{right:-3px;bottom:-3px;border-bottom:7px solid rgba(30,26,21,.55);border-left:7px solid transparent}
+
+/* título */
+.meta{min-width:0}
+.meta .song{
+  font-family:var(--sign);font-weight:700;font-size:23px;line-height:1.05;letter-spacing:-.02em;margin:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.meta .rule{display:block;margin-top:2px;color:var(--sello)}
+.meta .by{
+  margin:5px 0 0;font-family:var(--tip);font-size:10.5px;letter-spacing:.07em;color:var(--tinta2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.meta .by span{color:var(--senal)}
+
+/* la vía como barra de progreso */
+.rail{display:flex;flex-direction:column;gap:7px;min-width:0}
+.rail .top{display:flex;align-items:center;gap:12px}
+.rail .t{font-family:var(--tip);font-size:10.5px;letter-spacing:.06em;color:var(--tinta2);font-variant-numeric:tabular-nums}
+.line{position:relative;flex:1;height:14px;display:flex;align-items:center}
+.line .sleepers{ /* durmientes */
+  position:absolute;left:0;right:0;top:50%;height:11px;transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg, rgba(30,26,21,.26) 0 1px, transparent 1px 9px);
+}
+.line .track{position:absolute;left:0;right:0;top:50%;height:2px;transform:translateY(-50%);background:rgba(30,26,21,.34)}
+.line .done{position:absolute;left:0;top:50%;height:2.5px;transform:translateY(-50%);background:var(--sello);width:47%}
+.line .stn{
+  position:absolute;top:50%;width:7px;height:7px;border-radius:50%;transform:translate(-50%,-50%);
+  background:var(--boleto);border:1.6px solid var(--senal);
+}
+.line .stn.found{background:var(--senal)}
+.line .head{ /* señal de posición */
+  position:absolute;left:47%;top:50%;transform:translate(-50%,-50%);
+  width:15px;height:15px;
+}
+.line .head i{position:absolute;inset:0;border:1.6px solid var(--sello);background:var(--boleto);border-radius:50%}
+.line .head b{position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--sello);border-radius:50%;transform:translate(-50%,-50%)}
+.line .head u{position:absolute;left:50%;top:-9px;width:1.4px;height:9px;background:var(--sello);transform:translateX(-50%)}
+.rail .cap{font-family:var(--tip);font-size:8.5px;letter-spacing:.17em;text-transform:uppercase;color:rgba(30,26,21,.48)}
+.rail .cap em{font-style:normal;color:var(--senal)}
+
+/* discos de señal — transporte */
+.transport{display:flex;align-items:center;justify-content:center;gap:11px}
+.disc{position:relative;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--tinta);
+  display:grid;place-items:center;background:transparent;color:var(--tinta)}
+.disc.play{
+  width:54px;height:54px;background:var(--sello);border-color:var(--sello);color:var(--boleto);
+  box-shadow:0 1px 0 rgba(0,0,0,.25);
+}
+.disc.play::after{ /* anillo mal registrado */
+  content:"";position:absolute;inset:-5px -4px -3px -6px;border:1px solid rgba(45,92,78,.55);border-radius:50%;
+}
+
+/* palanca de volumen */
+.vol{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.vol .lbl{font-family:var(--tip);font-size:8px;letter-spacing:.2em;color:var(--tinta2)}
+.vol .slot{position:relative;width:88px;height:14px;display:flex;align-items:center}
+.vol .slot .ticks{position:absolute;inset:0;background:repeating-linear-gradient(90deg, rgba(30,26,21,.3) 0 1px, transparent 1px 11px)}
+.vol .slot .bar{position:absolute;left:0;right:0;top:50%;height:1.4px;background:rgba(30,26,21,.42);transform:translateY(-50%)}
+.vol .slot .knob{position:absolute;left:66%;top:50%;width:9px;height:17px;background:var(--tinta);transform:translate(-50%,-50%);border-radius:1px}
+.vol .slot .knob::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:1.2px;background:var(--boleto2);transform:translate(-50%,-50%)}
+
+/* pestaña troquelada */
+.tab{
+  position:absolute;right:30px;bottom:-21px;background:var(--boleto2);color:var(--tinta);
+  font-family:var(--tip);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  padding:5px 14px 6px;border-radius:0 0 3px 3px;
+  border-top:1px dashed rgba(30,26,21,.4);
+  box-shadow:0 10px 16px -12px rgba(0,0,0,.8);
+}
+
+/* sello de estado */
+.stamp{
+  position:absolute;right:186px;top:-14px;transform:rotate(-7deg);
+  border:2px solid var(--sello);border-radius:3px;padding:5px 13px 6px;
+  color:var(--sello);font-family:var(--tip);font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+  background:rgba(240,230,210,.55);opacity:.88;
+}
+.stamp span{display:block;font-size:7.5px;letter-spacing:.16em;font-weight:400;text-align:center;margin-top:1px;opacity:.85}
+.stamp::after{ /* falla digital: una banda corrida */
+  content:"";position:absolute;left:-2px;right:-2px;top:52%;height:3px;
+  background:rgba(45,92,78,.5);mix-blend-mode:multiply;
+}
+
+/* ---------- variante en pausa ---------- */
+.ticket.pausa .done{width:23%}
+.ticket.pausa .head{left:23%}
+.ticket.pausa .stamp{border-color:var(--senal);color:var(--senal);right:170px;transform:rotate(4deg)}
+.ticket.pausa .stamp::after{background:rgba(196,57,26,.45)}
+.ticket.pausa .disc.play{background:transparent;color:var(--tinta);border-color:var(--tinta)}
+.ticket.pausa .disc.play::after{border-color:rgba(196,57,26,.45)}
+
+/* ---------- variante de noche ---------- */
+.ticket.noche{
+  background-image:var(--grano),linear-gradient(180deg,#221E18 0%, var(--noche) 45%, #14110D 100%);
+  color:var(--boleto);
+  box-shadow:0 2px 0 rgba(0,0,0,.4), 0 26px 44px -26px #000;
+}
+.ticket.noche .stub{background:linear-gradient(180deg,#2A251E,#1D1914);border-right-color:rgba(240,230,210,.3)}
+.ticket.noche .stub .lbl,.ticket.noche .stub .de{color:rgba(240,230,210,.55)}
+.ticket.noche .stub .serial,.ticket.noche .stub .rot{color:rgba(240,230,210,.34)}
+.ticket.noche .meta .by{color:rgba(240,230,210,.6)}
+.ticket.noche .meta .by span{color:#6FAF96}
+.ticket.noche .rail .t{color:rgba(240,230,210,.6)}
+.ticket.noche .line .track{background:rgba(240,230,210,.3)}
+.ticket.noche .line .sleepers{background:repeating-linear-gradient(90deg, rgba(240,230,210,.2) 0 1px, transparent 1px 9px)}
+.ticket.noche .line .stn{background:var(--noche);border-color:#6FAF96}
+.ticket.noche .line .stn.found{background:#6FAF96}
+.ticket.noche .line .head i{background:var(--noche)}
+.ticket.noche .rail .cap{color:rgba(240,230,210,.45)}
+.ticket.noche .rail .cap em{color:#6FAF96}
+.ticket.noche .disc{border-color:var(--boleto);color:var(--boleto)}
+.ticket.noche .disc.play{background:#E4552C;border-color:#E4552C;color:#14110D}
+.ticket.noche .disc.play::after{border-color:rgba(111,175,150,.6)}
+.ticket.noche .vol .lbl{color:rgba(240,230,210,.55)}
+.ticket.noche .vol .slot .ticks{background:repeating-linear-gradient(90deg, rgba(240,230,210,.32) 0 1px, transparent 1px 11px)}
+.ticket.noche .vol .slot .bar{background:rgba(240,230,210,.4)}
+.ticket.noche .vol .slot .knob{background:var(--boleto)}
+.ticket.noche .vol .slot .knob::after{background:var(--noche)}
+.ticket.noche .tab{background:#2A251E;color:var(--boleto);border-top-color:rgba(240,230,210,.35)}
+.ticket.noche .stamp{background:rgba(20,17,13,.5);border-color:#E4552C;color:#E4552C}
+.ticket.noche::before,.ticket.noche::after{background:var(--mesa)}
+
+/* ---------- variante mobile 390 ---------- */
+.ticket.mini{
+  width:390px;height:96px;grid-template-columns:62px 1fr;
+}
+.ticket.mini::before,.ticket.mini::after{left:62px;width:11px;height:11px}
+.ticket.mini::before{top:-5.5px} .ticket.mini::after{bottom:-5.5px}
+.ticket.mini .stub .num{font-size:30px}
+.ticket.mini .stub .num::before{left:-1.5px}
+.ticket.mini .stub .serial,.ticket.mini .stub .rot{display:none}
+.ticket.mini .main{grid-template-columns:42px minmax(0,1fr) 40px;gap:12px;padding:0 14px 0 13px}
+.ticket.mini .art{width:42px;height:42px}
+.ticket.mini .art .img::before{width:22px;height:22px}
+.ticket.mini .meta .song{font-size:16px}
+.ticket.mini .meta .by{font-size:9px;margin-top:3px}
+.ticket.mini .meta .rule{display:none}
+.ticket.mini .rail{display:none}
+.ticket.mini .vol{display:none}
+.ticket.mini .transport .disc:not(.play){display:none}
+.ticket.mini .disc.play{width:40px;height:40px}
+.ticket.mini .stamp{right:auto;left:78px;top:-11px;padding:3px 9px 4px;font-size:9px}
+.ticket.mini .stamp span{display:none}
+.ticket.mini .tab{right:14px;bottom:-17px;font-size:8px;padding:4px 10px 5px}
+.ticket.mini .minirail{display:block}
+.minirail{display:none;position:absolute;left:13px;right:14px;bottom:11px;height:2px;background:rgba(30,26,21,.3)}
+.minirail i{position:absolute;left:0;top:0;bottom:0;width:47%;background:var(--sello)}
+.minirail b{position:absolute;left:47%;top:50%;width:7px;height:7px;border-radius:50%;background:var(--sello);transform:translate(-50%,-50%)}
+
+/* ---------- galería de variantes ---------- */
+.variants{display:flex;flex-direction:column;gap:56px;align-items:center}
+.vcap{font-family:var(--tip);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--tinta3);
+  text-align:center;margin:26px 0 0}
+.vcap b{color:var(--boleto);font-weight:400;letter-spacing:.14em}
+.vblock{width:100%;display:flex;flex-direction:column;align-items:center}
+
+/* ---------- anatomía ---------- */
+.anatomy{position:relative;display:flex;justify-content:center}
+.anawrap{position:relative;width:1040px;max-width:100%}
+.pin{
+  position:absolute;z-index:5;width:19px;height:19px;border-radius:50%;
+  background:var(--azul);color:#F0E6D2;border:1.5px solid rgba(240,230,210,.85);
+  font-family:var(--tip);font-size:9.5px;font-weight:700;display:grid;place-items:center;
+  transform:translate(-50%,-50%);box-shadow:0 2px 6px -1px rgba(0,0,0,.6);
+}
+.analist{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;margin-top:40px}
+.analist .it{display:grid;grid-template-columns:20px 1fr;gap:12px;padding:11px 0;
+  border-top:1px solid rgba(240,230,210,.16);font-size:13px;line-height:1.5;color:rgba(240,230,210,.66)}
+.analist .it b.n{width:20px;height:20px;border-radius:50%;background:var(--azul);color:#F0E6D2;
+  font-family:var(--tip);font-size:9.5px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.analist .it strong{color:var(--boleto);font-weight:600;display:block;font-family:var(--sign);font-size:13.5px}
+
+/* ---------- materiales ---------- */
+.mats{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+@media (max-width:860px){.mats{grid-template-columns:1fr;gap:32px}.analist{grid-template-columns:1fr}}
+.swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sw{display:flex;flex-direction:column;gap:7px}
+.sw .chip{height:62px;border-radius:2px;border:1px solid rgba(240,230,210,.2)}
+.sw .nm{font-family:var(--sign);font-weight:700;font-size:12.5px;color:var(--boleto)}
+.sw .hx{font-family:var(--tip);font-size:9.5px;letter-spacing:.09em;color:var(--tinta3)}
+.typerow{display:flex;flex-direction:column;gap:18px}
+.ty{border-top:1px solid rgba(240,230,210,.16);padding-top:13px}
+.ty .k{font-family:var(--tip);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinta3)}
+.ty .spec{margin-top:5px;color:var(--boleto)}
+.ty .use{font-size:12.5px;color:rgba(240,230,210,.6);margin-top:4px;line-height:1.5}
+
+.note{font-size:13px;line-height:1.65;color:rgba(240,230,210,.62);max-width:66ch;margin:0}
+.note b{color:var(--boleto);font-weight:600}
+
+.foot{margin-top:72px;padding-top:18px;border-top:1px solid rgba(240,230,210,.16);
+  font-family:var(--tip);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3);
+  display:flex;gap:22px;flex-wrap:wrap}
+.foot .r{margin-left:auto}
+
+@media (max-width:1040px){
+  .ticket{transform-origin:top center}
+  .stage,.anatomy{overflow-x:auto;justify-content:flex-start;padding-bottom:10px}
+  .anawrap{width:1040px;flex:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="plate">
+    <div>
+      <p class="eyebrow">sueter7 · La Sencilla Villa Quién · etapa de estética</p>
+      <h1>El reproductor<br>es un <em>boleto</em></h1>
+    </div>
+    <p class="lead">
+      Pieza estética, no funcional: los controles están dibujados, no conectados.
+      Se muestran cuatro estados del mismo objeto — <b>reproduciendo, en pausa, de noche y en celular</b> —
+      para fijar materiales antes de programar nada.
+    </p>
+  </div>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="sec" style="margin-top:56px">
+    <div class="sechead"><span class="n">01</span><h2>Estado en reproducción</h2>
+      <span class="aside">escritorio · 980 × 136</span></div>
+    <div class="stage">
+      <div class="ticket" id="hero-ticket">
+        <div class="stub">
+          <span class="lbl">Pista</span>
+          <span class="num" data-ghost="02">02</span>
+          <span class="de">de 07</span>
+          <span class="rot">Ramal Norte</span>
+          <span class="serial">44822844</span>
+        </div>
+        <div class="main">
+          <div class="art">
+            <div class="img"><span class="band"></span></div>
+            <span class="corner tl"></span><span class="corner br"></span>
+          </div>
+
+          <div class="meta">
+            <h3 class="song">Boleto capicúa</h3>
+            <svg class="rule" width="168" height="7" viewBox="0 0 168 7" fill="none" aria-hidden="true">
+              <path d="M1.5 4.6C22 2.2 44 5.4 66 3.2c22-2.2 44 2.6 66 .4 12-1.2 22 1.6 34.5.6"
+                    stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+            <p class="by">sueter7 · <span>lado a</span></p>
+          </div>
+
+          <div class="rail">
+            <div class="top">
+              <span class="t">0:48</span>
+              <div class="line">
+                <span class="sleepers"></span>
+                <span class="track"></span>
+                <span class="done"></span>
+                <span class="stn found" style="left:19%"></span>
+                <span class="stn" style="left:58%"></span>
+                <span class="stn" style="left:82%"></span>
+                <span class="head"><i></i><u></u><b></b></span>
+              </div>
+              <span class="t">4:05</span>
+            </div>
+            <span class="cap">Ramal Norte · <em>1 de 3 secretos</em></span>
+          </div>
+
+          <div class="transport">
+            <span class="disc" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 12 12"><path d="M11 1.5v9L4 6z" fill="currentColor"/><rect x="1.2" y="1.5" width="1.6" height="9" fill="currentColor"/></svg>
+            </span>
+            <span class="disc play" aria-hidden="true">
+              <svg width="16" height="17" viewBox="0 0 16 17"><rect x="1.5" y="1" width="4" height="15" fill="currentColor"/><rect x="10" y="1" width="4" height="15" fill="currentColor"/></svg>
+            </span>
+            <span class="disc" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 12 12"><path d="M1 1.5v9L8 6z" fill="currentColor"/><rect x="9.2" y="1.5" width="1.6" height="9" fill="currentColor"/></svg>
+            </span>
+          </div>
+
+          <div class="vol">
+            <span class="lbl">VOL</span>
+            <div class="slot"><span class="ticks"></span><span class="bar"></span><span class="knob"></span></div>
+          </div>
+        </div>
+        <div class="stamp">Reproduciendo<span>andén 2 · 23.40</span></div>
+        <div class="tab">Letra</div>
+        <div class="minirail"><i></i><b></b></div>
+      </div>
+    </div>
+    <p class="vcap"><b>Lámina 1</b> — el objeto completo, tal como vive al pie de toda la villa</p>
+  </section>
+
+  <!-- ===================== ANATOMÍA ===================== -->
+  <section class="sec">
+    <div class="sechead"><span class="n">02</span><h2>De qué está hecho</h2>
+      <span class="aside">once decisiones materiales</span></div>
+    <div class="anatomy"><div class="anawrap" id="anawrap"></div></div>
+    <div class="analist" id="analist"></div>
+  </section>
+
+  <!-- ===================== VARIANTES ===================== -->
+  <section class="sec">
+    <div class="sechead"><span class="n">03</span><h2>Los otros tres estados</h2>
+      <span class="aside">mismo objeto, distinta situación</span></div>
+    <div class="variants" id="variants"></div>
+  </section>
+
+  <!-- ===================== MATERIALES ===================== -->
+  <section class="sec">
+    <div class="sechead"><span class="n">04</span><h2>Materiales de la pieza</h2></div>
+    <div class="mats">
+      <div>
+        <p class="note" style="margin-bottom:20px">
+          Seis tintas, ninguna decorativa: <b>el bermellón es el tampón</b> del sello y marca lo que ya sonó;
+          <b>el verde es la señalética ferroviaria</b> y marca lo que hay para encontrar. Que nunca signifiquen
+          lo mismo es lo que mantiene legible el boleto.
+        </p>
+        <div class="swatches">
+          <div class="sw"><div class="chip" style="background:#F0E6D2"></div><span class="nm">Boleto</span><span class="hx">#F0E6D2</span></div>
+          <div class="sw"><div class="chip" style="background:#E3D5B8"></div><span class="nm">Cartón</span><span class="hx">#E3D5B8</span></div>
+          <div class="sw"><div class="chip" style="background:#1E1A15"></div><span class="nm">Tinta</span><span class="hx">#1E1A15</span></div>
+          <div class="sw"><div class="chip" style="background:#C4391A"></div><span class="nm">Sello</span><span class="hx">#C4391A</span></div>
+          <div class="sw"><div class="chip" style="background:#2D5C4E"></div><span class="nm">Señal</span><span class="hx">#2D5C4E</span></div>
+          <div class="sw"><div class="chip" style="background:#27334F"></div><span class="nm">Técnico</span><span class="hx">#27334F</span></div>
+        </div>
+      </div>
+      <div class="typerow">
+        <div class="ty">
+          <span class="k">Señalética</span>
+          <div class="spec" style="font-family:var(--sign);font-weight:900;font-size:27px;letter-spacing:-.025em">Chivo 900 · 700</div>
+          <p class="use">Número de pista y título de canción. Grotesca de Omnibus-Type, fundición porteña: la letra de los carteles de estación.</p>
+        </div>
+        <div class="ty">
+          <span class="k">Máquina de escribir</span>
+          <div class="spec" style="font-family:var(--tip);font-size:19px;letter-spacing:.04em">Courier Prime · 44822844</div>
+          <p class="use">Datos impresos, numeración, sellos y tiempos. Es la misma letra de las cartas de Q.: el boleto y la carta salen de la misma máquina.</p>
+        </div>
+        <div class="ty">
+          <span class="k">Interfaz</span>
+          <div class="spec" style="font-family:var(--ui);font-weight:500;font-size:17px">Archivo · etiquetas y textos de sistema</div>
+          <p class="use">Todo lo que no es parte del objeto de papel. Nunca aparece dentro del boleto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sechead"><span class="n">05</span><h2>Lo que hay que resolver antes de programarlo</h2></div>
+    <div class="analist">
+      <div class="it"><b class="n">a</b><span><strong>El troquel con fondo variable</strong>
+        Las muescas y la pestaña están pintadas del color de la mesa. Sobre el mapa isométrico, que no es plano,
+        hay que recortarlas de verdad — máscara o SVG — o se ven los parches.</span></div>
+      <div class="it"><b class="n">b</b><span><strong>El sello al cambiar de estado</strong>
+        Propuesta: no hace fundido, se estampa. Un cuadro de sobreimpresión y queda. Confirmar con D, que es
+        quien tiene la guía de movimiento.</span></div>
+      <div class="it"><b class="n">c</b><span><strong>Títulos largos</strong>
+        “Casa tomada por la señal” entra justo. Hay que decidir si se achica el cuerpo o si el nombre se corta
+        con puntos suspensivos, y probarlo con los siete temas reales.</span></div>
+      <div class="it"><b class="n">d</b><span><strong>Las estaciones de la vía</strong>
+        Muestran cuántos secretos tiene el tramo. Falta definir qué pasa cuando una canción no tiene ninguno:
+        vía limpia, o una marca de “sin paradas”.</span></div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>sueter7 · La Sencilla Villa Quién</span>
+    <span>Reproductor persistente · propuesta estética v1</span>
+    <span class="r">Pieza no funcional</span>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ---- variantes: se clonan del original para que no se desincronicen ---- */
+const hero = document.getElementById("hero-ticket");
+
+const VARIANTS = [
+  { cls:"pausa", cap:"<b>Lámina 2</b> — en pausa: el sello cambia de tinta y de ángulo, la señal se queda en la vía" },
+  { cls:"noche", cap:"<b>Lámina 3</b> — de noche: el mismo boleto bajo la lámpara del andén, para las secciones oscuras" },
+  { cls:"mini",  cap:"<b>Lámina 4</b> — celular, 390 px: cae la vía larga y queda el hilo de progreso al pie" }
+];
+
+const vcont = document.getElementById("variants");
+VARIANTS.forEach(v=>{
+  const block = document.createElement("div");
+  block.className = "vblock";
+  const stage = document.createElement("div");
+  stage.className = "stage";
+  const t = hero.cloneNode(true);
+  t.removeAttribute("id");
+  t.classList.add(v.cls);
+  if(v.cls === "pausa"){
+    t.querySelector(".stamp").innerHTML = 'En pausa<span>andén 2 · 23.41</span>';
+    t.querySelector(".disc.play").innerHTML =
+      '<svg width="15" height="17" viewBox="0 0 15 17"><path d="M2 1.2v14.6L14 8.5z" fill="currentColor"/></svg>';
+    t.querySelectorAll(".rail .t")[0].textContent = "0:23";
+  }
+  if(v.cls === "mini"){
+    t.querySelector(".stamp").innerHTML = 'Reproduciendo';
+  }
+  stage.append(t);
+  const cap = document.createElement("p");
+  cap.className = "vcap";
+  cap.innerHTML = v.cap;
+  block.append(stage, cap);
+  vcont.append(block);
+});
+
+/* ---- anatomía: el mismo boleto con alfileres numerados ---- */
+const PINS = [
+  [6.5, 52,  "Talón troquelado", "Lleva el número de pista en el cuerpo más grande de toda la interfaz. Es lo que en un boleto va impreso más fuerte: el dato que te dice dónde estás."],
+  [2.4, 30,  "Error de registro", "El número tiene un fantasma bermellón corrido dos píxeles. Es la falla digital del brief, dosificada: una sola, y en el lugar donde una imprenta real fallaría."],
+  [10.8, 14, "Línea de perforación", "Separa talón de cuerpo, con las dos muescas del troquel. Es lo que convierte un rectángulo en un boleto."],
+  [16.1, 30, "Tapa con esquineros", "No es un recuadro de interfaz: es una foto pegada en un álbum, apenas rotada, sostenida por dos esquineros de cartulina."],
+  [28.8, 52, "Subrayado a mano", "Trazo dibujado, no un borde CSS. Es el único gesto manual del objeto y por eso funciona: si hubiera cinco, no se notaría ninguno."],
+  [53.5, 43, "La vía como progreso", "Riel, durmientes y estaciones. El tiempo transcurrido es el tramo ya recorrido, en tinta de sello."],
+  [56.2, 25, "Señal de posición", "El cabezal no es un círculo: es una señal de vía con su mástil. Marca el segundo exacto al que vuelve una referencia."],
+  [63.6, 56, "Estaciones = secretos", "Cada parada es un secreto del tramo. Llena si ya lo encontraste, hueca si no. Insinúa sin revelar."],
+  [70, 8,    "Sello de estado", "Reproduciendo o en pausa, estampado en diagonal con su hora. Dice el estado sin un ícono de sistema."],
+  [80.6, 30, "Disco de señal", "Los controles son discos de señalética ferroviaria. El de reproducción lleva un anillo verde mal registrado: segunda y última falla."],
+  [94.7, 54, "Palanca de volumen", "Una palanca con sus muescas, no una barra de interfaz. Objeto físico hasta el último control."]
+];
+
+const ana = document.getElementById("anawrap");
+const anaTicket = hero.cloneNode(true);
+anaTicket.removeAttribute("id");
+ana.append(anaTicket);
+
+const list = document.getElementById("analist");
+PINS.forEach((p,i)=>{
+  const [x,y,title,text] = p;
+  const pin = document.createElement("span");
+  pin.className = "pin";
+  pin.style.left = x + "%";
+  pin.style.top  = y + "%";
+  pin.textContent = i+1;
+  ana.append(pin);
+
+  const it = document.createElement("div");
+  it.className = "it";
+  it.innerHTML = `<b class="n">${i+1}</b><span><strong>${title}</strong>${text}</span>`;
+  list.append(it);
+});
+</script>
+<a href="index.html" style="position:fixed;left:14px;bottom:14px;z-index:9999;font-family:'Bebas Neue',Arial,sans-serif;font-size:17px;letter-spacing:.08em;background:#e8c340;color:#141414;border:2px solid #141414;box-shadow:3px 3px 0 #141414;padding:7px 15px 4px;text-decoration:none;line-height:1">&larr; Volver al proyecto</a>
+</body>
+</html>
