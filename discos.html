@@ -27,6 +27,7 @@
 }
 
 *{box-sizing:border-box}
+[hidden]{display:none !important}
 body{margin:0;background:#1b1b1b;color:var(--crema);font-family:var(--mono);font-size:14px}
 
 .shell{max-width:1360px;margin:0 auto;padding:26px 20px 70px}
@@ -106,12 +107,10 @@ body{margin:0;background:#1b1b1b;color:var(--crema);font-family:var(--mono);font
 .lomo .pills i{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--tinta);display:block}
 
 .arte{
-  position:absolute;left:52px;top:0;width:300px;height:330px;background:var(--crema);
-  border:2.5px solid var(--tinta);z-index:2;display:grid;place-items:center;padding:14px;
-  background-image:
-    repeating-linear-gradient(90deg, rgba(20,20,20,.07) 0 1px, transparent 1px 7px),
-    repeating-linear-gradient(0deg, rgba(20,20,20,.05) 0 1px, transparent 1px 9px);
+  position:absolute;left:52px;top:16px;width:300px;height:300px;background:var(--crema);
+  border:2.5px solid var(--tinta);z-index:2;padding:11px;overflow:hidden;
 }
+.arte img{width:100%;height:100%;object-fit:cover;display:block}
 .hueco{
   width:100%;height:100%;border:2px dashed var(--rojo);display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:7px;text-align:center;padding:10px;background:rgba(201,69,44,.05);
@@ -206,6 +205,51 @@ body{margin:0;background:#1b1b1b;color:var(--crema);font-family:var(--mono);font
 .lanz .cinta-s{position:absolute;left:-10px;top:-11px;width:58px;height:20px;background:rgba(255,253,249,.8);
   border:1px solid rgba(20,20,20,.3);transform:rotate(-18deg)}
 
+/* ---------- reproductor ---------- */
+.tema{border:0;background:transparent;width:100%;text-align:left;cursor:pointer;font:inherit;
+  transition:background .12s}
+.tema:hover{background:rgba(232,195,64,.45)}
+.tema.vacio{pointer-events:none}
+.tema.son{background:var(--amarillo)}
+.tema.son .t{font-weight:700}
+.tema:focus-visible{outline:2px solid var(--rojo);outline-offset:-2px}
+
+.player{
+  position:absolute;left:84px;right:84px;bottom:26px;height:84px;z-index:6;
+  background:var(--crema);border:3px solid var(--tinta);box-shadow:8px 8px 0 rgba(20,20,20,.85);
+  display:flex;align-items:center;gap:18px;padding:0 24px;
+}
+.pbtn{
+  width:40px;height:40px;flex:none;border:2.5px solid var(--tinta);background:var(--crema);color:var(--tinta);
+  display:grid;place-items:center;cursor:pointer;transition:.12s;padding:0;
+}
+.pbtn:hover{background:var(--amarillo)}
+.pbtn.play{width:54px;height:54px;background:var(--azul);color:var(--crema);box-shadow:3px 3px 0 var(--tinta)}
+.pbtn.play:hover{background:#2456a0}
+.pbtn:focus-visible{outline:2px solid var(--rojo);outline-offset:2px}
+
+.pinfo{width:230px;flex:none;display:flex;flex-direction:column;gap:2px;min-width:0}
+.pinfo b{font-family:var(--display);font-size:24px;line-height:1;letter-spacing:.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pinfo span{font-family:var(--mono);font-size:11px;color:var(--gris);letter-spacing:.04em}
+
+.ptime{font-family:var(--mono);font-size:12.5px;color:var(--gris);font-variant-numeric:tabular-nums;flex:none}
+.pseek{position:relative;flex:1;height:18px;display:flex;align-items:center;cursor:pointer}
+.pseek::before{content:"";position:absolute;left:0;right:0;height:4px;background:rgba(20,20,20,.22)}
+.pseek i{position:absolute;left:0;height:4px;width:0;background:var(--rojo)}
+.pseek b{position:absolute;left:0;width:14px;height:14px;border-radius:50%;background:var(--rojo);
+  border:2px solid var(--tinta);transform:translateX(-50%)}
+.pseek:hover b{transform:translateX(-50%) scale(1.15)}
+
+.pvol{display:flex;align-items:center;gap:9px;flex:none}
+.plbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris)}
+.pvolbar{position:relative;width:76px;height:16px;display:flex;align-items:center;cursor:pointer}
+.pvolbar::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(20,20,20,.22)}
+.pvolbar i{position:absolute;left:0;height:3px;width:75%;background:var(--tinta)}
+
+.perr{position:absolute;right:24px;top:-15px;background:var(--rojo);color:var(--crema);
+  font-family:var(--mono);font-size:10px;letter-spacing:.07em;padding:3px 9px;border:2px solid var(--tinta)}
+
 /* ---------- notas de la lámina ---------- */
 .faltan{margin-top:30px;border:1px solid rgba(255,253,249,.2);padding:20px 22px;background:rgba(255,253,249,.04)}
 .faltan h2{font-family:var(--display);font-size:24px;letter-spacing:.05em;margin:0 0 4px;color:var(--crema)}
@@ -265,10 +309,7 @@ body{margin:0;background:#1b1b1b;color:var(--crema);font-family:var(--mono);font
         </div>
 
         <div class="arte">
-          <div class="hueco">
-            <b>Falta el dibujo</b>
-            <span>Ilustración de tapa<br>exportar PNG a 2×</span>
-          </div>
+          <img src="cover.png" alt="Tapa de Todo salió bien en la Sencilla Villa Quién">
         </div>
 
         <span class="cinta a"></span>
@@ -292,22 +333,22 @@ body{margin:0;background:#1b1b1b;color:var(--crema);font-family:var(--mono);font
         <div class="rule"></div>
 
         <div class="temas">
-          <div class="tema act"><span class="n">01</span><span class="t">Escritorio</span><span class="d">6:38</span></div>
-          <div class="tema"><span class="n">06</span><span class="t">Almohadas</span><span class="d">5:11</span></div>
-          <div class="tema"><span class="n">02</span><span class="t">Confluencias</span><span class="d">3:40</span></div>
-          <div class="tema"><span class="n">07</span><span class="t">Miedos de Transporte</span><span class="d">5:08</span></div>
-          <div class="tema"><span class="n">03</span><span class="t">Enero Cuervo</span><span class="d">5:33</span></div>
-          <div class="tema"><span class="n">08</span><span class="t">Todo Salió Bien (Carta p…)</span><span class="d">9:14</span></div>
-          <div class="tema"><span class="n">04</span><span class="t">De Chungking a Mendoza</span><span class="d">5:22</span></div>
-          <div class="tema"></div>
-          <div class="tema"><span class="n">05</span><span class="t">Mapache</span><span class="d">4:12</span></div>
+          <button class="tema" data-t="1"><span class="n">01</span><span class="t">Escritorio</span><span class="d">6:38</span></button>
+          <button class="tema" data-t="6"><span class="n">06</span><span class="t">Almohadas</span><span class="d">5:11</span></button>
+          <button class="tema" data-t="2"><span class="n">02</span><span class="t">Confluencias</span><span class="d">3:40</span></button>
+          <button class="tema" data-t="7"><span class="n">07</span><span class="t">Miedos de Transporte</span><span class="d">5:08</span></button>
+          <button class="tema" data-t="3"><span class="n">03</span><span class="t">Enero Cuervo</span><span class="d">5:33</span></button>
+          <button class="tema" data-t="8"><span class="n">08</span><span class="t">Todo Salió Bien (Carta p…)</span><span class="d">9:14</span></button>
+          <button class="tema" data-t="4"><span class="n">04</span><span class="t">De Chungking a Mendoza</span><span class="d">5:22</span></button>
+          <span class="tema vacio"></span>
+          <button class="tema" data-t="5"><span class="n">05</span><span class="t">Mapache</span><span class="d">4:12</span></button>
         </div>
 
         <div class="acciones">
-          <span class="btn primario">
+          <button class="btn primario" id="btn-disco">
             <svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M1 1v16l14-8z" fill="currentColor"/></svg>
-            Escuchar disco
-          </span>
+            <span id="btn-disco-txt">Escuchar disco</span>
+          </button>
           <span class="btn secundario">Comprar vinilo</span>
           <span class="plats">Spotify · YouTube · Bandcamp</span>
           <svg class="onda" width="58" height="26" viewBox="0 0 58 26" fill="none" aria-hidden="true">
@@ -340,25 +381,59 @@ body{margin:0;background:#1b1b1b;color:var(--crema);font-family:var(--mono);font
         </div>
       </div>
 
+      <!-- reproductor -->
+      <div class="player" id="player">
+        <button class="pbtn" id="p-prev" aria-label="Anterior">
+          <svg width="13" height="14" viewBox="0 0 13 14"><path d="M12 1v12L4 7z" fill="currentColor"/><rect x="1" y="1" width="2.2" height="12" fill="currentColor"/></svg>
+        </button>
+        <button class="pbtn play" id="p-play" aria-label="Reproducir">
+          <svg id="ico-play" width="17" height="19" viewBox="0 0 17 19"><path d="M2 1v17l14-8.5z" fill="currentColor"/></svg>
+          <svg id="ico-pause" width="17" height="19" viewBox="0 0 17 19" hidden><rect x="2" y="1" width="4.6" height="17" fill="currentColor"/><rect x="10.4" y="1" width="4.6" height="17" fill="currentColor"/></svg>
+        </button>
+        <button class="pbtn" id="p-next" aria-label="Siguiente">
+          <svg width="13" height="14" viewBox="0 0 13 14"><path d="M1 1v12l8-6z" fill="currentColor"/><rect x="9.8" y="1" width="2.2" height="12" fill="currentColor"/></svg>
+        </button>
+
+        <div class="pinfo">
+          <b id="p-title">Escritorio</b>
+          <span id="p-sub">sueter7 · pista 1 de 8</span>
+        </div>
+
+        <span class="ptime" id="p-cur">0:00</span>
+        <div class="pseek" id="p-seek"><i id="p-fill"></i><b id="p-knob"></b></div>
+        <span class="ptime" id="p-dur">6:38</span>
+
+        <div class="pvol">
+          <span class="plbl">Vol</span>
+          <div class="pvolbar" id="p-vol"><i id="p-volfill"></i></div>
+        </div>
+
+        <span class="perr" id="p-err" hidden>falta subir la carpeta audio/</span>
+      </div>
+
+      <audio id="au" preload="none"></audio>
+
     </div>
   </div>
 
   <div class="faltan">
-    <h2>Los cuatro huecos</h2>
+    <h2>Estado de la pantalla</h2>
     <p class="sub">
-      Todo lo demás salió del Figma: colores, tipografías, escala tipográfica, textos y tracklist.
-      Estas cuatro piezas son imágenes y mi entorno no puede descargarlas de figma.com, así que las dejé marcadas.
-      Exportalas y las pongo en su lugar.
+      Reproductor y tapa funcionando con el material real del repositorio. Quedan dos cosas de peso
+      y tres de dibujo.
     </p>
     <ol>
-      <li><b class="n">1</b><span><strong>Ilustración de tapa</strong>
-        El dibujo de línea del disco. <code>PNG a 2× · 600 × 660 px</code></span></li>
-      <li><b class="n">2</b><span><strong>Tres tapas chicas</strong>
+      <li><b class="n">✓</b><span><strong>Audio — andando</strong>
+        Los ocho temas suenan, se puede saltar de tema, buscar dentro de la canción y regular el volumen.</span></li>
+      <li><b class="n">✓</b><span><strong>Tapa — puesta</strong>
+        <code>cover.png</code> en su lugar.</span></li>
+      <li><b class="n">!</b><span><strong>Peso — conviene bajarlo</strong>
+        El cover son 6,7 MB para mostrarse a 300 px, y los MP3 suman 110 MB.
+        Una tapa de 600 px y audio a 192 kbps bajarían el sitio a menos de la mitad.</span></li>
+      <li><b class="n">1</b><span><strong>Tres tapas chicas</strong>
         Diario, BTS Remix y Las Flores. <code>PNG a 2× · 144 × 144 px c/u</code></span></li>
-      <li><b class="n">3</b><span><strong>Flecha y garabatos</strong>
-        La flecha de arriba y los trazos a mano. Los dibujé aproximados. <code>SVG</code></span></li>
-      <li><b class="n">4</b><span><strong>Medios tonos y cintas</strong>
-        Los hice en CSS, que pesa menos y escala solo. Si el patrón del Figma tiene una trama particular, pasame el <code>SVG</code> y lo cambio.</span></li>
+      <li><b class="n">2</b><span><strong>Flecha y garabatos</strong>
+        Los dibujé aproximados. <code>SVG</code></span></li>
     </ol>
   </div>
 </div>
@@ -376,7 +451,111 @@ function fit(){
 }
 window.addEventListener("resize", fit);
 fit();
+
+/* ===========================================================
+   REPRODUCTOR
+   =========================================================== */
+const DISCO = "sueter7 - Todo Salió Bien en la Sencilla Villa Quién - ";
+const TRACKS = [
+  {n:1, t:"Escritorio",             f:DISCO+"01 Escritorio.mp3",             d:398},
+  {n:2, t:"Confluencias",           f:DISCO+"02 Confluencias.mp3",           d:220},
+  {n:3, t:"Enero Cuervo",           f:DISCO+"03 Enero Cuervo.mp3",           d:333},
+  {n:4, t:"De Chungking a Mendoza", f:DISCO+"04 De Chungking a Mendoza.mp3", d:322},
+  {n:5, t:"Mapache",                f:DISCO+"05 Mapache.mp3",                d:252},
+  {n:6, t:"Almohadas",              f:DISCO+"06 Almohadas.mp3",              d:311},
+  {n:7, t:"Miedos de Transporte",   f:DISCO+"07 Miedos de Transporte.mp3",   d:308},
+  {n:8, t:"Todo Salió Bien (Carta para un amigo)", f:DISCO+"08 Todo Salió Bien (Carta para un amigo).mp3", d:554}
+];
+
+const au = document.getElementById("au");
+const $ = id => document.getElementById(id);
+let cur = 0;          // índice del tema cargado
+let loaded = false;
+
+const mmss = s => (isFinite(s) ? Math.floor(s/60) + ":" + String(Math.floor(s%60)).padStart(2,"0") : "0:00");
+
+function cargar(i, reproducir){
+  cur = (i + TRACKS.length) % TRACKS.length;
+  const tr = TRACKS[cur];
+  au.src = tr.f;
+  loaded = true;
+  $("p-title").textContent = tr.t;
+  $("p-sub").textContent = "sueter7 · pista " + tr.n + " de 8";
+  $("p-dur").textContent = mmss(tr.d);
+  $("p-cur").textContent = "0:00";
+  $("p-fill").style.width = "0%";
+  $("p-knob").style.left = "0%";
+  document.querySelectorAll(".tema[data-t]").forEach(b =>
+    b.classList.toggle("son", +b.dataset.t === tr.n));
+  if(reproducir) au.play().catch(()=>{});
+}
+
+function pintarBoton(){
+  const son = !au.paused && loaded;
+  $("ico-play").hidden = son;
+  $("ico-pause").hidden = !son;
+  $("p-play").setAttribute("aria-label", son ? "Pausar" : "Reproducir");
+  $("btn-disco-txt").textContent = son ? "Pausar disco" : "Escuchar disco";
+}
+
+$("p-play").addEventListener("click", () => {
+  if(!loaded){ cargar(0, true); return; }
+  au.paused ? au.play().catch(()=>{}) : au.pause();
+});
+$("btn-disco").addEventListener("click", () => {
+  if(!loaded){ cargar(0, true); return; }
+  au.paused ? au.play().catch(()=>{}) : au.pause();
+});
+$("p-prev").addEventListener("click", () => {
+  if(au.currentTime > 3){ au.currentTime = 0; return; }
+  cargar(cur - 1, true);
+});
+$("p-next").addEventListener("click", () => cargar(cur + 1, true));
+
+document.querySelectorAll(".tema[data-t]").forEach(b =>
+  b.addEventListener("click", () => {
+    const i = TRACKS.findIndex(t => t.n === +b.dataset.t);
+    if(i === cur && loaded){ au.paused ? au.play().catch(()=>{}) : au.pause(); }
+    else cargar(i, true);
+  }));
+
+au.addEventListener("play",  pintarBoton);
+au.addEventListener("pause", pintarBoton);
+au.addEventListener("ended", () => { if(cur < TRACKS.length - 1) cargar(cur + 1, true); else pintarBoton(); });
+au.addEventListener("timeupdate", () => {
+  const d = au.duration || TRACKS[cur].d;
+  const p = Math.min(100, (au.currentTime / d) * 100);
+  $("p-fill").style.width = p + "%";
+  $("p-knob").style.left  = p + "%";
+  $("p-cur").textContent  = mmss(au.currentTime);
+});
+au.addEventListener("loadedmetadata", () => { $("p-dur").textContent = mmss(au.duration); });
+au.addEventListener("error", () => { $("p-err").hidden = false; pintarBoton(); });
+
+function porPosicion(el, ev){
+  const r = el.getBoundingClientRect();
+  return Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width));
+}
+$("p-seek").addEventListener("click", ev => {
+  if(!loaded) return;
+  au.currentTime = porPosicion($("p-seek"), ev) * (au.duration || TRACKS[cur].d);
+});
+$("p-vol").addEventListener("click", ev => {
+  const v = porPosicion($("p-vol"), ev);
+  au.volume = v;
+  $("p-volfill").style.width = (v * 100) + "%";
+});
+au.volume = 0.75;
+$("p-volfill").style.width = "75%";
+
+/* teclado: barra espaciadora reproduce o pausa */
+document.addEventListener("keydown", ev => {
+  if(ev.code === "Space" && !/^(INPUT|TEXTAREA|BUTTON)$/.test(document.activeElement.tagName)){
+    ev.preventDefault();
+    $("p-play").click();
+  }
+});
 </script>
-<a href="index.html" style="position:fixed;left:14px;bottom:14px;z-index:9999;font-family:'Bebas Neue',Arial,sans-serif;font-size:17px;letter-spacing:.08em;background:#e8c340;color:#141414;border:2px solid #141414;box-shadow:3px 3px 0 #141414;padding:7px 15px 4px;text-decoration:none;line-height:1">&larr; Volver al proyecto</a>
+<a href="index.html" style="position:fixed;left:14px;top:14px;z-index:9999;font-family:'Bebas Neue',Arial,sans-serif;font-size:17px;letter-spacing:.08em;background:#e8c340;color:#141414;border:2px solid #141414;box-shadow:3px 3px 0 #141414;padding:7px 15px 4px;text-decoration:none;line-height:1">&larr; Volver al proyecto</a>
 </body>
 </html>
