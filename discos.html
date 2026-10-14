@@ -147,10 +147,11 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
   white-space:nowrap;max-width:400px;overflow:hidden;text-overflow:ellipsis}
 .palbum{position:absolute;left:99px;top:56px;font-family:var(--mono);font-size:15px;color:var(--gris);
   white-space:nowrap;max-width:400px;overflow:hidden;text-overflow:ellipsis}
-.pplay{position:absolute;left:525px;top:22px;width:52px;height:58px;border-radius:50%;
-  background:var(--tinta);color:var(--crema);border:0;display:grid;place-items:center;cursor:pointer;transition:transform .12s}
+.pplay{position:absolute;left:523px;top:21px;width:56px;height:56px;border-radius:50%;padding:0;
+  background:var(--crema);border:2.5px solid var(--tinta);display:grid;place-items:center;cursor:pointer;transition:transform .12s}
 .pplay:hover{transform:scale(1.06)}
 .pplay:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
+.pplay .ico{width:26px;height:26px}
 .pseek{position:absolute;left:605px;top:42px;width:764px;height:16px;display:flex;align-items:center;cursor:pointer}
 .pseek::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(20,20,20,.25)}
 .pseek i{position:absolute;left:0;height:3px;width:0;background:var(--rojo)}
@@ -161,10 +162,12 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
   display:grid;place-items:center;opacity:.9;transition:opacity .12s}
 .pic:hover{opacity:1}
 .pic:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
-.p-shuffle{left:1444px;top:41px;width:41px;height:20px}
-.p-prev{left:1517px;top:40px;width:18px;height:22px}
-.p-next{left:1573px;top:40px;width:18px;height:22px}
-.p-vol{left:1632px;top:38px;width:16px;height:27px}
+.p-shuffle{left:1448px;top:35px;width:32px;height:32px}
+.p-prev{left:1512px;top:37px;width:28px;height:28px}
+.p-next{left:1568px;top:37px;width:28px;height:28px}
+.p-vol{left:1626px;top:37px;width:28px;height:28px}
+.ico{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;transition:transform .07s}
+.pic:active .ico,.pplay:active .ico{transform:scale(1.08)}
 .pvolbar{position:absolute;left:1659px;top:42px;width:86px;height:16px;display:flex;align-items:center;cursor:pointer}
 .pvolbar::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(20,20,20,.25)}
 .pvolbar i{position:absolute;left:0;height:3px;width:75%;background:var(--tinta)}
@@ -259,25 +262,14 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
         <div class="pthumb"><img src="cover.png" alt=""></div>
         <div class="ptitle" id="p-title">Escritorio</div>
         <div class="palbum" id="p-sub">Todo Salió Bien en la Sencilla Villa Quién</div>
-        <button class="pplay" id="p-play" aria-label="Reproducir">
-          <svg id="ico-play" width="17" height="21" viewBox="0 0 17 21"><path d="M2 1v19l14-9.5z" fill="currentColor"/></svg>
-          <svg id="ico-pause" width="17" height="25" viewBox="0 0 17 25" hidden><rect x="2" y="0" width="5.4" height="25" fill="currentColor"/><rect x="10.5" y="0" width="5.4" height="25" fill="currentColor"/></svg>
-        </button>
+        <button class="pplay" id="p-play" aria-label="Reproducir"><img class="ico" id="ico-main" src="play.png" data-a="play.png" data-b="play-glitch.png" alt=""></button>
         <div class="pseek" id="p-seek"><i id="p-fill"></i><b id="p-knob"></b></div>
         <span class="pcur" id="p-cur">0:00</span>
         <span class="pdur" id="p-dur">6:38</span>
-        <button class="pic p-shuffle" id="p-shuffle" aria-label="Aleatorio" aria-pressed="false">
-          <svg width="41" height="20" viewBox="0 0 41 20" fill="none"><path d="M1 4h8l6 12h9M1 16h8l6-12h9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M31 1l6 3-6 3M31 13l6 3-6 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="pic p-prev" id="p-prev" aria-label="Anterior">
-          <svg width="18" height="22" viewBox="0 0 18 22"><path d="M17 1v20L5 11z" fill="currentColor"/><rect x="0" y="1" width="3" height="20" fill="currentColor"/></svg>
-        </button>
-        <button class="pic p-next" id="p-next" aria-label="Siguiente">
-          <svg width="18" height="22" viewBox="0 0 18 22"><path d="M1 1v20l12-10z" fill="currentColor"/><rect x="15" y="1" width="3" height="20" fill="currentColor"/></svg>
-        </button>
-        <span class="pic p-vol" aria-hidden="true">
-          <svg width="16" height="27" viewBox="0 0 16 27"><path d="M9 1L4 7H1v13h3l5 6z" fill="currentColor"/><path d="M12 8c2 2.5 2 8.5 0 11" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
-        </span>
+        <button class="pic p-shuffle" id="p-shuffle" aria-label="Aleatorio" aria-pressed="false"><img class="ico" src="shuffle.png" data-a="shuffle.png" data-b="shuffle-glitch.png" alt=""></button>
+        <button class="pic p-prev" id="p-prev" aria-label="Anterior"><img class="ico" src="prev.png" data-a="prev.png" data-b="prev-glitch.png" alt=""></button>
+        <button class="pic p-next" id="p-next" aria-label="Siguiente"><img class="ico" src="next.png" data-a="next.png" data-b="next-glitch.png" alt=""></button>
+        <button class="pic p-vol" id="p-mute" aria-label="Silenciar"><img class="ico" id="ico-vol" src="vol.png" data-a="vol.png" data-b="vol-glitch.png" alt=""></button>
         <div class="pvolbar" id="p-vol-bar"><i id="p-volfill"></i></div>
         <a class="pspot a" href="#" aria-label="Reproducir en Spotify">
           <svg width="14" height="18" viewBox="0 0 14 18"><path d="M1 1v16l12-8z" fill="currentColor"/></svg>
@@ -327,10 +319,18 @@ function cargar(i, reproducir){
   if(reproducir) au.play().catch(()=>{});
 }
 function pintar(){
-  const son=!au.paused && loaded;
-  $("ico-play").hidden=son; $("ico-pause").hidden=!son;
+  const son=!au.paused && loaded, im=$("ico-main");
+  im.dataset.a = son ? "pause.png" : "play.png";
+  im.dataset.b = son ? "pause-glitch.png" : "play-glitch.png";
+  if(!/glitch/.test(im.src)) im.src=im.dataset.a;
   $("p-play").setAttribute("aria-label", son?"Pausar":"Reproducir");
   $("btn-disco-txt").textContent=son?"Pausar disco":"Escuchar disco";
+}
+function pintarVol(){
+  const im=$("ico-vol"), mudo = au.muted || au.volume===0;
+  im.dataset.a = mudo ? "mute.png" : "vol.png";
+  im.dataset.b = mudo ? "mute-glitch.png" : "vol-glitch.png";
+  if(!/glitch/.test(im.src)) im.src=im.dataset.a;
 }
 function alternar(){ if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
 function siguiente(forzar){
@@ -345,8 +345,8 @@ $("p-next").addEventListener("click", ()=> siguiente(true));
 $("p-shuffle").addEventListener("click", ()=>{
   aleatorio=!aleatorio;
   $("p-shuffle").setAttribute("aria-pressed", String(aleatorio));
-  $("p-shuffle").style.color = aleatorio ? "#c9452c" : "";
-  $("p-shuffle").style.opacity = aleatorio ? "1" : "";
+  const im=$("p-shuffle").querySelector(".ico");
+  im.dataset.a = aleatorio ? "shuffle-glitch.png" : "shuffle.png";
 });
 document.querySelectorAll(".tema[data-t]").forEach(b=>b.addEventListener("click", ()=>{
   const i=TRACKS.findIndex(t=>t.n===+b.dataset.t);
@@ -364,8 +364,17 @@ au.addEventListener("loadedmetadata", ()=> $("p-dur").textContent=mmss(au.durati
 au.addEventListener("error", ()=>{ $("p-err").hidden=false; pintar(); });
 const pos=(el,ev)=>{const r=el.getBoundingClientRect();return Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));};
 $("p-seek").addEventListener("click", ev=>{ if(loaded) au.currentTime=pos($("p-seek"),ev)*(au.duration||TRACKS[cur].d); });
-$("p-vol-bar").addEventListener("click", ev=>{ const v=pos($("p-vol-bar"),ev); au.volume=v; $("p-volfill").style.width=(v*100)+"%"; });
+$("p-vol-bar").addEventListener("click", ev=>{ const v=pos($("p-vol-bar"),ev); au.muted=false; au.volume=v; $("p-volfill").style.width=(v*100)+"%"; pintarVol(); });
+$("p-mute").addEventListener("click", ()=>{ au.muted=!au.muted; $("p-volfill").style.width=(au.muted?0:au.volume*100)+"%"; pintarVol(); });
 au.volume=0.75; $("p-volfill").style.width="75%";
+/* iconos: mientras se aprieta aparece la version bugeada */
+["play","pause","prev","next","shuffle","vol","mute"].forEach(n=>{ new Image().src=n+".png"; new Image().src=n+"-glitch.png"; });
+function bug(b){
+  const im=b.querySelector(".ico"); if(!im) return;
+  im.src=im.dataset.b; clearTimeout(im._t);
+  im._t=setTimeout(()=>{ im.src=im.dataset.a; }, 260);
+}
+document.querySelectorAll(".pplay,.pic").forEach(b=>b.addEventListener("pointerdown", ()=>bug(b)));
 document.addEventListener("keydown", ev=>{
   if(ev.code==="Space" && !/^(INPUT|TEXTAREA|BUTTON|A)$/.test(document.activeElement.tagName)){
     ev.preventDefault(); alternar();
