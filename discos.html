@@ -8,15 +8,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
 <style>
+/* ===========================================================
+   TOKENS — variables de Figma + los grises del diseño
+   =========================================================== */
 :root{
-  --papel:#e7dfd3;
+  --papel:#e7dfd3;      /* fondo de diario */
+  --papel-2:#ddd4c6;
   --crema:#fffdf9;
-  --crema-var:#efe9de;
+  --crema-var:#efe9de;  /* crema sueter */
   --tinta:#141414;
+  --tinta-2:#202020;
   --gris:#333;
   --rojo:#c9452c;
-  --rojo-var:#d24426;
+  --rojo-var:#d24426;   /* rojo sueter */
   --amarillo:#e8c340;
+  --amarillo-var:#e8c229;
   --azul:#2c61b2;
   --verde:#1db954;
   --display:"Bebas Neue","Haettenschweiler","Arial Narrow",sans-serif;
@@ -24,19 +30,29 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none !important}
-.embebida .player,.embebida #au{display:none !important}
-html,body{height:100%}
-body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono);font-size:14px;overflow-x:hidden}.shell{max-width:none;margin:0;padding:0}
-.stage{margin:0;display:flex;justify-content:center;align-items:flex-start}
+body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size:14px}
+.shell{max-width:1400px;margin:0 auto;padding:26px 20px 70px}
+.bar{display:flex;align-items:baseline;gap:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,253,249,.18);
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,253,249,.55);flex-wrap:wrap}
+.bar b{color:#fffdf9;font-weight:700;letter-spacing:.06em}
+.bar .r{margin-left:auto;color:var(--amarillo)}
+.stage{margin-top:22px;display:flex;justify-content:center}
+
+/* ===========================================================
+   PANTALLA 1920 × 1080
+   =========================================================== */
 .screen{
   position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;
   transform-origin:top center;background:var(--papel);
   font-family:var(--mono);color:var(--tinta);
 }
+/* fondo real del diseño (imagen de medios tonos del Figma) */
 .bg{position:absolute;inset:0;pointer-events:none;
   background:var(--papel) url("fondo.png") center/cover no-repeat}
 .screen > *:not(.bg){position:absolute;z-index:2}
 .screen > .vinilo{z-index:1}
+
+/* ---------- cinta adhesiva ---------- */
 .cinta{
   background:linear-gradient(105deg, rgba(240,232,214,.62), rgba(226,215,192,.78) 45%, rgba(240,232,214,.6));
   border-top:1px solid rgba(255,255,255,.45);border-bottom:1px solid rgba(20,20,20,.14);
@@ -44,6 +60,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 }
 .cinta::after{content:"";position:absolute;inset:0;
   background-image:repeating-linear-gradient(90deg, rgba(20,20,20,.05) 0 1px, transparent 1px 5px)}
+
+/* ---------- navegación ---------- */
 .nav{left:1163px;top:39px;width:690px;height:44px;display:flex;gap:0}
 .nav a{
   position:absolute;top:0;height:44px;display:grid;place-items:center;
@@ -53,6 +71,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 }
 .nav a.on{background:var(--amarillo);color:var(--tinta)}
 .nav a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
+
+/* ---------- flecha y títulos ---------- */
 .flecha{left:74px;top:67px;width:72px;height:32px}
 .t-discos{
   left:87px;top:151px;width:443px;height:139px;background:var(--amarillo);
@@ -65,6 +85,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
   display:grid;place-items:center;
 }
 .t-canciones span{font-family:var(--mono);font-weight:700;font-size:48px;line-height:1;letter-spacing:-.02em;color:var(--crema);text-transform:uppercase}
+
+/* ---------- tapa del LP ---------- */
 .tapa{left:178px;top:308px;width:389px;height:389px;background:var(--crema);
   border:2.5px solid var(--tinta);box-shadow:8px 8px 0 rgba(20,20,20,.5);overflow:hidden}
 .tapa img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
@@ -78,7 +100,9 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 .lomo .pills i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--tinta);display:block}
 .pie{left:152px;top:650px;width:206px;height:62px;background:var(--tinta);color:var(--crema);
   padding:7px 10px;font-family:var(--display);font-size:19px;line-height:1.02;letter-spacing:.02em;z-index:1}
-.vinilo{left:439px;top:323px;width:351px;height:351px;border-radius:50%;
+
+/* ---------- vinilo ---------- */
+.vinilo{left:439px;top:323px;width:351px;height:351px;border-radius:50%;z-index:1;
   background:repeating-radial-gradient(circle at 50% 50%, #1d1d1d 0 1.5px, #0c0c0c 1.5px 4.6px), #111;
   border:2.5px solid var(--tinta);box-shadow:7px 7px 0 rgba(20,20,20,.45);display:grid;place-items:center}
 .vinilo .label{width:142px;height:142px;border-radius:50%;background:var(--amarillo);border:2px solid var(--tinta);
@@ -87,6 +111,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 .vinilo .label span{font-family:var(--display);font-size:12px;line-height:.95;letter-spacing:.01em}
 .vinilo .hole{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;
   border-radius:50%;background:var(--papel);border:1.5px solid var(--tinta);z-index:2}
+
+/* ---------- ficha del disco ---------- */
 .ficha{left:930px;top:270px;width:900px;height:470px;background:var(--crema);
   border:3px solid var(--tinta);box-shadow:8px 8px 0 var(--tinta)}
 .anio{position:absolute;left:35px;top:30px;width:120px;height:130px;background:var(--tinta);
@@ -99,6 +125,14 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 .ficha .meta{position:absolute;left:187px;top:112px;margin:0;font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:.07em}
 .ficha .desc{position:absolute;left:187px;top:146px;margin:0;font-family:var(--mono);font-size:16px;line-height:1.5;color:var(--gris)}
 .ficha .rule{position:absolute;left:35px;top:200px;width:830px;border-top:2px dashed rgba(20,20,20,.35)}
+/* acceso a la pantalla de letras del tema que esté cargado */
+.btn-letras{position:absolute;left:690px;top:156px;width:175px;height:34px;display:grid;place-items:center;
+  font-family:var(--display);font-size:19px;letter-spacing:.09em;text-transform:uppercase;line-height:1;
+  background:var(--rojo);color:var(--crema);text-decoration:none;padding-top:3px;
+  border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta);transition:transform .1s,box-shadow .1s}
+.btn-letras:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
+.btn-letras:focus-visible{outline:2px solid var(--tinta);outline-offset:3px}
+
 .temas{position:absolute;left:27px;top:210px;width:839px}
 .tema{position:absolute;display:grid;grid-template-columns:50px 1fr 58px;gap:0;align-items:center;
   height:34px;padding:0 8px;border:0;background:transparent;font:inherit;text-align:left;cursor:pointer;width:411px;
@@ -110,6 +144,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 .tema .n{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--rojo)}
 .tema .t{font-family:var(--mono);font-size:18px;color:var(--tinta);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tema .d{font-family:var(--mono);font-size:18px;text-align:right;font-variant-numeric:tabular-nums}
+
 .btn{position:absolute;display:inline-flex;align-items:center;justify-content:center;gap:11px;
   font-family:var(--display);font-size:26px;letter-spacing:.06em;text-transform:uppercase;line-height:1;
   border:2.5px solid var(--tinta);box-shadow:6px 6px 0 var(--tinta);cursor:pointer;padding-top:4px}
@@ -118,6 +153,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 .btn.comprar{left:340px;top:404px;width:250px;height:50px;background:var(--crema);color:var(--tinta)}
 .btn.comprar:hover{background:var(--amarillo)}
 .plats{position:absolute;left:638px;top:415px;font-family:var(--mono);font-size:14px;color:var(--gris);letter-spacing:.03em}
+
+/* ---------- sticker y garabato ---------- */
 .sticker{left:1724px;top:205px;width:176px;height:176px;border-radius:50%;background:var(--rojo-var);
   border:2.5px solid var(--tinta);display:grid;place-items:center;transform:rotate(-9deg);
   box-shadow:5px 5px 0 rgba(20,20,20,.35)}
@@ -125,6 +162,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 .sticker span{font-family:var(--mono);font-size:12.5px;font-weight:700;line-height:1.6;letter-spacing:.01em;
   color:var(--crema);text-align:center;padding:0 8px}
 .garabato{left:1700px;top:722px;width:62px;height:46px}
+
+/* ---------- otros lanzamientos ---------- */
 .otros-lbl{left:86px;top:750px;width:381px;height:56px;background:var(--tinta);display:grid;place-items:center;
   transform:rotate(-.8deg)}
 .otros-lbl span{font-family:var(--mono);font-weight:700;font-size:26px;letter-spacing:.01em;color:var(--crema);text-transform:uppercase}
@@ -140,6 +179,10 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
   border:2px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta);
   font-family:var(--display);font-size:17px;letter-spacing:.08em;color:var(--tinta);cursor:pointer;padding-top:2px}
 .lanz .esc:hover{background:var(--amarillo)}
+
+/* ===========================================================
+   REPRODUCTOR — barra inferior a todo el ancho
+   =========================================================== */
 .player{left:-8px;top:979px;width:1936px;height:102px;background:var(--crema-var);
   border-top:2.5px solid var(--tinta);color:var(--tinta);z-index:10}
 .pthumb{position:absolute;left:13px;top:17px;width:68px;height:68px;border:1.5px solid var(--tinta);overflow:hidden;background:#000}
@@ -148,57 +191,99 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
   white-space:nowrap;max-width:400px;overflow:hidden;text-overflow:ellipsis}
 .palbum{position:absolute;left:99px;top:56px;font-family:var(--mono);font-size:15px;color:var(--gris);
   white-space:nowrap;max-width:400px;overflow:hidden;text-overflow:ellipsis}
-.pplay{position:absolute;left:523px;top:21px;width:56px;height:56px;border-radius:50%;padding:0;
-  background:var(--crema);border:2.5px solid var(--tinta);display:grid;place-items:center;cursor:pointer;transition:transform .12s}
+
+.pplay{position:absolute;left:521px;top:23px;width:56px;height:56px;background:transparent;border:0;padding:0;cursor:pointer;transition:transform .1s}
 .pplay:hover{transform:scale(1.06)}
+.pplay:active{transform:scale(.93)}
 .pplay:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
-.pplay .ico{width:26px;height:26px}
+
+/* íconos dibujados: versión limpia + versión glitcheada */
+.ic-wrap{position:absolute;inset:0;display:block}
+.ic{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;user-select:none;-webkit-user-drag:none}
+.ic-b{opacity:0;transform:scale(1.17)}
+.pplay:active .ic-a,.pic:active .ic-a,.glitch .ic-a,.pic.on .ic-a{opacity:0}
+.pplay:active .ic-b,.pic:active .ic-b,.glitch .ic-b,.pic.on .ic-b{opacity:1}
+
 .pseek{position:absolute;left:605px;top:42px;width:764px;height:16px;display:flex;align-items:center;cursor:pointer}
 .pseek::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(20,20,20,.25)}
 .pseek i{position:absolute;left:0;height:3px;width:0;background:var(--rojo)}
 .pseek b{position:absolute;left:0;width:15px;height:15px;border-radius:50%;background:var(--tinta);transform:translateX(-50%)}
 .pcur{position:absolute;left:605px;top:66px;font-family:var(--mono);font-size:14px;color:var(--gris);font-variant-numeric:tabular-nums}
 .pdur{position:absolute;left:1328px;top:66px;width:44px;text-align:right;font-family:var(--mono);font-size:14px;color:var(--gris);font-variant-numeric:tabular-nums}
-.pic{position:absolute;background:transparent;border:0;color:var(--tinta);cursor:pointer;padding:0;
-  display:grid;place-items:center;opacity:.9;transition:opacity .12s}
+
+.pic{position:absolute;background:transparent;border:0;cursor:pointer;padding:0;display:block;
+  opacity:.92;transition:opacity .12s,transform .1s}
 .pic:hover{opacity:1}
+.pic:active{transform:scale(.92)}
 .pic:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
-.p-shuffle{left:1448px;top:35px;width:32px;height:32px}
-.p-prev{left:1512px;top:37px;width:28px;height:28px}
-.p-next{left:1568px;top:37px;width:28px;height:28px}
-.p-vol{left:1626px;top:37px;width:28px;height:28px}
-.ico{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;transition:transform .07s}
-.pic:active .ico,.pplay:active .ico{transform:scale(1.08)}
+.p-shuffle{left:1448px;top:34px;width:34px;height:34px}
+.p-prev{left:1510px;top:35px;width:32px;height:32px}
+.p-next{left:1566px;top:35px;width:32px;height:32px}
+.p-vol{left:1624px;top:35px;width:32px;height:32px}
 .pvolbar{position:absolute;left:1659px;top:42px;width:86px;height:16px;display:flex;align-items:center;cursor:pointer}
 .pvolbar::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(20,20,20,.25)}
 .pvolbar i{position:absolute;left:0;height:3px;width:75%;background:var(--tinta)}
+
 .pspot{position:absolute;top:27px;width:43px;height:48px;border-radius:50%;display:grid;place-items:center;
   text-decoration:none;cursor:pointer;transition:transform .12s}
 .pspot:hover{transform:scale(1.07)}
 .pspot.a{left:1788px;background:var(--verde);color:var(--crema)}
 .pspot.b{left:1848px;background:transparent;color:var(--verde)}
+
 .perr{position:absolute;right:24px;top:-18px;background:var(--rojo);color:var(--crema);z-index:3;
   font-family:var(--mono);font-size:10px;letter-spacing:.07em;padding:3px 9px;border:2px solid var(--tinta)}
+
+/* ---------- notas ---------- */
+.faltan{margin-top:30px;border:1px solid rgba(255,253,249,.2);padding:20px 22px;background:rgba(255,253,249,.04)}
+.faltan h2{font-family:var(--display);font-size:24px;letter-spacing:.05em;margin:0 0 4px;color:#fffdf9}
+.faltan .sub{font-size:12.5px;color:rgba(255,253,249,.6);margin:0 0 16px;line-height:1.55;max-width:76ch}
+.faltan ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 30px}
+@media (max-width:820px){.faltan ol{grid-template-columns:1fr}}
+.faltan li{display:grid;grid-template-columns:22px 1fr;gap:11px;font-size:12.5px;line-height:1.5;
+  color:rgba(255,253,249,.66);padding-top:9px;border-top:1px solid rgba(255,253,249,.13)}
+.faltan li b.n{width:22px;height:22px;border-radius:50%;background:var(--amarillo);color:#141414;
+  font-family:var(--mono);font-size:10px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.faltan li strong{display:block;color:#fffdf9;font-weight:700;font-size:13px}
+.faltan code{font-family:var(--mono);font-size:11.5px;color:var(--amarillo)}
 </style>
+
+<style>
+/* ---- sitio publicado: pantalla a sangre ---- */
+html,body{height:100%}
+body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
+.shell{max-width:none;margin:0;padding:0}
+.stage{margin:0;align-items:flex-start}
+@media (max-width:900px){
+  .shell{padding:0}
+}
+</style>
+<script src="puente.js"></script>
 </head>
 <body>
 <div class="shell">
+
   <div class="stage">
     <div class="screen" id="screen">
       <div class="bg"></div>
+
+      <!-- navegación -->
       <nav class="nav">
-        <a href="index.html" data-ir="" style="left:0;width:88px">Inicio</a>
-        <a href="index.html#sueter7" data-ir="sueter7" style="left:110px;width:111px">Sueter 7</a>
-        <a href="index.html#diario" data-ir="diario" style="left:243px;width:92px">Diario</a>
-        <a href="index.html#discos" data-ir="discos" class="on" aria-current="page" style="left:357px;width:95px">Discos</a>
-        <a href="index.html#tienda" data-ir="tienda" style="left:474px;width:96px">Tienda</a>
-        <a href="index.html#fechas" data-ir="fechas" style="left:592px;width:98px">Fechas</a>
+        <a href="index.html" style="left:0;width:88px">Inicio</a>
+        <a href="sueter7.html" style="left:110px;width:111px">Sueter 7</a>
+        <a href="diario.html" style="left:243px;width:92px">Diario</a>
+        <a href="discos.html" class="on" aria-current="page" style="left:357px;width:95px">Discos</a>
+        <a href="tienda.html" style="left:474px;width:96px">Tienda</a>
+        <a href="fechas.html" style="left:592px;width:98px">Fechas</a>
       </nav>
+
       <svg class="flecha" viewBox="0 0 72 32" fill="none" aria-hidden="true">
         <path d="M2 16h63M52 5l14 11-14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/>
       </svg>
+
       <div class="t-discos"><span>Discos</span></div>
       <div class="t-canciones"><span>&amp; Canciones</span></div>
+
+      <!-- tapa -->
       <div class="tapa">
         <img src="img/tapa-800.jpg" alt="Tapa de Todo salió bien en la Sencilla Villa Quién">
         <div class="lomo">
@@ -207,16 +292,22 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
         </div>
       </div>
       <div class="pie">TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN</div>
+
+      <!-- vinilo -->
       <div class="vinilo">
         <div class="label"><b>S7</b><span>TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN</span></div>
         <span class="hole"></span>
       </div>
+
+      <!-- ficha -->
       <div class="ficha">
         <div class="anio"><b>2026</b><span>8 TEMAS</span></div>
         <h1>Todo salió bien en la Sencilla Villa Quién</h1>
         <p class="meta">SUETER 7 · 2026 · 45 MIN</p>
         <p class="desc">Canciones escritas entre caminatas, cuadernos<br>y el ruido del tren de las seis.</p>
+        <a class="btn-letras" id="btn-letras" href="letras.html">Ver letras</a>
         <div class="rule"></div>
+
         <div class="temas">
           <button class="tema" data-t="1" style="left:0;top:0"><span class="n">01</span><span class="t">Escritorio</span><span class="d">6:38</span></button>
           <button class="tema" data-t="2" style="left:0;top:36px"><span class="n">02</span><span class="t">Confluencias</span><span class="d">3:40</span></button>
@@ -227,6 +318,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
           <button class="tema" data-t="7" style="left:435px;top:36px"><span class="n">07</span><span class="t">Miedos de Transporte</span><span class="d">5:08</span></button>
           <button class="tema" data-t="8" style="left:435px;top:72px"><span class="n">08</span><span class="t">Todo Salió Bien (Carta p…)</span><span class="d">9:14</span></button>
         </div>
+
         <button class="btn escuchar" id="btn-disco">
           <svg width="16" height="20" viewBox="0 0 16 20" aria-hidden="true"><path d="M1 1v18l14-9z" fill="currentColor"/></svg>
           <span id="btn-disco-txt">Escuchar disco</span>
@@ -234,64 +326,78 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
         <button class="btn comprar">Comprar vinilo</button>
         <span class="plats">Spotify · YouTube · Bandcamp</span>
       </div>
+
+      <!-- sticker -->
       <div class="sticker"><span>DISPONIBLE<br>EN TODAS LAS<br>PLATAFORMAS</span></div>
+
       <svg class="garabato" viewBox="0 0 62 46" fill="none" aria-hidden="true">
         <path d="M2 44c4-2 4-40 8-40s4 38 8 38 4-34 8-34 4 36 8 36 4-30 8-30 4 28 8 28" stroke="#141414" stroke-width="2.6" stroke-linecap="round"/>
       </svg>
+
+      <!-- otros lanzamientos -->
       <div class="otros-lbl"><span>Otros lanzamientos</span></div>
+
       <div class="lanz" style="left:87px;top:809px">
-        <div class="mini"><img src="data:image/jpeg;base64,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" alt="Tapa de Diario"></div>
+        <div class="mini"><img src="diario.png" alt="Tapa de Diario"></div>
         <div><h3>Diario</h3><p>16 min · 2025 · 5 canciones</p></div>
         <button class="esc">Escuchar</button>
       </div>
       <div class="lanz" style="left:687px;top:809px">
-        <div class="mini"><img src="data:image/jpeg;base64,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" alt="Tapa de BTS (Sueter 7 — Remix)"></div>
+        <div class="mini"><img src="bts.png" alt="Tapa de BTS (Sueter 7 — Remix)"></div>
         <div><h3>BTS (Sueter 7 — Remix)</h3><p>Anabel G. · 2026 · 1 canción</p></div>
         <button class="esc">Escuchar</button>
       </div>
       <div class="lanz" style="left:1290px;top:830px">
-        <div class="mini"><img src="data:image/jpeg;base64,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" alt="Tapa de Las Flores"></div>
+        <div class="mini"><img src="flores.png" alt="Tapa de Las Flores"></div>
         <div><h3>Las Flores</h3><p>Bautibit · 2026 · 1 canción</p></div>
         <button class="esc">Escuchar</button>
       </div>
+
+      <!-- cintas -->
       <div class="cinta" style="left:872px;top:295px;width:133px;height:40px;transform:rotate(-28deg)"></div>
       <div class="cinta" style="left:1775px;top:786px;width:134px;height:38px;transform:rotate(12deg)"></div>
       <div class="cinta" style="left:1293px;top:822px;width:83px;height:34px;transform:rotate(-16deg)"></div>
       <div class="cinta" style="left:150px;top:292px;width:96px;height:32px;transform:rotate(-22deg)"></div>
       <div class="cinta" style="left:520px;top:676px;width:96px;height:30px;transform:rotate(8deg)"></div>
+
+      <!-- reproductor -->
       <div class="player" id="player">
-        <div class="pthumb"><img src="img/tapa-mini.jpg" alt=""></div>
+        <div class="pthumb"><img src="img/tapa-800.jpg" alt=""></div>
         <div class="ptitle" id="p-title">Escritorio</div>
         <div class="palbum" id="p-sub">Todo Salió Bien en la Sencilla Villa Quién</div>
-        <button class="pplay" id="p-play" aria-label="Reproducir"><img class="ico" id="ico-main" src="play.png" data-a="play.png" data-b="play-glitch.png" alt=""></button>
+
+        <button class="pplay" id="p-play" aria-label="Reproducir">
+          <span class="ic-wrap" id="ico-play"><img class="ic ic-a" src="play.png" alt=""><img class="ic ic-b" src="play-glitch.png" alt=""></span>
+          <span class="ic-wrap" id="ico-pause" hidden><img class="ic ic-a" src="pause.png" alt=""><img class="ic ic-b" src="pause-glitch.png" alt=""></span>
+        </button>
+
         <div class="pseek" id="p-seek"><i id="p-fill"></i><b id="p-knob"></b></div>
         <span class="pcur" id="p-cur">0:00</span>
         <span class="pdur" id="p-dur">6:38</span>
-        <button class="pic p-shuffle" id="p-shuffle" aria-label="Aleatorio" aria-pressed="false"><img class="ico" src="shuffle.png" data-a="shuffle.png" data-b="shuffle-glitch.png" alt=""></button>
-        <button class="pic p-prev" id="p-prev" aria-label="Anterior"><img class="ico" src="prev.png" data-a="prev.png" data-b="prev-glitch.png" alt=""></button>
-        <button class="pic p-next" id="p-next" aria-label="Siguiente"><img class="ico" src="next.png" data-a="next.png" data-b="next-glitch.png" alt=""></button>
-        <button class="pic p-vol" id="p-mute" aria-label="Silenciar"><img class="ico" id="ico-vol" src="vol.png" data-a="vol.png" data-b="vol-glitch.png" alt=""></button>
+
+        <button class="pic p-shuffle" id="p-shuffle" aria-label="Aleatorio" aria-pressed="false"><img class="ic ic-a" src="shuffle.png" alt=""><img class="ic ic-b" src="shuffle-glitch.png" alt=""></button>
+        <button class="pic p-prev" id="p-prev" aria-label="Anterior"><img class="ic ic-a" src="prev.png" alt=""><img class="ic ic-b" src="prev-glitch.png" alt=""></button>
+        <button class="pic p-next" id="p-next" aria-label="Siguiente"><img class="ic ic-a" src="next.png" alt=""><img class="ic ic-b" src="next-glitch.png" alt=""></button>
+        <span class="pic p-vol" id="p-vol-ico" aria-hidden="true"><img class="ic ic-a" id="ic-vol-a" src="vol.png" alt=""><img class="ic ic-b" id="ic-vol-b" src="vol-glitch.png" alt=""></span>
         <div class="pvolbar" id="p-vol-bar"><i id="p-volfill"></i></div>
+
         <a class="pspot a" href="#" aria-label="Reproducir en Spotify">
           <svg width="14" height="18" viewBox="0 0 14 18"><path d="M1 1v16l12-8z" fill="currentColor"/></svg>
         </a>
         <a class="pspot b" href="#" aria-label="Abrir en Spotify">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.7 0 12 0zm5.5 17.3c-.2.4-.7.5-1.1.3-3-1.8-6.7-2.2-11.2-1.2-.4.1-.8-.2-.9-.6-.1-.4.2-.8.6-.9 4.8-1.1 9-.6 12.3 1.4.4.2.5.7.3 1zm1.5-3.3c-.3.4-.8.6-1.3.3-3.4-2.1-8.6-2.7-12.6-1.5-.5.2-1-.1-1.2-.6-.2-.5.1-1 .6-1.2 4.6-1.4 10.3-.7 14.2 1.7.4.3.6.9.3 1.3zm.1-3.4C15.5 8.2 8.7 8 5 9.2c-.6.2-1.2-.2-1.4-.8-.2-.6.2-1.2.8-1.4C8.7 5.6 16.2 5.8 20.6 8.4c.5.3.7 1 .4 1.5-.3.6-1 .8-1.5.5z"/></svg>
         </a>
+
         <span class="perr" id="p-err" hidden>no se encuentra el audio</span>
       </div>
+
       <audio id="au" preload="none"></audio>
     </div>
   </div>
 </div>
+
 <script>
 "use strict";
-/* Esta página vive adentro de la estación (index.html), que tiene el reproductor
-   persistente. Si se abre suelta, se redirige ahí para que la música no se corte. */
-const EMBEBIDA = window.parent !== window;
-if(!EMBEBIDA) location.replace("index.html#discos");
-if(EMBEBIDA) document.documentElement.classList.add("embebida");
-const alPadre = m => { try{ window.parent.postMessage(m, "*"); }catch(e){} };
 function fit(){
   const s=document.getElementById("screen"), stage=s.parentElement;
   const k=Math.min(1, stage.parentElement.clientWidth/1920);
@@ -300,20 +406,25 @@ function fit(){
 }
 window.addEventListener("resize", fit);
 fit();
-const DISCO = "sueter7 - Todo Salió Bien en la Sencilla Villa Quién - ";
+
+/* ---------- reproductor ---------- */
+const DISCO = "audio/";
 const TRACKS = [
-  {n:1, t:"Escritorio",             f:DISCO+"01 Escritorio.mp3",             d:398},
-  {n:2, t:"Confluencias",           f:DISCO+"02 Confluencias.mp3",           d:220},
-  {n:3, t:"Enero Cuervo",           f:DISCO+"03 Enero Cuervo.mp3",           d:333},
-  {n:4, t:"De Chungking a Mendoza", f:DISCO+"04 De Chungking a Mendoza.mp3", d:322},
-  {n:5, t:"Mapache",                f:DISCO+"05 Mapache.mp3",                d:252},
-  {n:6, t:"Almohadas",              f:DISCO+"06 Almohadas.mp3",              d:311},
-  {n:7, t:"Miedos de Transporte",   f:DISCO+"07 Miedos de Transporte.mp3",   d:308},
-  {n:8, t:"Todo Salió Bien (Carta para un amigo)", f:DISCO+"08 Todo Salió Bien (Carta para un amigo).mp3", d:554}
+  {n:1, t:"Escritorio",             f:DISCO+"01-escritorio.mp3",             d:398},
+  {n:2, t:"Confluencias",           f:DISCO+"02-confluencias.mp3",           d:220},
+  {n:3, t:"Enero Cuervo",           f:DISCO+"03-enero-cuervo.mp3",           d:333},
+  {n:4, t:"De Chungking a Mendoza", f:DISCO+"04-de-chungking-a-mendoza.mp3", d:322},
+  {n:5, t:"Mapache",                f:DISCO+"05-mapache.mp3",                d:252},
+  {n:6, t:"Almohadas",              f:DISCO+"06-almohadas.mp3",              d:311},
+  {n:7, t:"Miedos de Transporte",   f:DISCO+"07-miedos-de-transporte.mp3",   d:308},
+  {n:8, t:"Todo Salió Bien (Carta para un amigo)", f:DISCO+"08-todo-salio-bien.mp3", d:554}
 ];
-const au=document.getElementById("au"), $=id=>document.getElementById(id);
+
+/* adentro de la estación, el audio es el reproductor de la estación (ver puente.js) */
+const au=(window.S7&&S7.audio)||document.getElementById("au"), $=id=>document.getElementById(id);
 let cur=0, loaded=false, aleatorio=false;
 const mmss=s=>isFinite(s)?Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0"):"0:00";
+
 function cargar(i, reproducir){
   cur=(i+TRACKS.length)%TRACKS.length;
   const tr=TRACKS[cur];
@@ -323,28 +434,17 @@ function cargar(i, reproducir){
   $("p-cur").textContent="0:00";
   $("p-fill").style.width="0%"; $("p-knob").style.left="0%";
   document.querySelectorAll(".tema[data-t]").forEach(b=>b.classList.toggle("son", +b.dataset.t===tr.n));
+  $("btn-letras").href="letras.html?tema="+tr.n;
   if(reproducir) au.play().catch(()=>{});
 }
 function pintar(){
-  const son=!au.paused && loaded, im=$("ico-main");
-  im.dataset.a = son ? "pause.png" : "play.png";
-  im.dataset.b = son ? "pause-glitch.png" : "play-glitch.png";
-  if(!/glitch/.test(im.src)) im.src=im.dataset.a;
+  const son=!au.paused && loaded;
+  $("ico-play").hidden=son; $("ico-pause").hidden=!son;
   $("p-play").setAttribute("aria-label", son?"Pausar":"Reproducir");
   $("btn-disco-txt").textContent=son?"Pausar disco":"Escuchar disco";
 }
-function pintarVol(){
-  const im=$("ico-vol"), mudo = au.muted || au.volume===0;
-  im.dataset.a = mudo ? "mute.png" : "vol.png";
-  im.dataset.b = mudo ? "mute-glitch.png" : "vol-glitch.png";
-  if(!/glitch/.test(im.src)) im.src=im.dataset.a;
-}
-function alternar(){ if(EMBEBIDA){ alPadre({s7:"alternar"}); return; } if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
-function siguiente(forzar){
-  if(aleatorio){ let i; do{ i=Math.floor(Math.random()*TRACKS.length); }while(TRACKS.length>1 && i===cur); cargar(i,true); }
-  else if(cur<TRACKS.length-1 || forzar) cargar(cur+1,true);
-  else pintar();
-}
+function alternar(){ if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
+
 $("p-play").addEventListener("click", alternar);
 $("btn-disco").addEventListener("click", alternar);
 $("p-prev").addEventListener("click", ()=>{ if(au.currentTime>3){au.currentTime=0;return;} cargar(cur-1,true); });
@@ -352,14 +452,21 @@ $("p-next").addEventListener("click", ()=> siguiente(true));
 $("p-shuffle").addEventListener("click", ()=>{
   aleatorio=!aleatorio;
   $("p-shuffle").setAttribute("aria-pressed", String(aleatorio));
-  const im=$("p-shuffle").querySelector(".ico");
-  im.dataset.a = aleatorio ? "shuffle-glitch.png" : "shuffle.png";
+  $("p-shuffle").classList.toggle("on", aleatorio);
 });
+function destello(el){ el.classList.add("glitch"); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("glitch"), 220); }
+function mudo(m){ $("ic-vol-a").src = m ? "mute.png" : "vol.png"; $("ic-vol-b").src = m ? "mute-glitch.png" : "vol-glitch.png"; }
+["p-play","p-prev","p-next","p-shuffle"].forEach(id=> $(id).addEventListener("click", ()=> destello($(id))));
+function siguiente(forzar){
+  if(aleatorio){ let i; do{ i=Math.floor(Math.random()*TRACKS.length); }while(TRACKS.length>1 && i===cur); cargar(i,true); }
+  else if(cur<TRACKS.length-1 || forzar) cargar(cur+1,true);
+  else pintar();
+}
 document.querySelectorAll(".tema[data-t]").forEach(b=>b.addEventListener("click", ()=>{
-  if(EMBEBIDA){ alPadre({s7:"tema", n:+b.dataset.t}); return; }
   const i=TRACKS.findIndex(t=>t.n===+b.dataset.t);
   if(i===cur && loaded) alternar(); else cargar(i,true);
 }));
+
 au.addEventListener("play", pintar);
 au.addEventListener("pause", pintar);
 au.addEventListener("ended", ()=> siguiente(false));
@@ -370,37 +477,20 @@ au.addEventListener("timeupdate", ()=>{
 });
 au.addEventListener("loadedmetadata", ()=> $("p-dur").textContent=mmss(au.duration));
 au.addEventListener("error", ()=>{ $("p-err").hidden=false; pintar(); });
+
 const pos=(el,ev)=>{const r=el.getBoundingClientRect();return Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));};
 $("p-seek").addEventListener("click", ev=>{ if(loaded) au.currentTime=pos($("p-seek"),ev)*(au.duration||TRACKS[cur].d); });
-$("p-vol-bar").addEventListener("click", ev=>{ const v=pos($("p-vol-bar"),ev); au.muted=false; au.volume=v; $("p-volfill").style.width=(v*100)+"%"; pintarVol(); });
-$("p-mute").addEventListener("click", ()=>{ au.muted=!au.muted; $("p-volfill").style.width=(au.muted?0:au.volume*100)+"%"; pintarVol(); });
+$("p-vol-bar").addEventListener("click", ev=>{ const v=pos($("p-vol-bar"),ev); au.volume=v; $("p-volfill").style.width=(v*100)+"%";
+  mudo(v<0.02); destello($("p-vol-ico")); });
 au.volume=0.75; $("p-volfill").style.width="75%";
-/* iconos: mientras se aprieta aparece la version bugeada */
-["play","pause","prev","next","shuffle","vol","mute"].forEach(n=>{ new Image().src=n+".png"; new Image().src=n+"-glitch.png"; });
-function bug(b){
-  const im=b.querySelector(".ico"); if(!im) return;
-  im.src=im.dataset.b; clearTimeout(im._t);
-  im._t=setTimeout(()=>{ im.src=im.dataset.a; }, 260);
-}
-document.querySelectorAll(".pplay,.pic").forEach(b=>b.addEventListener("pointerdown", ()=>bug(b)));
+/* si el tema cambia desde el reproductor de la estación, la ficha lo acompaña */
+window.addEventListener("s7-tema", e=>{ const i=TRACKS.findIndex(t=>t.n===e.detail); if(i>=0) cargar(i,false); });
+
 document.addEventListener("keydown", ev=>{
   if(ev.code==="Space" && !/^(INPUT|TEXTAREA|BUTTON|A)$/.test(document.activeElement.tagName)){
     ev.preventDefault(); alternar();
   }
 });
-/* navegación y estado compartido con la estación */
-document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev=>{
-  if(!EMBEBIDA) return;
-  ev.preventDefault(); alPadre({s7:"ir", a:a.dataset.ir});
-}));
-window.addEventListener("message", ev=>{
-  const m=ev.data||{};
-  if(ev.source!==window.parent || m.s7!=="estado") return;
-  document.querySelectorAll(".tema[data-t]").forEach(b=>b.classList.toggle("son", +b.dataset.t===m.n));
-  $("btn-disco-txt").textContent = m.sonando ? "Pausar disco" : "Escuchar disco";
-});
-document.addEventListener("keydown", ev=>{ if(EMBEBIDA && ev.key==="Escape") alPadre({s7:"ir", a:""}); });
-if(EMBEBIDA) alPadre({s7:"hola"});
 </script>
 </body>
 </html>

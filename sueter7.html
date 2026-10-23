@@ -3,128 +3,114 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sueter 7 — sueter7</title>
+<title>Sobre Sueter 7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
 <style>
 :root{
-  --papel:#e7dfd3; --crema:#fffdf9; --crema-var:#efe9de;
-  --tinta:#141414; --gris:#333; --rojo:#c9452c; --rojo-var:#d24426;
-  --amarillo:#e8c340; --azul:#2c61b2;
-  --display:"Bebas Neue","Arial Narrow",sans-serif;
+  --papel:#eae5db;
+  --tinta:#141414;
+  --rojo:#c9452c;
+  --amarillo:#e8c340;
+  --crema:#fffdf9;
+  --display:"Bebas Neue","Haettenschweiler","Arial Narrow",sans-serif;
   --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{background:var(--papel);color:var(--tinta);font-family:var(--mono);font-size:14px;overflow:hidden}
+html,body{height:100%}
+body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-family:var(--mono)}
 .stage{display:flex;justify-content:center;align-items:flex-start}
-.screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;transform-origin:top center;background:var(--papel)}
-.bg{position:absolute;inset:0;background:var(--papel) url("fondo.png") center/cover no-repeat}
-.screen > *:not(.bg){position:absolute;z-index:2}
-.nav{left:1163px;top:39px;width:690px;height:44px}
-.nav a{position:absolute;top:0;height:44px;display:grid;place-items:center;
-  font-family:var(--display);font-size:20px;letter-spacing:.09em;text-transform:uppercase;
-  background:var(--rojo);color:var(--crema);text-decoration:none;
-  border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta);line-height:1;padding-top:3px}
-.nav a.on{background:var(--amarillo);color:var(--tinta)}
-.nav a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
-.nav a:focus-visible{outline:3px solid var(--azul);outline-offset:3px}
-.volver{left:74px;top:52px;display:flex;align-items:center;gap:12px;text-decoration:none;
-  font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta)}
-.volver svg{transform:rotate(180deg)}
-.volver:hover{color:var(--rojo)}
-.t-1{margin:0;left:87px;top:160px;padding:30px 44px 18px;background:var(--rojo);
-  box-shadow:16px 16px 0 var(--tinta);transform:rotate(-2.2deg)}
-.t-1 span{font-family:var(--mono);font-weight:700;font-size:118px;line-height:.8;letter-spacing:-.02em;color:var(--crema);text-transform:uppercase;white-space:nowrap}
-.t-2{left:150px;top:330px;padding:16px 26px 12px;background:var(--tinta);transform:rotate(-1.2deg)}
-.t-2 span{font-family:var(--mono);font-weight:700;font-size:40px;line-height:1;letter-spacing:-.02em;color:var(--crema);text-transform:uppercase;white-space:nowrap}
-.ficha{left:178px;top:470px;width:1000px;min-height:380px;background:var(--crema);
-  border:3px solid var(--tinta);box-shadow:8px 8px 0 var(--tinta);padding:44px 52px 48px}
-.sello{display:inline-block;margin:0 0 26px;font-family:var(--display);font-size:30px;letter-spacing:.1em;color:var(--rojo);
-  border:3px solid var(--rojo);padding:8px 18px 3px;transform:rotate(-3deg);margin:0 0 26px}
-.lugar{font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:.08em;margin:0 0 12px}
-.texto{font-family:var(--mono);font-size:19px;line-height:1.6;color:var(--gris);margin:0 0 38px;max-width:52ch}
-.botones{display:flex;gap:26px;align-items:center}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;height:54px;padding:4px 30px 0;
-  font-family:var(--display);font-size:26px;letter-spacing:.06em;text-transform:uppercase;line-height:1;text-decoration:none;
-  border:2.5px solid var(--tinta);box-shadow:6px 6px 0 var(--tinta);cursor:pointer}
-.btn:active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--tinta)}
-.btn:focus-visible{outline:3px solid var(--rojo);outline-offset:4px}
-.btn.escuchar{background:var(--azul);color:var(--crema)}
-.btn.escuchar:hover{filter:brightness(1.1)}
-.btn.otro{background:var(--crema);color:var(--tinta)}
-.btn.otro:hover{background:var(--amarillo)}
-.sticker{left:1300px;top:420px;width:230px;height:230px;border-radius:50%;background:var(--rojo-var);
-  border:2.5px solid var(--tinta);display:grid;place-items:center;transform:rotate(-9deg);box-shadow:6px 6px 0 rgba(20,20,20,.35)}
-.sticker::before{content:"";position:absolute;inset:11px;border:1.5px dashed rgba(255,253,249,.6);border-radius:50%}
-.sticker span{font-family:var(--mono);font-size:17px;font-weight:700;line-height:1.5;color:var(--crema);text-align:center}
-.cinta{background:linear-gradient(105deg, rgba(240,232,214,.62), rgba(226,215,192,.78) 45%, rgba(240,232,214,.6));
-  border-top:1px solid rgba(255,255,255,.45);border-bottom:1px solid rgba(20,20,20,.14);box-shadow:0 1px 3px rgba(20,20,20,.18);z-index:9}
+
+.screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;
+  transform-origin:top center;background:var(--papel)}
+.fondo{position:absolute;inset:0;width:100%;height:100%;display:block;-webkit-user-drag:none}
+
+/* zonas que se pueden apretar, encima de la imagen */
+.zona{position:absolute;display:block;cursor:pointer;z-index:4;
+  border:2.5px solid transparent;transition:border-color .14s}
+.zona:hover,.zona:focus-visible{border-color:var(--tinta);outline:none}
+
+.btn-discos{position:absolute;left:168px;top:891px;width:411px;height:34px;z-index:4;
+  display:block;cursor:pointer;transition:transform .1s}
+.btn-discos:hover{transform:translate(-1px,-1px)}
+.btn-discos:focus-visible{outline:2px solid var(--tinta);outline-offset:3px}
+
+.pronto{position:absolute;z-index:8;background:var(--rojo);color:var(--crema);
+  font-size:14px;font-weight:700;letter-spacing:.16em;padding:7px 13px;border:2.5px solid var(--tinta);
+  transform:rotate(-6deg) scale(.7);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
+.pronto.on{opacity:1;transform:rotate(-6deg) scale(1)}
+.fundido{position:absolute;inset:0;background:var(--papel);opacity:0;pointer-events:none;
+  transition:opacity .4s linear;z-index:9}
+.fundido.on{opacity:1}
+
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
+<script src="puente.js"></script>
 </head>
 <body>
 <div class="stage">
   <div class="screen" id="screen">
-    <div class="bg"></div>
-    <a class="volver" href="index.html" data-ir="">
-      <svg width="56" height="26" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M2 16h63M52 5l14 11-14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/></svg>
-      Volver al andén
-    </a>
-    <nav class="nav" aria-label="Secciones">
-        <a href="index.html" data-ir="" style="left:0px;width:88px">Inicio</a>
-        <a href="index.html#sueter7" data-ir="sueter7" class="on" aria-current="page" style="left:110px;width:111px">Sueter 7</a>
-        <a href="index.html#diario" data-ir="diario" style="left:243px;width:92px">Diario</a>
-        <a href="index.html#discos" data-ir="discos" style="left:357px;width:95px">Discos</a>
-        <a href="index.html#tienda" data-ir="tienda" style="left:474px;width:96px">Tienda</a>
-        <a href="index.html#fechas" data-ir="fechas" style="left:592px;width:98px">Fechas</a>
-    </nav>
-    <h1 class="t-1"><span>Sueter 7</span></h1>
-    <div class="t-2"><span>La casa / taller</span></div>
-    <div class="ficha">
-      <p class="sello">Estación en obra</p>
-      <p class="lugar">LA CASA / TALLER</p>
-      <p class="texto">Acá va a vivir la biografía: quiénes son, cómo se armó el disco y desde qué cuarto de la villa se escribieron las canciones.</p>
-      <div class="botones">
-        <button class="btn escuchar" id="btn-disco">
-          <svg width="16" height="20" viewBox="0 0 16 20" aria-hidden="true"><path d="M1 1v18l14-9z" fill="currentColor"/></svg>
-          <span id="btn-disco-txt">Escuchar el disco</span>
-        </button>
-        <a class="btn otro" href="index.html#discos" data-ir="discos">Ver discos</a>
-      </div>
-    </div>
-    <div class="sticker"><span>PASEN,<br>ESTÁ ABIERTO<br>EL TALLER</span></div>
-    <div class="cinta" style="left:150px;top:452px;width:110px;height:36px;transform:rotate(-22deg)"></div>
-    <div class="cinta" style="left:1110px;top:838px;width:120px;height:36px;transform:rotate(14deg)"></div>
+    <img class="fondo" src="sobre-fondo.jpg"
+         alt="Sobre Sueter 7: proyecto personal que nace en la rutina, entre cuadernos, caminatas y canciones.">
+
+    <!-- navegación: va encima de los botones que ya están en el diseño -->
+    <a class="zona" href="index.html"   style="left:1220px;top:22px;width:88px;height:44px"  aria-label="Inicio"></a>
+    <a class="zona" href="sueter7.html" style="left:1330px;top:22px;width:111px;height:44px" aria-label="Sueter 7" aria-current="page"></a>
+    <a class="zona" href="diario.html"  style="left:1463px;top:22px;width:92px;height:44px"  aria-label="Diario"></a>
+    <a class="zona" href="discos.html"  style="left:1577px;top:22px;width:95px;height:44px"  aria-label="Discos"></a>
+    <a class="zona" href="tienda.html"  style="left:1694px;top:22px;width:96px;height:44px"  aria-label="Tienda"></a>
+    <a class="zona" href="fechas.html"  style="left:1812px;top:22px;width:98px;height:44px"  aria-label="Fechas"></a>
+
+    <a class="btn-discos" href="discos.html" aria-label="Ir a Discos"></a>
+
+    <div class="pronto" id="pronto">PRONTO</div>
+    <div class="fundido" id="fundido"></div>
   </div>
 </div>
+
 <script>
 "use strict";
-/* Página de sección: vive adentro de la estación (index.html), que tiene el
-   reproductor persistente. Si se abre suelta, se redirige ahí. */
-const EMBEBIDA = window.parent !== window;
-if(!EMBEBIDA) location.replace("index.html#sueter7");
-const alPadre = m => { try{ window.parent.postMessage(m, "*"); }catch(e){} };
+const $=id=>document.getElementById(id);
+const dormir = ms => new Promise(r=>setTimeout(r, ms));
+const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 function fit(){
-  const s=document.getElementById("screen"), stage=s.parentElement;
-  const k=Math.min(stage.parentElement.clientWidth/1920, window.innerHeight/1080);
-  s.style.transform="scale("+k+")"; stage.style.height=(1080*k)+"px";
+  const s=$("screen"), stage=s.parentElement;
+  const k=Math.min(1, stage.parentElement.clientWidth/1920);
+  s.style.transform="scale("+k+")";
+  stage.style.height=(1080*k)+"px";
 }
-addEventListener("resize", fit); fit();
-document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev=>{
-  if(!EMBEBIDA) return; ev.preventDefault(); alPadre({s7:"ir", a:a.dataset.ir});
-}));
-document.getElementById("btn-disco").addEventListener("click", ()=> alPadre({s7:"alternar"}));
-addEventListener("message", ev=>{
-  const m=ev.data||{};
-  if(ev.source!==window.parent || m.s7!=="estado") return;
-  document.getElementById("btn-disco-txt").textContent = m.sonando ? "Pausar el disco" : "Escuchar el disco";
+window.addEventListener("resize", fit); fit();
+
+/* si la página todavía no existe, avisa en vez de tirar 404 */
+let yendo=false;
+async function existe(url){
+  try{ const r=await fetch(url,{method:"HEAD"}); return r.ok; }catch(e){ return false; }
+}
+document.querySelectorAll("a[href$='.html']").forEach(a=>{
+  a.addEventListener("click", async ev=>{
+    ev.preventDefault();
+    if(yendo) return;
+    const destino=a.getAttribute("href");
+    if(destino==="sueter7.html") return;
+    yendo=true;
+    if(await existe(destino)){
+      $("fundido").classList.add("on");
+      await dormir(quieto?0:380);
+      location.href=destino;
+      return;
+    }
+    const r=a.getBoundingClientRect(), s=$("screen").getBoundingClientRect(), k=s.width/1920;
+    const sello=$("pronto");
+    sello.style.left=((r.left-s.left)/k + a.offsetWidth/2 - 48)+"px";
+    sello.style.top =((r.top -s.top )/k + a.offsetHeight + 12)+"px";
+    sello.classList.add("on");
+    await dormir(1100);
+    sello.classList.remove("on");
+    yendo=false;
+  });
 });
-document.addEventListener("keydown", ev=>{
-  if(ev.key==="Escape") alPadre({s7:"ir", a:""});
-  if(ev.code==="Space" && !/^(BUTTON|A)$/.test(document.activeElement.tagName)){ ev.preventDefault(); alPadre({s7:"alternar"}); }
-});
-alPadre({s7:"hola"});
 </script>
 </body>
 </html>

@@ -183,33 +183,40 @@ function fit(){
 addEventListener("resize", fit); fit();
 
 /* ---------- navegación entre secciones ---------- */
-const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html", fechas:"fechas.html"};
-const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda", fechas:"Fechas"};
+const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
+  fechas:"fechas.html", letras:"letras.html", compra:"compra.html"};
+const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",
+  fechas:"Fechas", letras:"Letras", compra:"Tu compra"};
 const sec=$("seccion"), marco=$("marco");
 const quieto=matchMedia("(prefers-reduced-motion: reduce)");
-let abierta="";
+let abierta="";          /* la ruta abierta: nombre + consulta, p. ej. "letras?tema=3" */
 
+const partir=ruta=>{ const i=ruta.indexOf("?"); return i<0 ? [ruta,""] : [ruta.slice(0,i), ruta.slice(i)]; };
 function recorte(nombre){
-  // la sección se abre desde la puerta que se tocó
+  // la sección se abre desde la puerta que se tocó (o desde el centro si no tiene puerta)
   const p=document.querySelector(`.puerta[data-ir="${nombre}"]`);
   if(!p) return "inset(50% 50% 50% 50%)";
   const l=parseFloat(p.style.left), t=parseFloat(p.style.top), w=parseFloat(p.style.width), h=parseFloat(p.style.height);
   return `inset(${t}px ${W-l-w}px ${1016-t-h}px ${l}px)`;
 }
-function ir(nombre, conHistoria){
+function ir(nombre, q){
   nombre = PAGINAS[nombre] ? nombre : "";
-  const actual = location.hash.slice(1);
-  if(conHistoria !== false && actual !== nombre){
-    history.pushState(null, "", nombre ? "#"+nombre : location.pathname+location.search);
+  q = nombre ? (q||"") : "";
+  if(nombre==="letras" && !q) q="?tema="+TRACKS[cur].n;   // las letras abren en el tema que suena
+  const ruta = nombre + q;
+  if(decodeURIComponent(location.hash.slice(1)) !== ruta){
+    history.pushState(null, "", ruta ? "#"+ruta : location.pathname+location.search);
   }
-  mostrar(nombre);
+  mostrar(ruta);
 }
-function mostrar(nombre){
-  if(nombre===abierta) return;
-  const anterior=abierta; abierta=nombre;
+function mostrar(ruta){
+  if(ruta===abierta) return;
+  const [nombre, q]=partir(ruta);
+  if(nombre && !PAGINAS[nombre]) return mostrar("");
+  const anterior=partir(abierta)[0]; abierta=ruta;
   sec.style.transition = quieto.matches ? "none" : "";
   if(nombre){
-    const src=PAGINAS[nombre];
+    const src=PAGINAS[nombre]+q;
     // replace() en vez de cambiar src: así el iframe no suma pasos al historial
     // y el botón "atrás" del navegador sigue el hash de la estación
     if(marco.dataset.pagina!==src){ marco.dataset.pagina=src; marco.contentWindow.location.replace(src); }
@@ -230,7 +237,7 @@ function mostrar(nombre){
 document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev=>{
   ev.preventDefault(); ir(a.dataset.ir);
 }));
-addEventListener("popstate", ()=> mostrar(location.hash.slice(1)));
+addEventListener("popstate", ()=> mostrar(decodeURIComponent(location.hash.slice(1))));
 addEventListener("keydown", ev=>{ if(ev.key==="Escape" && abierta) ir(""); });
 $("p-thumb").addEventListener("click", ()=> ir("discos"));
 
@@ -303,9 +310,11 @@ au.addEventListener("ended", ()=> siguiente(false));
 let ultimoGuardado=0;
 au.addEventListener("timeupdate", ()=>{
   pintarTiempo(au.currentTime, au.duration||TRACKS[cur].d);
+  avisar();
   if(Date.now()-ultimoGuardado>4000){ ultimoGuardado=Date.now(); guardar(); }
 });
-au.addEventListener("loadedmetadata", ()=> $("p-dur").textContent=mmss(au.duration));
+au.addEventListener("loadedmetadata", ()=>{ $("p-dur").textContent=mmss(au.duration); avisar(); });
+au.addEventListener("seeked", avisar);
 au.addEventListener("error", ()=>{ if(loaded){ $("p-err").hidden=false; pintar(); } });
 
 /* barras arrastrables (posición y volumen) */
@@ -352,20 +361,35 @@ document.addEventListener("keydown", ev=>{
 
 /* ---------- diálogo con la sección abierta ---------- */
 function avisar(){
-  try{ marco.contentWindow.postMessage({s7:"estado", n:TRACKS[cur].n, sonando:sonando()}, "*"); }catch(e){}
+  try{
+    marco.contentWindow.postMessage({s7:"estado", n:TRACKS[cur].n, sonando:sonando(), cargado:loaded,
+      t:au.currentTime||0, d:au.duration||TRACKS[cur].d}, "*");
+  }catch(e){}
 }
+const indice=n=>TRACKS.findIndex(t=>t.n===n);
 addEventListener("message", ev=>{
   if(ev.source!==marco.contentWindow) return;
   const m=ev.data||{};
   if(m.s7==="hola") avisar();
-  else if(m.s7==="ir") ir(m.a||"");
+  else if(m.s7==="ir") ir(m.a||"", m.q||"");
   else if(m.s7==="tema") tocarTema(+m.n);
   else if(m.s7==="alternar") alternar();
+  /* lo que piden Discos y Letras a través de su audio de puente */
+  else if(m.s7==="cargar"){ const i=indice(+m.n); if(i>=0 && (i!==cur || !loaded)) cargar(i, sonando()); }
+  else if(m.s7==="play"){
+    const i=indice(+m.n);
+    if(i>=0 && (i!==cur || !loaded)) cargar(i,true); else au.play().catch(()=>{});
+  }
+  else if(m.s7==="pausa") au.pause();
+  else if(m.s7==="buscar"){
+    const t=+m.t||0;
+    if(!loaded) cargar(cur,false,t); else { try{ au.currentTime=t; }catch(e){} }
+  }
 });
 marco.addEventListener("load", avisar);
 
 /* entrar directo a una sección (index.html#discos) */
-if(location.hash) mostrar(location.hash.slice(1));
+if(location.hash) mostrar(decodeURIComponent(location.hash.slice(1)));
 </script>
 </body>
 </html>

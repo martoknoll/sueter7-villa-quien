@@ -20,8 +20,14 @@ cuentan hallazgos, nunca puntos ni tiempos.
 | Archivo | Qué es |
 |---|---|
 | `index.html` | **Inicio — la estación.** Andén con las cuatro puertas (Sueter7, Diario, Discos, Tienda) y el reproductor persistente. Las secciones se abren adentro de esta página, así la música no se corta al navegar. |
-| `discos.html` | Pantalla **Discos y Canciones** con la estética definitiva. Usa el reproductor de la estación. |
-| `sueter7.html`, `diario.html`, `tienda.html`, `fechas.html` | Secciones provisorias ("estación en obra"), ya conectadas a la navegación. |
+| `discos.html` | **Discos y Canciones**, con acceso a las letras del tema que suena. |
+| `letras.html` | **Letras** sincronizadas: se resaltan solas siguiendo el reproductor de la estación. |
+| `sueter7.html` | **Sobre Sueter 7**. |
+| `tienda.html` | **Tienda** con carrito y cobro por Mercado Pago (el pago se abre en la ventana entera). |
+| `fechas.html` | **Próximas fechas**. |
+| `compra.html` | Vuelta de Mercado Pago: pago aprobado, pendiente o rechazado. |
+| `diario.html` | **Diario**, todavía provisorio ("estación en obra"). |
+| `puente.js` | Conecta cada sección con la estación: navegación y reproductor compartido. |
 | `proyecto.html` | Portada del proyecto académico: piezas, documentos y sprints. |
 | `img/` | Escena de la estación, carteles, puertas y tapa en versión liviana. |
 | `prototipo.html` | Prototipo navegable de baja fidelidad, once pantallas conectadas. |

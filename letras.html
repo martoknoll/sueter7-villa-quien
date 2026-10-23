@@ -1,0 +1,1388 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letra — sueter7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --papel:#e7dfd3;
+  --crema:#fffdf9;
+  --crema-var:#efe9de;
+  --tinta:#141414;
+  --gris:#333;
+  --rojo:#c9452c;
+  --amarillo:#e8c340;
+  --azul:#2c61b2;
+  --verde:#1db954;
+  --display:"Bebas Neue","Haettenschweiler","Arial Narrow",sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{height:100%}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono);overflow-x:hidden}
+.stage{display:flex;justify-content:center;align-items:flex-start}
+
+.screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;
+  transform-origin:top center;background:var(--papel);font-family:var(--mono);color:var(--tinta)}
+.bg{position:absolute;inset:0;pointer-events:none;
+  background:var(--papel) url("fondo.png") center/cover no-repeat}
+.screen > *:not(.bg){position:absolute;z-index:2}
+
+/* ---------- navegación (misma que el resto del sitio) ---------- */
+.nav{left:1163px;top:39px;width:690px;height:44px}
+.nav a{
+  position:absolute;top:0;height:44px;display:grid;place-items:center;
+  font-family:var(--display);font-size:20px;letter-spacing:.09em;text-transform:uppercase;
+  background:var(--rojo);color:var(--crema);text-decoration:none;
+  border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta);line-height:1;padding-top:3px;
+  transition:transform .1s,box-shadow .1s}
+.nav a.on{background:var(--amarillo);color:var(--tinta)}
+.nav a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
+
+/* ---------- encabezado ---------- */
+.flecha{left:74px;top:67px;width:72px;height:32px;cursor:pointer;background:transparent;border:0;padding:0}
+.volver{left:74px;top:104px;font-family:var(--display);font-size:19px;letter-spacing:.09em;
+  color:var(--rojo);text-decoration:none;text-transform:uppercase}
+.volver:hover{text-decoration:underline}
+
+.kicker{font-family:var(--mono);font-size:13px;font-weight:700;
+  letter-spacing:.22em;color:var(--rojo);text-transform:uppercase;margin-bottom:9px}
+.titulo{margin:0 0 34px;font-family:var(--mono);font-weight:700;
+  font-size:46px;line-height:.95;letter-spacing:-.02em;text-transform:uppercase;color:var(--tinta)}
+
+/* ---------- lista de temas ---------- */
+.lista{left:122px;top:188px;width:356px}
+.lista .lbl{font-family:var(--display);font-size:20px;letter-spacing:.09em;color:var(--gris);
+  border-bottom:2px solid var(--tinta);padding-bottom:3px;margin-bottom:6px}
+.tema{display:grid;grid-template-columns:40px 1fr;align-items:center;width:100%;
+  height:36px;padding:0 8px;border:0;background:transparent;font:inherit;text-align:left;cursor:pointer;
+  border-bottom:1px solid rgba(20,20,20,.22);transition:background .12s}
+.tema:hover{background:rgba(232,195,64,.5)}
+.tema.son{background:var(--amarillo)}
+.tema.son .t{font-weight:700}
+.tema:focus-visible{outline:2px solid var(--rojo);outline-offset:-2px}
+.tema .n{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--rojo)}
+.tema .t{font-family:var(--mono);font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tema .mark{font-family:var(--mono);font-size:11px;color:var(--gris)}
+
+/* ---------- tira de papel con la letra ---------- */
+.tira{left:548px;top:176px;width:852px;height:486px;background:var(--crema);
+  border:2.5px solid var(--tinta);box-shadow:14px 14px 0 var(--tinta);
+  transition:top .22s ease,height .22s ease}
+.tira.completa{top:118px;height:824px}
+
+/* ---------- lectura de a dos líneas ---------- */
+.cuerpo{position:absolute;left:0;right:0;top:74px;bottom:0;padding:40px 52px 0;overflow:hidden;z-index:2}
+.tira.completa .cuerpo{display:none}
+.doble{position:relative}
+.l1{position:relative;display:inline-block;max-width:100%;padding:11px 17px;overflow:hidden;
+  font-family:var(--mono);font-weight:700;font-size:30px;line-height:1.3;letter-spacing:-.012em;
+  color:var(--tinta);background:rgba(232,195,64,.32);box-shadow:7px 7px 0 var(--tinta);
+  min-height:56px;transition:background-color .2s}
+.l1 i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--amarillo);z-index:0;
+  transition:width .12s linear}
+.l1 b{position:relative;z-index:1;font-weight:inherit}
+.l1.muda{background:transparent;box-shadow:none;color:var(--rojo);letter-spacing:.3em;padding-left:2px}
+.l1.muda i{display:none}
+.l2{margin-top:24px;padding:0 17px;font-family:var(--mono);font-size:23px;line-height:1.35;
+  color:var(--tinta);opacity:.36;min-height:32px}
+.nota{position:absolute;left:52px;right:52px;bottom:26px;font-family:var(--mono);font-size:13px;
+  line-height:1.65;color:var(--gris)}
+.nota b{color:var(--tinta)}
+.nota button{font:inherit;font-weight:700;color:var(--rojo);background:transparent;border:0;padding:0;
+  cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.cabeza .acciones{display:flex;gap:9px}
+/* el borde rasgado va en una capa aparte para no cortar la sombra */
+.tira::before,.tira::after{content:"";position:absolute;left:-2.5px;right:-2.5px;height:12px;
+  background:var(--papel);pointer-events:none;z-index:4}
+.tira::before{top:-2.5px;
+  clip-path:polygon(0 0,100% 0,100% 6px,96% 11px,92% 4px,88% 10px,84% 3px,80% 9px,76% 4px,72% 11px,68% 5px,64% 10px,60% 3px,56% 9px,52% 4px,48% 11px,44% 5px,40% 10px,36% 3px,32% 9px,28% 4px,24% 11px,20% 5px,16% 10px,12% 3px,8% 9px,4% 4px,0 10px)}
+.tira::after{bottom:-2.5px;
+  clip-path:polygon(0 12px,100% 12px,100% 6px,96% 1px,92% 8px,88% 2px,84% 9px,80% 3px,76% 8px,72% 1px,68% 7px,64% 2px,60% 9px,56% 3px,52% 8px,48% 1px,44% 7px,40% 2px,36% 9px,32% 3px,28% 8px,24% 1px,20% 7px,16% 2px,12% 9px,8% 3px,4% 8px,0 2px)}
+
+.tira .cabeza{position:absolute;left:0;right:0;top:0;height:74px;border-bottom:2px dashed rgba(20,20,20,.35);
+  display:flex;align-items:center;justify-content:space-between;padding:14px 32px 0;z-index:3;background:var(--crema)}
+.tira .cabeza .quien{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gris)}
+.btn-cabeza{font-family:var(--display);font-size:17px;letter-spacing:.09em;text-transform:uppercase;
+  background:var(--rojo);color:var(--crema);border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta);
+  padding:5px 12px 2px;cursor:pointer;transition:transform .1s,box-shadow .1s}
+.btn-cabeza:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
+
+.rollo{position:absolute;left:0;right:0;top:74px;bottom:0;overflow-y:auto;overflow-x:hidden;display:none;
+  padding:60px 60px 480px;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 58px,#000 calc(100% - 90px),transparent 100%);
+          mask-image:linear-gradient(180deg,transparent 0,#000 58px,#000 calc(100% - 90px),transparent 100%)}
+.rollo::-webkit-scrollbar{width:0;height:0}
+.tira.completa .rollo{display:block}
+
+.verso{display:block;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;
+  font-family:var(--mono);font-size:23px;line-height:1.42;letter-spacing:-.005em;color:var(--tinta);
+  padding:7px 10px;margin:0 0 10px;opacity:.34;transition:opacity .18s,background-color .18s}
+.verso:hover{opacity:.72;background:rgba(232,195,64,.35)}
+.verso:focus-visible{outline:2px solid var(--rojo);outline-offset:-2px}
+.verso.ahora{opacity:1;font-weight:700;background:var(--amarillo);
+  box-shadow:5px 5px 0 rgba(20,20,20,.9)}
+.verso.ya{opacity:.22}
+.pausa{display:flex;gap:9px;align-items:center;padding:12px 10px 18px;opacity:.5}
+.pausa i{width:7px;height:7px;background:var(--rojo);display:block}
+
+/* letra sin sincronizar: se lee igual, pero no se resalta ni se puede tocar */
+.suelta{padding:4px 0 0}
+.suelta .sello{display:inline-flex;align-items:center;gap:9px;margin:0 0 26px 10px;
+  background:var(--azul);color:var(--crema);font-family:var(--mono);font-size:10.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;border:2px solid var(--tinta)}
+.suelta .linea{font-family:var(--mono);font-size:22px;line-height:1.46;letter-spacing:-.005em;
+  color:var(--tinta);opacity:.84;padding:3px 10px;margin:0}
+.suelta .espacio{height:24px}
+.suelta .cierre{margin:34px 10px 0;padding-top:20px;border-top:2px dashed rgba(20,20,20,.3);
+  font-family:var(--mono);font-size:13.5px;line-height:1.7;color:var(--gris);max-width:52ch}
+.suelta .cierre button{font:inherit;font-weight:700;color:var(--rojo);background:transparent;border:0;
+  padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+.vacio{padding:36px 10px 0;max-width:46ch}
+.vacio h2{font-family:var(--mono);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:0 0 14px;
+  text-transform:uppercase}
+.vacio p{font-family:var(--mono);font-size:15px;line-height:1.7;color:var(--gris);margin:0 0 14px}
+.vacio .b{display:inline-block;margin-top:10px;font-family:var(--display);font-size:19px;letter-spacing:.09em;
+  text-transform:uppercase;background:var(--amarillo);color:var(--tinta);border:2.5px solid var(--tinta);
+  box-shadow:4px 4px 0 var(--tinta);padding:7px 16px 4px;cursor:pointer;transition:transform .1s,box-shadow .1s}
+.vacio .b:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--tinta)}
+
+.aviso-demo{position:absolute;left:32px;bottom:22px;z-index:5;background:var(--azul);color:var(--crema);
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 11px;border:2px solid var(--tinta);display:flex;gap:12px;align-items:center}
+.aviso-demo button{font:inherit;background:var(--crema);color:var(--tinta);border:2px solid var(--tinta);
+  padding:1px 7px;cursor:pointer}
+
+
+/* ---------- REPRODUCTOR (mismo componente que en Discos) ---------- */
+.player{left:-8px;top:979px;width:1936px;height:102px;background:var(--crema-var);
+  border-top:2.5px solid var(--tinta);color:var(--tinta);z-index:10}
+.pthumb{position:absolute;left:13px;top:17px;width:68px;height:68px;border:1.5px solid var(--tinta);overflow:hidden;background:#000}
+.pthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ptitle{position:absolute;left:99px;top:25px;font-family:var(--mono);font-size:21px;font-weight:700;line-height:1;letter-spacing:.01em;
+  white-space:nowrap;max-width:400px;overflow:hidden;text-overflow:ellipsis}
+.palbum{position:absolute;left:99px;top:56px;font-family:var(--mono);font-size:15px;color:var(--gris);
+  white-space:nowrap;max-width:400px;overflow:hidden;text-overflow:ellipsis}
+
+.pplay{position:absolute;left:521px;top:23px;width:56px;height:56px;background:transparent;border:0;padding:0;cursor:pointer;transition:transform .1s}
+.pplay:hover{transform:scale(1.06)}
+.pplay:active{transform:scale(.93)}
+.pplay:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
+
+.ic-wrap{position:absolute;inset:0;display:block}
+.ic{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;user-select:none;-webkit-user-drag:none}
+.ic-b{opacity:0;transform:scale(1.17)}
+.pplay:active .ic-a,.pic:active .ic-a,.glitch .ic-a,.pic.on .ic-a{opacity:0}
+.pplay:active .ic-b,.pic:active .ic-b,.glitch .ic-b,.pic.on .ic-b{opacity:1}
+
+.pseek{position:absolute;left:605px;top:42px;width:764px;height:16px;display:flex;align-items:center;cursor:pointer}
+.pseek::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(20,20,20,.25)}
+.pseek i{position:absolute;left:0;height:3px;width:0;background:var(--rojo)}
+.pseek b{position:absolute;left:0;width:15px;height:15px;border-radius:50%;background:var(--tinta);transform:translateX(-50%)}
+.pcur{position:absolute;left:605px;top:66px;font-family:var(--mono);font-size:14px;color:var(--gris);font-variant-numeric:tabular-nums}
+.pdur{position:absolute;left:1328px;top:66px;width:44px;text-align:right;font-family:var(--mono);font-size:14px;color:var(--gris);font-variant-numeric:tabular-nums}
+
+.pic{position:absolute;background:transparent;border:0;cursor:pointer;padding:0;display:block;
+  opacity:.92;transition:opacity .12s,transform .1s}
+.pic:hover{opacity:1}
+.pic:active{transform:scale(.92)}
+.pic:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
+.p-shuffle{left:1448px;top:34px;width:34px;height:34px}
+.p-prev{left:1510px;top:35px;width:32px;height:32px}
+.p-next{left:1566px;top:35px;width:32px;height:32px}
+.p-vol{left:1624px;top:35px;width:32px;height:32px}
+.pvolbar{position:absolute;left:1659px;top:42px;width:86px;height:16px;display:flex;align-items:center;cursor:pointer}
+.pvolbar::before{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(20,20,20,.25)}
+.pvolbar i{position:absolute;left:0;height:3px;width:75%;background:var(--tinta)}
+.perr{position:absolute;right:24px;top:-18px;background:var(--rojo);color:var(--crema);z-index:3;
+  font-family:var(--mono);font-size:10px;letter-spacing:.07em;padding:3px 9px;border:2px solid var(--tinta)}
+
+@media (prefers-reduced-motion:reduce){ *{transition:none !important;scroll-behavior:auto !important} }
+</style>
+<script src="puente.js"></script>
+</head>
+<body>
+<div class="stage">
+  <div class="screen" id="screen">
+    <div class="bg"></div>
+
+    <nav class="nav">
+      <a href="index.html"   style="left:0;width:88px">Inicio</a>
+      <a href="sueter7.html" style="left:110px;width:111px">Sueter 7</a>
+      <a href="diario.html"  style="left:243px;width:92px">Diario</a>
+      <a href="discos.html"  class="on" style="left:357px;width:95px">Discos</a>
+      <a href="tienda.html"  style="left:474px;width:96px">Tienda</a>
+      <a href="fechas.html"  style="left:592px;width:98px">Fechas</a>
+    </nav>
+
+    <svg class="flecha" viewBox="0 0 72 32" fill="none" aria-hidden="true">
+      <path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/>
+    </svg>
+    <a class="volver" href="discos.html">Volver a discos</a>
+
+    <div class="lista">
+      <div class="lbl">Todo salió bien en la Sencilla Villa Quién</div>
+      <div id="lista-temas"></div>
+    </div>
+
+    <!-- tira de papel con la letra -->
+    <div class="tira" id="tira">
+      <div class="cabeza">
+        <div class="quien" id="cab-tema">Tema 1 · Escritorio</div>
+        <div class="acciones">
+          <button class="btn-cabeza" id="ver-completa">Letra completa</button>
+        </div>
+      </div>
+
+      <div class="cuerpo">
+        <div class="kicker">Letra</div>
+        <h1 class="titulo" id="titulo">Escritorio</h1>
+        <div class="doble">
+          <div class="l1" id="l1"><i id="l1-fill"></i><b id="l1-txt"></b></div>
+          <div class="l2" id="l2"></div>
+        </div>
+        <div class="nota" id="nota"></div>
+      </div>
+
+      <div class="rollo" id="rollo"></div>
+
+      <div class="aviso-demo" id="aviso-demo" hidden>
+        <span>Letra de muestra, para ver el efecto</span>
+        <button type="button" id="salir-demo">Salir</button>
+      </div>
+
+    </div>
+
+    <!-- reproductor -->
+    <div class="player" id="player">
+      <div class="pthumb"><img src="img/tapa-800.jpg" alt="" id="pthumb-img"></div>
+      <div class="ptitle" id="p-title">Escritorio</div>
+      <div class="palbum">Todo Salió Bien en la Sencilla Villa Quién</div>
+
+      <button class="pplay" id="p-play" aria-label="Reproducir">
+        <span class="ic-wrap" id="ico-play"><img class="ic ic-a" src="play.png" alt=""><img class="ic ic-b" src="play-glitch.png" alt=""></span>
+        <span class="ic-wrap" id="ico-pause" hidden><img class="ic ic-a" src="pause.png" alt=""><img class="ic ic-b" src="pause-glitch.png" alt=""></span>
+      </button>
+
+      <div class="pseek" id="p-seek"><i id="p-fill"></i><b id="p-knob"></b></div>
+      <span class="pcur" id="p-cur">0:00</span>
+      <span class="pdur" id="p-dur">6:38</span>
+
+      <button class="pic p-shuffle" id="p-shuffle" aria-label="Aleatorio" aria-pressed="false"><img class="ic ic-a" src="shuffle.png" alt=""><img class="ic ic-b" src="shuffle-glitch.png" alt=""></button>
+      <button class="pic p-prev" id="p-prev" aria-label="Anterior"><img class="ic ic-a" src="prev.png" alt=""><img class="ic ic-b" src="prev-glitch.png" alt=""></button>
+      <button class="pic p-next" id="p-next" aria-label="Siguiente"><img class="ic ic-a" src="next.png" alt=""><img class="ic ic-b" src="next-glitch.png" alt=""></button>
+      <span class="pic p-vol" id="p-vol-ico" aria-hidden="true"><img class="ic ic-a" id="ic-vol-a" src="vol.png" alt=""><img class="ic ic-b" id="ic-vol-b" src="vol-glitch.png" alt=""></span>
+      <div class="pvolbar" id="p-vol-bar"><i id="p-volfill"></i></div>
+
+      <span class="perr" id="p-err" hidden>no se encuentra el audio</span>
+    </div>
+
+    <audio id="au" preload="none"></audio>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =====================================================================
+   LETRAS — formato LRC, una línea por verso: [mm:ss.cc]texto
+
+   Para cambiar o cargar una letra, pegá su archivo .lrc acá abajo,
+   entre las comillas invertidas del tema que corresponda. Nada más.
+   ===================================================================== */
+const LRC = {
+  1: `[ti:Escritorio]
+[ar:sueter7]
+[al:Todo Salió Bien en la Sencilla Villa Quién]
+[length:06:38.57]
+[offset:0]
+
+[00:00.00]
+[00:30.46]Cuánta juventud, cuánta gente como yo
+[00:36.88]paseándose en los parques de su mente
+[00:41.14]besando fantasías suavemente
+[00:46.12]Un tesoro más hecho para desfilar
+[00:52.48]se ahoga en el tintero del ensueño
+[00:56.82]que esconde la rutina de su dueño
+[01:00.50]
+[01:32.90]Noches de ciudad que pudimos adornar
+[01:39.88]perdidas entre horas liminales
+[01:43.50]en vías y en tarea interminable
+[01:48.54]Solo para ver si algún día puedo ser
+[01:54.30]la persona que me han imaginado
+[01:58.60]pagando lo que sea necesario
+[02:03.00]
+[02:35.16]Pero hay algo tan real entre cables y metal
+[02:43.42]Diseñado para mí para conocerte a ti
+[02:50.62]Un camino sin andar para no volver atrás
+[02:58.46]Diseñado para mí para conocerte a ti
+[03:06.22]Diseñado para mí para conocerte a ti
+[03:14.80]
+[03:47.30]Una intención que nunca se vuelve acción
+[03:52.38]empuja tras la puerta de su cuarto
+[03:56.58]cansada del sabor de estar mirando
+[04:02.35]No quiero esperar, siempre ha sido esperar
+[04:08.38]que se acabe este momento transitorio
+[04:12.62]la vida no entra en un escritorio
+[04:16.40]
+[05:03.96]Pero hay algo tan real entre cables y metal
+[05:12.74]Diseñado para mí para conocerte a ti
+[05:20.34]Un camino sin andar para no volver atrás
+[05:28.08]Diseñado para mí para conocerte a ti
+[05:36.12]Diseñado para mí para conocerte a ti
+[05:43.46]Diseñado para mí para conocerte a ti
+[05:51.70]Diseñado para mí para conocerte a ti
+[05:59.00]`,
+  2: `[ti:Confluencias]
+[ar:sueter7]
+[al:Todo Salió Bien en la Sencilla Villa Quién]
+[length:03:40.29]
+[offset:0]
+
+[00:00.00]
+[00:12.14]Nadie elige el momento ideal
+[00:17.14]para encontrarse en los brazos que van
+[00:22.38]a soltar cada pieza de lugar
+[00:28.55]
+[00:31.66]No fue casual y no fue intencional
+[00:36.62]Son decisiones que quieren jugar
+[00:41.88]en secreto a dejarnos justo acá
+[00:50.30]Tal vez sea pronto, pero
+[00:54.28]¿de que sirve navegar con miedo a desembocar
+[01:00.80]donde el agua es clara y los aires calman?
+[01:06.14]Ser una caricia
+[01:11.21]Vamos a nadar
+[01:17.00]Ven a abrigarme en voz baja y verás
+[01:22.60]que el muro se empieza a desdibujar
+[01:27.84]derramando viejas sombras sobre ti
+[01:34.15]
+[01:37.60]Llego al invierno sin armas y se
+[01:42.08]que en la mirada siempre llevarás
+[01:47.54]lo que vale arriesgarse a confluir
+[01:56.16]Tal vez sea pronto, pero
+[01:59.30]¿de que sirve navegar con miedo a desembocar
+[02:06.02]donde el agua es clara y los aires calman?
+[02:11.28]Ser una caricia
+[02:13.58]Vamos a nadar
+[02:16.34]Tal vez sea pronto, pero
+[02:19.26]¿de que sirve navegar con miedo a desembocar
+[02:26.14]donde el agua es clara y los aires calman?
+[02:31.14]Ser una caricia
+[02:36.22]Vamos a nadar
+[02:38.79]
+[03:15.94]Tal vez sea pronto, pero
+[03:19.26]¿de que sirve navegar con miedo a desembocar
+[03:25.62]donde el agua es clara y los aires calman?
+[03:31.42]Ser una caricia
+[03:35.64]Vamos a nadar`,
+  3: `[ti:Enero Cuervo]
+[ar:sueter7]
+[al:Todo Salió Bien en la Sencilla Villa Quién]
+[length:05:33.75]
+[offset:0]
+
+[00:00.00]
+[00:30.00]Diciembre hizo magia otra vez
+[00:36.38]y ató los cabos sueltos por un mes
+[00:43.34]La tarde se enrojece de pudor
+[00:50.20]y con su baile frágil reflorece
+[00:56.57]
+[01:00.00]¿Qué hago con el tiempo muerto?
+[01:03.83]
+[01:09.00]Olvidar presentimientos
+[01:10.81]
+[01:27.88]Enero cuervo sabe que es el fin
+[01:33.90]en su aleteo mudo lo advertí
+[01:41.32]La nube ya gastó su tornasol
+[01:47.96]Y lloverá desvelos sobre mí
+[01:57.74]¿Qué hago con el tiempo muerto?
+[02:02.15]
+[02:05.36]Olvidar presentimientos
+[02:08.53]
+[02:11.46]¿Qué hago con el tiempo muerto?
+[02:16.01]
+[02:19.12]Olvidar presentimientos
+[02:22.63]
+[02:53.90]Una vereda de suspenso
+[02:59.62]Sortear tu cara en el andén
+[03:05.76]Pisando un trozo de este siglo
+[03:11.16]hay tanto gris llegando al Sur
+[03:15.43]
+[04:14.42]¿Qué hago con el tiempo muerto?
+[04:18.85]
+[04:22.46]Olvidar presentimientos
+[04:28.16]¿Qué hago con el tiempo muerto?
+[04:30.19]
+[04:35.80]Olvidar presentimientos
+[04:40.53]`,
+  4: `[ti:De Chungking a Mendoza]
+[ar:sueter7]
+[al:Todo Salió Bien en la Sencilla Villa Quién]
+[length:05:22.55]
+[offset:0]
+
+[00:00.00]
+[00:40.20]Como un roce de manos hay un vuelo perdido
+[00:45.98]Esperando su turno con maletas de almohada
+[00:52.12]Imagina la cara de la voz en la radio
+[00:59.12]Prometer una vida que no cabe en diarios
+[01:05.12]Corazones expiran aunque estén enlatados
+[01:10.80]aunque viajen seguros por envíos cifrados
+[01:18.35]
+[01:30.62]Tu sol amanecido pasa por la persiana
+[01:36.62]Y convierte en estrellas el polvo de mi cama
+[01:43.63]La persona perfecta vive en otro planeta
+[01:49.99]Mientras voy abrazando lo que tengo en la tierra
+[01:56.12]Corazones expiran aunque estén enlatados
+[02:02.12]aunque viajen seguros por envíos cifrados
+[02:07.46]Corazones expiran aunque estén enlatados
+[02:14.08]aunque viajen seguros por envíos cifrados
+[02:20.17]
+[02:23.00]Un asiento guardado de Chungking a Mendoza
+[02:32.65]
+[03:45.00]Corazones expiran aunque estén enlatados
+[03:51.20]aunque viajen seguros por envíos cifrados
+[03:56.88]Corazones expiran aunque estén enlatados
+[04:03.28]aunque viajen seguros por envíos cifrados
+[04:09.19]
+[04:14.88]Sigue sintonizando de Chungking a Mendoza
+[04:23.89]`,
+  5: `[ti:Mapache]
+[ar:sueter7]
+[al:Todo Salió Bien en la Sencilla Villa Quién]
+[length:04:12.94]
+[offset:0]
+
+[00:00.00]
+[00:08.50]Mari tiene poco que contar
+[00:11.78]otro sábado sin novedad
+[00:15.44]que la pueda conmover o siquiera levantar
+[00:23.58]Mari ya no viene a visitar
+[00:27.32]no se puede resbalar del plan
+[00:31.27]en la mira de un reloj y un boleto sin sacar
+[00:35.79]
+[00:39.26]Alejándonos hasta que se quede sin color
+[00:46.20]Alejándonos hasta que se quede sin color
+[00:51.04]Un amigo como vos, vos
+[00:57.58]Vos, vos
+[00:59.57]
+[01:08.14]Cuando no se puede concentrar
+[01:12.14]Los renglones son un espiral
+[01:16.46]Endulzando el corazón hasta que la acuesta el sol
+[01:23.52]Nadie nunca supo su rincón
+[01:26.78]pero le encargaron la misión
+[01:30.48]de elegir el souvenir de su peor vacación
+[01:35.91]
+[01:38.84]Alejándonos hasta que se quede sin color
+[01:46.46]Alejándonos hasta que se quede sin color
+[01:51.02]Una amiga como vos, vos
+[01:57.40]Vos, vos
+[02:01.26]Vos, vos
+[02:02.11]
+[02:05.04]Vos, vos
+[02:05.89]
+[02:23.72]Refugiada en lo que ve
+[02:24.50]Ya sabe pertenecer
+[02:27.14]A todo ese mar de balcones
+[02:30.72]Ve papeles sin firmar
+[02:33.20]Ropa que desordenar
+[02:34.64]Y el amor deambula en las calles
+[02:37.70]En la cima hay un colchón
+[02:41.72]que la culpa de soñar
+[02:45.68]y descansará bien sola
+[02:50.25]
+[03:34.06]Alejándonos hasta que se quede sin color
+[03:42.68]Alejándonos hasta que se quede sin color
+[03:47.58]Una amiga como vos, vos
+[03:53.82]Vos, vos
+[03:57.58]Vos, vos
+[04:01.32]Vos, vos
+[04:03.47]`,
+  6: `[ti:Almohadas]
+[ar:sueter7]
+[al:Todo Salió Bien en la Sencilla Villa Quién]
+[length:05:11.42]
+[offset:0]
+
+[00:00.00]
+[00:29.38]Tengo un eco de semanas escribiendo en las paredes
+[00:41.94]Siempre que intento atraparlo con palabras se desvanece
+[00:52.40]Sin decir nada, sin dormir nada
+[01:04.40]Sin decir nada, sin dormir nada
+[01:14.75]
+[01:21.10]Canta la Luna de los ojos entreabiertos, incandescente
+[01:33.12]Veo mi cara rodeada de sonrisas y no me alcanza
+[01:43.54]Sin decir nada, sin dormir nada
+[01:55.54]Sin decir nada, sin dormir nada
+[02:05.77]
+[02:11.20]Hoy no voy a soñar, me queda girar al amanecer
+[02:17.26]Hoy no voy a soñar, me queda girar al amanecer
+[02:23.46]Una hora mas, un segundo más
+[02:33.75]
+[02:38.20]Sigo tejiendo una trama para un cuento que no me calma
+[02:50.24]Dime si vos también guardas tus pensamientos bajo la almohada
+[03:01.42]Sin decir nada, sin dormir nada
+[03:12.82]Sin decir nada, sin dormir nada
+[03:23.75]
+[03:29.24]Hoy no voy a soñar, me queda girar al amanecer
+[03:34.92]Hoy no voy a soñar, me queda girar al amanecer
+[03:41.26]No lo voy a intentar, me quiero cansar del amanecer
+[03:47.46]No lo voy a intentar, me quiero cansar
+[03:54.32]Una hora mas, un segundo más
+[04:03.91]`,
+  7: `[ti:Miedos de Transporte]
+[ar:sueter7]
+[al:Todo Salió Bien en la Sencilla Villa Quién]
+[length:05:08.79]
+[offset:0]
+
+[00:00.00]
+[00:12.30]Otoño nos va a arrojar como hojas al barro
+[00:19.84]La bici no aguanta más arrastre y derrapar
+[00:26.82]Odio verte llorar entre falsas familias
+[00:35.48]La raíz va a quebrar el pavimento
+[00:40.85]
+[00:56.82]Un recuerdo más, dame un recuerdo más
+[01:00.16]que me ate aquí cuando nadie sepa sobre mi
+[01:04.66]Dame un día más, dame solo un beso más
+[01:07.66]antes de partir y que nada me acompañe
+[01:13.46]Es un salto de fe ser humano de cero
+[01:20.16]Sin que nadie te agarre cuando caes de pie
+[01:28.16]Quiero subir al tren y no bajarme nunca
+[01:36.16]¿Te acordás tu canción? No es difícil en verdad
+[01:42.35]
+[01:50.16]Un recuerdo más, dame un recuerdo más
+[01:53.60]que me ate aquí cuando nadie sepa sobre mi
+[01:57.62]Dame un día más, dame solo un beso más
+[02:01.04]antes de partir y que nada me acompañe
+[02:05.27]Un recuerdo más, dame un recuerdo más
+[02:08.86]que me ate aquí cuando nadie sepa sobre mi
+[02:12.17]Dame un día más, dame solo un beso más
+[02:16.27]antes de partir y que nada me acompañe
+[02:21.47]Este cuerpo va a morir
+[02:25.07]y el hogar donde crecí
+[02:28.97]ya no va a saber mi nombre
+[02:32.42]
+[02:36.27]Si quisieras verme al fin
+[02:39.71]con mi risa de jardín
+[02:44.11]Dejame empezar de nuevo
+[02:47.90]
+[04:17.35]Este cuerpo va a morir
+[04:20.91]y el hogar donde crecí
+[04:24.63]ya no va a saber mi nombre
+[04:28.12]
+[04:31.05]Si quisieras verme al fin
+[04:35.25]con mi risa de jardín
+[04:39.09]Dejame empezar de nuevo
+[04:42.83]Puedo empezar de nuevo
+[04:46.55]Puedo empezar de nuevo
+[04:49.64]`,
+  8: `[ti:Todo Salió Bien (Carta para un amigo)]
+[ar:sueter7]
+[al:Todo Salió Bien en la Sencilla Villa Quién]
+[length:09:14.89]
+[offset:0]
+
+[00:00.00]
+[00:14.94]Calles de tierra sin destino
+[00:20.52]Buenas ideas en olvido
+[00:26.08]Mira de cerca si te encuentra
+[00:31.72]Algo en el polvo del camino
+[00:37.38]Algún relato entre el ruido
+[00:42.66]De aquel lugar tan aburrido
+[00:48.38]El entusiasmo acallado
+[00:53.80]No quiere verse reflejado
+[01:00.12]Aquella voz sobre la mesa
+[01:05.62]Bajo el legado de la pena
+[01:11.76]Deja de lado la vergüenza
+[01:16.84]de no sentirte invitado
+[01:22.80]Antes que cese el fuego ingenuo
+[01:28.80]Cuéntame lo que está pasando
+[01:34.50]¿Qué mas se puede hacer?
+[01:37.30]lanzarse y esperar
+[01:40.12]que todo salga bien
+[01:43.30]en la sencilla villa quién
+[01:46.73]
+[02:08.72]Se de las tardes que se mueren
+[02:14.30]por que se vean sus colores
+[02:20.02]Se de las horas que se apagan
+[02:25.72]en lo mas gris de esta vida
+[02:30.92]Aunque la sangre riegue el mundo
+[02:37.00]que te dejó tan reducido
+[02:42.74]A contramano de un consejo, de la partida y la llegada
+[02:53.92]¿Qué mas se puede hacer?
+[02:57.48]lanzarse y esperar
+[02:59.94]que todo salga bien
+[03:05.40]El día llegará
+[03:08.50]y vamos a decir
+[03:11.38]Que todo salió bien
+[03:14.58]en la sencilla villa quién
+[03:17.99]
+[03:28.88]Muchos quedan atrás
+[03:32.24]Cuando nadie sabe nada
+[03:34.68]de hoy, mañana o ayer
+[03:40.82]Notas que ya escuché
+[03:43.94]pero ya no dicen nada
+[03:46.06]de hoy, mañana o ayer
+[03:49.26]¿Para que mentirse así?
+[03:52.15]
+[04:02.48]Hoy no puedo reír
+[04:08.86]Botas que ya escuché
+[04:14.22]Quiero vernos tomar
+[04:17.76]todo lo que era nuestro
+[04:20.08]Ciclos a desarmar
+[04:23.78]Y un camino sin andar
+[04:26.23]
+[05:33.52]¿Qué mas se puede hacer?
+[05:37.42]lanzarse y esperar
+[05:39.70]que todo salga bien
+[05:43.35]
+[05:46.64]¿Qué mas se puede hacer?
+[05:50.16]lanzarse y esperar
+[05:52.84]que todo salga bien
+[05:56.05]
+[05:58.86]¿Qué mas se puede hacer?
+[06:02.22]lanzarse y esperar
+[06:04.76]que todo salga bien
+[06:07.69]
+[06:10.65]¿Qué mas se puede hacer?
+[06:13.42]lanzarse y esperar
+[06:16.36]que todo salga bien
+[06:19.42]en la sencilla villa quién
+[06:22.64]El día llegará
+[06:24.65]y vamos a decir
+[06:27.35]Que todo salió bien
+[06:30.21]en la sencilla villa quién
+[06:33.63]El día llegará
+[06:35.10]y vamos a decir
+[06:37.80]Que todo salió bien
+[06:40.78]en la sencilla villa quién
+[06:43.94]El día llegará
+[06:45.96]y vamos a decir
+[06:48.88]Que todo salió bien
+[06:51.76]en la sencilla villa quién
+[06:55.58]El día llegará
+[06:57.62]y vamos a decir
+[06:59.82]Que todo salió bien
+[07:02.86]en la sencilla villa quién
+[07:06.85]
+[08:15.22]Dime de que sirve navegar con miedo
+[08:33.96]Puedo empezar de nuevo
+[08:44.97]`
+};
+
+/* =====================================================================
+   LETRA ESCRITA de cada tema, tal como viene en los metadatos de los
+   archivos del disco. Solo se usa de respaldo: si un tema se quedara
+   sin su .lrc, la letra se muestra igual, quieta.
+   ===================================================================== */
+const LETRA_CRUDA = {
+  /* Escritorio · 28 versos */
+  1: `Cuanta juventud, cuanta gente como yo
+paseándose en los parques de su mente
+besando fantasías suavemente
+Un tesoro más hecho para desfilar
+se ahoga en el tintero del ensueño
+que esconde la rutina de su dueño
+
+Noches de ciudad que pudimos adornar
+perdidas entre horas liminales
+en vías y en tarea interminable
+Solo para ver si algún día puedo ser
+la persona que me han imaginado
+pagando lo que sea necesario
+
+Pero hay algo tan real entre cables y metal
+Diseñado para mi para conocerte a ti
+Un camino sin andar para no volver atrás
+Diseñado para mi para conocerte a ti
+Diseñado para mi para conocerte a ti
+
+Una intención que nunca se vuelve acción
+empuja tras la puerta de su cuarto
+cansada del sabor de estar mirando
+"No quiero esperar, siempre ha sido esperar
+que se acabe este momento transitorio
+la vida no entra en un escritorio"
+
+Pero hay algo tan real entre cables y metal
+Diseñado para mi para conocerte a ti
+Un camino sin andar para no volver atrás
+Diseñado para mi para conocerte a ti
+Diseñado para mi para conocerte a ti`,
+  /* Confluencias · 22 versos */
+  2: `Nadie elige el momento ideal
+para encontrarse en los brazos que van
+a soltar cada pieza de lugar
+No fue casual y no fue intencional
+Son decisiones que quieren jugar
+en secreto a dejarnos justo acá
+
+Tal vez sea pronto, pero
+¿de que sirve navegar con miedo a desembocar
+donde el agua es clara y los aires calman?
+Ser una caricia
+Vamos a nadar
+
+Ven a abrigarme en voz baja y verás
+que el muro se empieza a desdibujar
+derramando viejas sombras sobre ti
+Llego al invierno sin armas y se
+que en la mirada siempre llevarás
+lo que vale arriesgarse a confluir
+
+Tal vez sea pronto, pero
+¿de que sirve navegar con miedo a desembocar
+donde el agua es clara y los aires calman?
+Ser una caricia
+Vamos a nadar`,
+  /* Enero Cuervo · 22 versos */
+  3: `Diciembre hizo magia otra vez
+y ató los cabos sueltos por un mes
+La tarde se enrojece de pudor
+y con su baile frágil reflorece
+
+¿Qué hago con el tiempo muerto?
+Olvidar presentimientos
+
+Enero cuervo sabe que es el fin
+en su aleteo mudo lo advertí
+La nube ya gastó su tornasol
+Y lloverá desvelos sobre mí
+
+¿Qué hago con el tiempo muerto?
+Olvidar presentimientos
+¿Qué hago con el tiempo muerto?
+Olvidar presentimientos
+
+Una vereda de suspenso
+Sortear tu cara en el andén
+Pisando un trozo de este siglo
+hay tanto gris llegando al Sur
+
+¿Qué hago con el tiempo muerto?
+Olvidar presentimientos
+¿Qué hago con el tiempo muerto?
+Olvidar presentimientos`,
+  /* De Chungking a Mendoza · 20 versos */
+  4: `Como un roce de manos hay un vuelo perdido
+Esperando su turno con maletas de almohada
+Imagina la cara de la voz en la radio
+Prometer una vida que no cabe en diarios
+
+Corazones expiran aunque estén enlatados
+aunque viajen seguros por envíos cifrados
+
+Tu sol amanecido pasa por la persiana
+Y convierte en estrellas el polvo de mi cama
+La persona perfecta vive en otro planeta
+Mientras voy abrazando lo que tengo en la tierra
+
+Corazones expiran aunque estén enlatados
+aunque viajen seguros por envíos cifrados
+Corazones expiran aunque estén enlatados
+aunque viajen seguros por envíos cifrados
+Un asiento guardado de Chungking a Mendoza
+
+Corazones expiran aunque estén enlatados
+aunque viajen seguros por envíos cifrados
+Corazones expiran aunque estén enlatados
+aunque viajen seguros por envíos cifrados
+Sigue sintonizando de Chungking a Mendoza`,
+  /* Mapache · 33 versos */
+  5: `Mari tiene poco que contar
+otro sábado sin novedad
+que la pueda conmover o siquiera levantar
+
+Mari ya no viene a visitar
+no se puede resbalar del plan
+en la mira de un reloj y un boleto sin sacar
+
+Alejándonos hasta que se quede sin color
+Alejándonos hasta que se quede sin color
+Un amigo como vos, vos
+Vos, vos
+
+Cuando no se puede concentrar
+Los renglones son un espiral
+Endulzando el corazón hasta que la acuesta el sol
+
+Nadie nunca supo su rincón
+pero le encargaron la misión
+de elegir el souvenir de su peor vacación
+
+Alejándonos hasta que se quede sin color
+Alejándonos hasta que se quede sin color
+Una amiga como vos, vos
+Vos, vos
+
+Refugiada en lo que ve
+Ya sabe pertenecer
+A todo ese mar de balcones
+Ve papeles sin firmar
+Ropa que desordenar
+Y el amor deambula en las calles
+
+En la cima hay un colchón
+que la culpa de soñar
+y descansará bien sola
+
+Alejándonos hasta que se quede sin color
+Alejándonos hasta que se quede sin color
+Una amiga como vos, vos
+Vos, vos`,
+  /* Almohadas · 20 versos */
+  6: `Tengo un eco de semanas escribiendo en las paredes
+Siempre que intento atraparlo con palabras se desvanece
+
+Sin decir nada, sin dormir nada
+Sin decir nada, sin dormir nada
+
+Canta la Luna de los ojos entreabiertos, incandescente
+Veo mi cara rodeada de sonrisas y no me alcanza
+
+Sin decir nada, sin dormir nada
+Sin decir nada, sin dormir nada
+
+Hoy no voy a soñar, me queda girar al amanecer
+Hoy no voy a soñar, me queda girar al amanecer
+Una hora mas, un segundo más
+
+Sigo tejiendo una trama para un cuento que no me calma
+Dime si vos también guardas tus pensamientos bajo la almohada
+
+Sin decir nada, sin dormir nada
+Sin decir nada, sin dormir nada
+
+Hoy no voy a soñar, me queda girar al amanecer
+Hoy no voy a soñar, me queda girar al amanecer
+No lo voy a intentar, me quiero cansar del amanecer
+No lo voy a intentar, me quiero cansar
+Una hora mas, un segundo más`,
+  /* Miedos de Transporte · 34 versos */
+  7: `Otoño nos va a arrojar como hojas al barro
+La bici no aguanta más arrastre y derrapar
+Odio verte llorar entre falsas familias
+La raíz va a quebrar el pavimento
+
+Un recuerdo más, dame un recuerdo más
+que me ate aquí cuando nadie sepa sobre mi
+Dame un día más, dame solo un beso más
+antes de partir y que nada me acompañe
+
+Es un salto de fe ser humano de cero
+Sin que nadie te agarre cuando caes de pie
+Quiero subir al tren y no bajarme nunca
+¿Te acordás tu canción? No es difícil en verdad
+
+Un recuerdo más, dame un recuerdo más
+que me ate aquí cuando nadie sepa sobre mi
+Dame un día más, dame solo un beso más
+antes de partir y que nada me acompañe
+
+Un recuerdo más, dame un recuerdo más
+que me ate aquí cuando nadie sepa sobre mi
+Dame un día más, dame solo un beso más
+antes de partir y que nada me acompañe
+
+Este cuerpo va a morir
+y el hogar donde crecí
+ya no va a saber mi nombre
+Si quisieras verme al fin
+con mi risa de jardín
+Dejame empezar de nuevo
+
+Este cuerpo va a morir
+y el hogar donde crecí
+ya no va a saber mi nombre
+Si quisieras verme al fin
+con mi risa de jardín
+Dejame empezar de nuevo
+Puedo empezar de nuevo
+Puedo empezar de nuevo`,
+  /* Todo Salió Bien (Carta para un amigo) · 54 versos */
+  8: `Calles de tierra sin destino
+Buenas ideas en olvido
+Mira de cerca si te encuentra
+Algo en el polvo del camino
+
+Algún relato entre el ruido
+De aquel lugar tan aburrido
+
+El entusiasmo acallado
+No quiere verse reflejado
+Aquella voz sobre la mesa
+Bajo el legado de la pena
+
+Deja de lado la vergüenza
+de no sentirte invitado
+Antes que cese el fuego ingenuo
+Cuéntame lo que está pasando
+
+¿Qué mas se puede hacer?
+lanzarse y esperar
+que todo salga bien
+en la sencilla villa quién
+
+Se de las tardes que se mueren
+por que se vean sus colores
+Se de las horas que se apagan
+en lo mas gris de esta vida
+
+Aunque la sangre riegue el mundo
+que te dejó tan reducido
+A contramano de un consejo, de la partida y la llegada
+
+¿Qué mas se puede hacer?
+lanzarse y esperar
+que todo salga bien
+
+El día llegará
+y vamos a decir
+Que todo salió bien
+en la sencilla villa quién
+
+Muchos quedan atrás
+Cuando nadie sabe nada
+de hoy, mañana o ayer
+
+Notas que ya escuché
+pero ya no dicen nada
+de hoy, mañana o ayer
+¿Para que mentirse así?
+
+Hoy no puedo reír
+Botas que ya escuché
+
+Quiero vernos tomar
+todo lo que era nuestro
+Ciclos a desarmar
+Y un camino sin andar
+
+¿Qué mas se puede hacer?
+lanzarse y esperar
+que todo salga bien
+
+El día llegará
+y vamos a decir
+Que todo salió bien
+en la sencilla villa quién
+
+Dime de que sirve navegar con miedo
+Puedo empezar de nuevo`
+};
+
+/* letra de muestra: sirve para ver cómo se comporta la vista sin tener
+   todavía las letras reales cargadas */
+const MUESTRA = `[00:03.00]Acá va el primer verso
+[00:08.50]y acá el segundo, que es más largo y ocupa dos renglones si hace falta
+[00:14.00]el tercero entra enseguida
+[00:18.00]el cuarto
+[00:23.50]y el quinto cierra la primera parte
+[00:40.00]después del interludio vuelve
+[00:45.50]con otro verso
+[00:50.00]y otro más
+[00:56.00]hasta el final`;
+
+const DISCO = "Todo Salió Bien en la Sencilla Villa Quién";
+const TRACKS = [
+  {n:1, t:"Escritorio",             f:"audio/01-escritorio.mp3",             d:398},
+  {n:2, t:"Confluencias",           f:"audio/02-confluencias.mp3",           d:220},
+  {n:3, t:"Enero Cuervo",           f:"audio/03-enero-cuervo.mp3",           d:333},
+  {n:4, t:"De Chungking a Mendoza", f:"audio/04-de-chungking-a-mendoza.mp3", d:322},
+  {n:5, t:"Mapache",                f:"audio/05-mapache.mp3",                d:252},
+  {n:6, t:"Almohadas",              f:"audio/06-almohadas.mp3",              d:311},
+  {n:7, t:"Miedos de Transporte",   f:"audio/07-miedos-de-transporte.mp3",   d:308},
+  {n:8, t:"Todo Salió Bien (Carta para un amigo)", f:"audio/08-todo-salio-bien.mp3", d:554}
+];
+
+const PAUSA_MINIMA = 10;       /* segundos entre versos para dibujar el separador de interludio */
+const $ = id => document.getElementById(id);
+/* adentro de la estación, el audio es el reproductor de la estación (ver puente.js) */
+const au = (window.S7 && S7.audio) || $("au");
+const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const mmss = s => isFinite(s) ? Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0") : "0:00";
+
+/* ---------- escalado de la pantalla de 1920 ---------- */
+function fit(){
+  const s=$("screen"), stage=s.parentElement;
+  const k=Math.min(1, stage.parentElement.clientWidth/1920);
+  s.style.transform="scale("+k+")";
+  stage.style.height=(1080*k)+"px";
+}
+window.addEventListener("resize", fit); fit();
+
+/* ---------- si los iconos están en una subcarpeta, los buscamos ahí ---------- */
+let reubicados=false;
+document.querySelectorAll(".ic").forEach(img=>{
+  img.addEventListener("error", ()=>{
+    if(reubicados) return;
+    reubicados=true;
+    document.querySelectorAll(".ic").forEach(o=>{
+      if(!o.getAttribute("src").includes("/")) o.src="iconos/"+o.getAttribute("src");
+    });
+  }, {once:true});
+});
+$("pthumb-img").addEventListener("error", ()=>{ $("pthumb-img").style.display="none"; }, {once:true});
+
+/* =====================================================================
+   PARSEO DEL LRC
+   ===================================================================== */
+function parsear(txt){
+  const versos=[];
+  let desfase = 0;                       /* [offset:] del encabezado, en ms */
+  (txt||"").split(/\r?\n/).forEach(linea=>{
+    const off = linea.match(/^\s*\[offset:\s*([+-]?\d+)\s*\]/i);
+    if(off){ desfase = (+off[1])/1000; return; }
+    /* [ti:], [ar:], [al:], [length:] y demás encabezados no son versos */
+    const m = linea.match(/^\s*\[(\d{1,3}):(\d{1,2})(?:[.:](\d{1,3}))?\]\s*(.*)$/);
+    if(!m) return;
+    let frac = 0;
+    if(m[3]) frac = m[3].length===3 ? (+m[3])/1000 : (+m[3])/100;
+    /* las líneas sin texto se guardan igual: marcan los interludios,
+       y sirven para vaciar la pantalla mientras no se canta */
+    versos.push({ t: (+m[1])*60 + (+m[2]) + frac, x: m[4].trim() });
+  });
+  versos.sort((a,b)=>a.t-b.t);
+  versos.forEach(v=>{ v.t = Math.max(0, v.t + desfase); });
+  /* si arranca con un marcador vacío en 0, no aporta nada */
+  while(versos.length && !versos[0].x && versos[0].t < 0.05) versos.shift();
+  return versos;
+}
+
+/* =====================================================================
+   ESTADO
+   ===================================================================== */
+let cur = 0;                 /* índice del tema */
+let versos = [];             /* letra del tema actual, con tiempos */
+let crudo  = [];             /* la misma letra escrita, sin tiempos */
+let activo = -1;             /* verso que suena */
+let demo = null;             /* {t0} cuando corre la letra de muestra */
+let cargado = false;
+
+/* en demo el tiempo lo da un reloj propio, así se puede ver el efecto
+   incluso sin tener el audio a mano */
+const ahora = () => demo ? ((performance.now()-demo.t0)/1000) % 75 : au.currentTime;
+
+/* =====================================================================
+   LISTA DE TEMAS
+   ===================================================================== */
+function pintarLista(){
+  const cont = $("lista-temas");
+  cont.innerHTML = "";
+  TRACKS.forEach((tr,i)=>{
+    const b = document.createElement("button");
+    b.className = "tema" + (i===cur ? " son" : "");
+    b.type = "button";
+    b.innerHTML = '<span class="n">'+String(tr.n).padStart(2,"0")+'</span>'+
+                  '<span class="t"></span>';
+    b.querySelector(".t").textContent = tr.t;
+    b.addEventListener("click", ()=> cargar(i, !au.paused && cargado));
+    cont.appendChild(b);
+  });
+}
+
+/* =====================================================================
+   LA TIRA DE LETRA
+   ===================================================================== */
+function pintarLetra(){
+  const rollo = $("rollo");
+  rollo.innerHTML = "";
+  activo = -1;
+
+  /* sin tiempos todavía: se muestra la letra escrita, que ya la tenemos */
+  if(!versos.length){
+    const crudo = (LETRA_CRUDA[TRACKS[cur].n] || "").trim();
+    if(crudo){
+      const caja = document.createElement("div");
+      caja.className = "suelta";
+
+      const sello = document.createElement("div");
+      sello.className = "sello";
+      sello.textContent = "Letra sin sincronizar";
+      caja.appendChild(sello);
+
+      crudo.split(/\n/).forEach(l=>{
+        const d = document.createElement("div");
+        if(l.trim()){ d.className = "linea"; d.textContent = l.trim(); }
+        else { d.className = "espacio"; d.setAttribute("aria-hidden","true"); }
+        caja.appendChild(d);
+      });
+
+      const pie = document.createElement("div");
+      pie.className = "cierre";
+      pie.innerHTML = 'Todavía no tiene los tiempos, así que no se resalta sola ni se '+
+        'puede tocar un verso para saltar ahí. Se arregla pegando su archivo '+
+        '.lrc en el bloque LRC de este HTML. '+
+        '<button type="button" id="ver-demo">Ver cómo queda sincronizada</button>';
+      caja.appendChild(pie);
+
+      rollo.appendChild(caja);
+      $("ver-demo").addEventListener("click", arrancarDemo);
+      return;
+    }
+
+    const v = document.createElement("div");
+    v.className = "vacio";
+    v.innerHTML =
+      '<h2>Todavía no cargamos esta letra</h2>'+
+      '<p>Las letras se guardan con el momento exacto en que entra cada verso, '+
+      'así se van resaltando mientras suena el tema y se puede tocar un verso '+
+      'para saltar ahí.</p>'+
+      '<button class="b" type="button" id="ver-demo">Ver cómo se ve</button>';
+    rollo.appendChild(v);
+    $("ver-demo").addEventListener("click", arrancarDemo);
+    return;
+  }
+
+  let previo = null;
+  versos.forEach((v,i)=>{
+    if(!v.x) return;                         /* marcador de interludio: no se dibuja */
+    if(previo !== null && v.t - versos[previo].t >= PAUSA_MINIMA){
+      const p = document.createElement("div");
+      p.className = "pausa";
+      p.innerHTML = "<i></i><i></i><i></i>";
+      p.setAttribute("aria-hidden","true");
+      rollo.appendChild(p);
+    }
+    previo = i;
+    const b = document.createElement("button");
+    b.className = "verso";
+    b.type = "button";
+    b.dataset.i = i;
+    b.textContent = v.x;
+    b.addEventListener("click", ()=>{
+      if(demo){ demo.t0 = performance.now() - v.t*1000; return; }
+      if(!cargado) cargar(cur, true);
+      au.currentTime = v.t;
+      au.play().catch(()=>{});
+    });
+    rollo.appendChild(b);
+  });
+}
+
+function versoActual(t){
+  let k = -1;
+  for(let i=0;i<versos.length;i++){ if(versos[i].t <= t + 0.12) k = i; else break; }
+  return k;
+}
+
+/* el primer verso con texto después de k */
+function proximoConTexto(k){
+  for(let i=Math.max(0,k+1); i<versos.length; i++) if(versos[i].x) return versos[i].x;
+  return "";
+}
+
+/* la vista de a dos líneas: la que suena y la que viene */
+function pintarDoble(k){
+  const l1 = $("l1"), txt = $("l1-txt"), l2 = $("l2");
+
+  if(!versos.length){                       /* todavía sin tiempos */
+    l1.classList.remove("muda");
+    txt.textContent = crudo[0] || "";
+    l2.textContent  = crudo[1] || "";
+    $("l1-fill").style.width = "0%";
+    return;
+  }
+  const v = k >= 0 ? versos[k] : null;
+  if(!v || !v.x){                           /* interludio, o todavía no entró */
+    l1.classList.add("muda");
+    txt.textContent = v ? "· · ·" : "";
+    l2.textContent  = proximoConTexto(k);
+  } else {
+    l1.classList.remove("muda");
+    txt.textContent = v.x;
+    l2.textContent  = proximoConTexto(k);
+  }
+}
+
+/* el bloque amarillo se va llenando mientras dura el verso */
+function rellenar(k, t){
+  const f = $("l1-fill");
+  if(k < 0 || !versos.length || !versos[k] || !versos[k].x){ f.style.width = "0%"; return; }
+  const ini = versos[k].t;
+  const fin = versos[k+1] ? versos[k+1].t : ini + 6;
+  const p = Math.max(0, Math.min(1, (t - ini) / Math.max(0.3, fin - ini)));
+  f.style.width = (p*100).toFixed(1) + "%";
+}
+
+function marcarRollo(k){
+  const rollo = $("rollo");
+  if(!rollo.querySelector(".verso")) return;
+  rollo.querySelectorAll(".verso").forEach(b=>{
+    const i = +b.dataset.i;
+    b.classList.toggle("ahora", i === k);
+    b.classList.toggle("ya", i < k);
+  });
+  const el = rollo.querySelector('.verso[data-i="'+k+'"]');
+  if(el){
+    const destino = el.offsetTop - rollo.clientHeight*0.36;
+    rollo.scrollTo({ top: Math.max(0, destino), behavior: quieto ? "auto" : "smooth" });
+  }
+}
+
+function seguir(forzar){
+  if(!versos.length) return;
+  const t = ahora();
+  const k = versoActual(t);
+  if(k !== activo || forzar){
+    activo = k;
+    pintarDoble(k);
+    if($("tira").classList.contains("completa")) marcarRollo(k);
+  }
+  rellenar(k, t);
+}
+
+/* pasar de la vista de a dos a la letra entera y volver */
+$("ver-completa").addEventListener("click", ()=>{
+  const on = $("tira").classList.toggle("completa");
+  $("ver-completa").textContent = on ? "De a dos líneas" : "Letra completa";
+  if(on){ pintarLetra(); marcarRollo(activo); }
+});
+
+function pintarNota(){
+  const n = $("nota");
+  if(versos.length){
+    n.innerHTML = 'Se mueve sola con el tema. '+
+      '<button type="button" id="ir-completa">Ver la letra entera</button>';
+    $("ir-completa").addEventListener("click", ()=> $("ver-completa").click());
+  } else {
+    n.innerHTML = '<b>Esta letra todavía no tiene tiempos</b>, así que no se mueve sola. '+
+      'Se carga pegando su archivo .lrc en el bloque LRC de este HTML. '+
+      '<button type="button" id="ir-demo">Ver cómo queda cuando los tiene</button>';
+    $("ir-demo").addEventListener("click", arrancarDemo);
+  }
+}
+
+/* ---------- letra de muestra ---------- */
+function arrancarDemo(){
+  versos = parsear(MUESTRA);
+  demo = { t0: performance.now() };
+  activo = -1;
+  $("aviso-demo").hidden = false;
+  pintarLetra();
+  pintarDoble(-1);
+  pintarNota();
+}
+$("salir-demo").addEventListener("click", ()=>{
+  demo = null;
+  activo = -1;
+  $("aviso-demo").hidden = true;
+  versos = parsear(LRC[TRACKS[cur].n]);
+  pintarLetra();
+  pintarDoble(-1);
+  $("l1-fill").style.width = "0%";
+  pintarNota();
+});
+
+/* =====================================================================
+   REPRODUCTOR
+   ===================================================================== */
+function cargar(i, reproducir){
+  cur = (i + TRACKS.length) % TRACKS.length;
+  const tr = TRACKS[cur];
+
+  au.src = tr.f; cargado = true;
+  $("p-title").textContent = tr.t;
+  $("p-dur").textContent = mmss(tr.d);
+  $("p-cur").textContent = "0:00";
+  $("p-fill").style.width = "0%"; $("p-knob").style.left = "0%";
+  $("p-err").hidden = true;
+
+  $("titulo").textContent = tr.t;
+  $("titulo").style.fontSize = (tr.t.length > 28 ? 36 : tr.t.length > 18 ? 44 : 52) + "px";
+  $("cab-tema").textContent = "Tema " + tr.n + " · " + tr.t;
+
+  demo = null; $("aviso-demo").hidden = true;
+  versos = parsear(LRC[tr.n]);
+  crudo  = (LETRA_CRUDA[tr.n] || "").split(/\n/).map(x=>x.trim()).filter(Boolean);
+  activo = -1;
+  $("tira").classList.remove("completa");
+  $("ver-completa").textContent = "Letra completa";
+  pintarLista();
+  pintarLetra();
+  pintarDoble(-1);
+  $("l1-fill").style.width = "0%";
+  pintarNota();
+
+  if(reproducir) au.play().catch(()=>{});
+}
+
+function pintarPlay(){
+  const son = !au.paused && cargado;
+  $("ico-play").hidden = son;
+  $("ico-pause").hidden = !son;
+  $("p-play").setAttribute("aria-label", son ? "Pausar" : "Reproducir");
+}
+
+$("p-play").addEventListener("click", ()=>{
+  if(!cargado) cargar(cur, true);
+  else if(au.paused) au.play().catch(()=>{});
+  else au.pause();
+});
+$("p-prev").addEventListener("click", ()=> cargar(cur-1, !au.paused && cargado));
+$("p-next").addEventListener("click", ()=> cargar(cur+1, !au.paused && cargado));
+
+$("p-shuffle").addEventListener("click", e=>{
+  const on = e.currentTarget.classList.toggle("on");
+  e.currentTarget.setAttribute("aria-pressed", on ? "true" : "false");
+});
+
+$("p-seek").addEventListener("click", e=>{
+  const r = e.currentTarget.getBoundingClientRect();
+  const p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+  if(demo){ demo.t0 = performance.now() - p*75*1000; return; }
+  if(!cargado) cargar(cur, false);
+  const dur = isFinite(au.duration) ? au.duration : TRACKS[cur].d;
+  au.currentTime = p * dur;
+});
+
+$("p-vol-bar").addEventListener("click", e=>{
+  const r = e.currentTarget.getBoundingClientRect();
+  const p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+  au.volume = p; au.muted = false;
+  $("p-volfill").style.width = (p*100) + "%";
+  /* sin volumen cambia el ícono por el de mute */
+  const carpeta = $("ic-vol-a").getAttribute("src").includes("/") ? "iconos/" : "";
+  $("ic-vol-a").src = carpeta + (p === 0 ? "mute.png" : "vol.png");
+  $("ic-vol-b").src = carpeta + (p === 0 ? "mute-glitch.png" : "vol-glitch.png");
+});
+
+au.addEventListener("play", pintarPlay);
+au.addEventListener("pause", pintarPlay);
+au.addEventListener("error", ()=>{ if(cargado) $("p-err").hidden = false; });
+au.addEventListener("seeked", ()=> seguir(true));
+au.addEventListener("timeupdate", ()=>{
+  const dur = isFinite(au.duration) ? au.duration : TRACKS[cur].d;
+  const p = dur ? (au.currentTime/dur)*100 : 0;
+  $("p-fill").style.width = p + "%";
+  $("p-knob").style.left = p + "%";
+  $("p-cur").textContent = mmss(au.currentTime);
+});
+
+/* un solo bucle para seguir la letra: timeupdate no alcanza, dispara
+   cada 250ms y se nota el retraso en el resalte */
+function bucle(){
+  if(demo || (!au.paused && cargado)) seguir();
+  requestAnimationFrame(bucle);
+}
+/* el título del tema se achica solo si es largo */
+requestAnimationFrame(bucle);
+
+
+/* ---------- arranque ---------- */
+const pedido = new URLSearchParams(location.search).get("tema");
+/* si el tema cambia desde el reproductor de la estación, la letra lo acompaña */
+window.addEventListener("s7-tema", e=>{ const i=TRACKS.findIndex(t=>t.n===e.detail); if(i>=0 && i!==cur) cargar(i,false); });
+cargar(pedido ? (+pedido - 1) : 0, false);
+pintarPlay();
+</script>
+</body>
+</html>
