@@ -4,245 +4,368 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>sueter7 — La Sencilla Villa Quién</title>
-<meta name="description" content="Sitio oficial de sueter7. Proyecto Final de Diseño Digital, Instituto Tecnológico ORT, 2026.">
+<meta name="description" content="Sitio oficial de sueter7. Todo salió bien en la Sencilla Villa Quién.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
+<link rel="preload" as="image" href="img/estacion.webp">
 <style>
 :root{
-  --azul:#2c61b2; --azul-dot:#24539b; --azul-osc:#1d4280;
-  --rojo:#c9452c; --amarillo:#e8c340; --crema:#fffdf9; --crema-2:#efe9de;
-  --tinta:#141414; --gris:#333;
+  --papel:#e7dfd3; --crema:#fffdf9; --crema-var:#f4f0e6;
+  --tinta:#141414; --gris:#333; --gris-claro:#bbbbbb;
+  --rojo:#c9452c; --amarillo:#e8c340; --azul:#2c61b2;
   --display:"Bebas Neue","Arial Narrow",sans-serif;
-  --mono:"Geist Mono",ui-monospace,Menlo,monospace;
+  --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --W:1728px; --H:1117px; --escena:1016px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;background:var(--azul);color:var(--crema);
-  font-family:var(--mono);font-size:15px;line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-}
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:radial-gradient(var(--azul-dot) 2.6px, transparent 2.9px);
-  background-size:16px 16px;
-  -webkit-mask-image:linear-gradient(140deg,#000 0%,transparent 38%),radial-gradient(ellipse 60% 55% at 100% 100%,#000 0%,transparent 70%);
-          mask-image:linear-gradient(140deg,#000 0%,transparent 38%),radial-gradient(ellipse 60% 55% at 100% 100%,#000 0%,transparent 70%);
-}
-.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:54px 26px 90px}
+[hidden]{display:none !important}
+html,body{margin:0;height:100%;background:var(--tinta);overflow:hidden}
+body{font-family:var(--mono);color:var(--tinta);-webkit-font-smoothing:antialiased}
 
-/* ---------- encabezado ---------- */
-.eyebrow{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,253,249,.7);margin:0 0 20px}
-.titulo .uno{
-  display:inline-block;background:var(--amarillo);color:var(--tinta);
-  font-family:var(--display);font-size:clamp(52px,9vw,112px);line-height:.82;letter-spacing:.015em;
-  padding:22px 30px 12px;transform:rotate(-2deg);border:3px solid var(--tinta);
-  box-shadow:7px 7px 0 rgba(20,20,20,.9);
-}
-.titulo .dos{
-  display:inline-block;background:var(--tinta);color:var(--crema);
-  font-family:var(--display);font-size:clamp(24px,3.4vw,46px);line-height:1;letter-spacing:.05em;
-  padding:12px 20px 7px;transform:rotate(-1deg) translate(-18px,16px);
-}
-.bajada{
-  margin:34px 0 0;max-width:58ch;font-size:16px;line-height:1.7;color:rgba(255,253,249,.88);
-}
-.bajada b{color:var(--amarillo);font-weight:700}
+/* lienzo a 1728 x 1117 que se escala entero a la ventana */
+.lienzo{position:absolute;left:0;top:0;width:var(--W);height:var(--H);transform-origin:0 0;overflow:hidden;background:var(--crema-var)}
 
-.ficha-proy{
-  margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-  gap:2px;background:rgba(20,20,20,.55);border:2.5px solid var(--tinta);box-shadow:6px 6px 0 rgba(20,20,20,.6);
-}
-.ficha-proy div{background:var(--azul);padding:14px 16px}
-.ficha-proy .k{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,253,249,.6);display:block}
-.ficha-proy .v{font-family:var(--display);font-size:22px;letter-spacing:.03em;color:var(--crema);display:block;margin-top:3px;line-height:1.1}
+/* ---------- escena: la estación ---------- */
+.escena{position:absolute;left:0;top:0;width:var(--W);height:var(--escena);
+  background:url("img/estacion.webp") 0 0/100% 100% no-repeat}
+.logo{position:absolute;left:70px;top:36px;width:350px;height:90px;border-radius:2px}
+.proyecto{position:absolute;left:18px;top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(20,20,20,.5);text-decoration:none;padding:2px 4px}
+.proyecto:hover{color:var(--rojo)}
 
-/* ---------- secciones ---------- */
-h2{
-  display:inline-block;background:var(--tinta);color:var(--crema);
-  font-family:var(--display);font-size:28px;letter-spacing:.08em;
-  padding:9px 20px 5px;line-height:1;margin:0;
-}
-section{margin-top:66px}
-.sec-nota{margin:16px 0 24px;max-width:62ch;color:rgba(255,253,249,.72);font-size:14px;line-height:1.65}
+.puerta{position:absolute;display:block;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.puerta img{position:absolute;display:block;pointer-events:none;user-select:none}
+.puerta .door{transition:filter .25s ease}
+.puerta .sign{z-index:2;transition:transform .16s ease, box-shadow .16s ease}
+.puerta:hover .sign,.puerta:focus-visible .sign{transform:translate(-4px,-5px);box-shadow:8px 9px 0 var(--tinta)}
+.puerta:hover .door,.puerta:focus-visible .door{filter:brightness(1.08) saturate(1.25) contrast(1.04)}
+.puerta:focus-visible .sign{outline:3px solid var(--crema);outline-offset:4px}
+.puerta:active .sign{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
 
-/* ---------- piezas ---------- */
-.piezas{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:26px}
-.pieza{
-  background:var(--crema);color:var(--tinta);border:2.5px solid var(--tinta);
-  box-shadow:7px 7px 0 rgba(20,20,20,.8);padding:20px 22px 18px;
-  display:flex;flex-direction:column;gap:10px;position:relative;text-decoration:none;
-  transition:transform .12s ease, box-shadow .12s ease;
-}
-a.pieza:hover{transform:translate(-2px,-2px);box-shadow:10px 10px 0 rgba(20,20,20,.85)}
-.pieza .cinta{position:absolute;left:-12px;top:-11px;width:64px;height:22px;
-  background:rgba(255,253,249,.82);border:1px solid rgba(20,20,20,.3);transform:rotate(-18deg)}
-.pieza .estado{
-  font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  padding:3px 9px;border:1.5px solid var(--tinta);align-self:flex-start;
-}
-.pieza .estado.listo{background:var(--amarillo)}
-.pieza .estado.curso{background:var(--rojo);color:var(--crema);border-color:var(--rojo)}
-.pieza .estado.prox{background:transparent;color:var(--gris);border-style:dashed}
-.pieza h3{font-family:var(--display);font-size:30px;line-height:.98;letter-spacing:.02em;margin:0;color:var(--tinta)}
-.pieza p{margin:0;font-size:13px;line-height:1.55;color:var(--gris)}
-.pieza .ver{
-  margin-top:auto;padding-top:12px;font-family:var(--display);font-size:18px;letter-spacing:.08em;
-  color:var(--rojo);display:flex;align-items:center;gap:8px;
-}
-.pieza.vacia{background:rgba(255,253,249,.08);border-style:dashed;border-color:rgba(255,253,249,.4);
-  box-shadow:none;color:var(--crema)}
-.pieza.vacia h3{color:rgba(255,253,249,.85)}
-.pieza.vacia p{color:rgba(255,253,249,.6)}
-.pieza.vacia .estado.prox{color:rgba(255,253,249,.7);border-color:rgba(255,253,249,.4)}
+/* ---------- sección abierta (se carga adentro, la música sigue) ---------- */
+.seccion{position:absolute;left:0;top:0;width:var(--W);height:var(--escena);z-index:5;background:var(--papel);
+  clip-path:inset(0 0 0 0);transition:clip-path .55s cubic-bezier(.7,0,.2,1), opacity .3s ease}
+.seccion iframe{display:block;width:100%;height:100%;border:0;background:var(--papel)}
+.seccion.cerrada{pointer-events:none;opacity:0}
 
-/* ---------- sprints ---------- */
-.sprints{border:2.5px solid var(--tinta);background:rgba(20,20,20,.35);box-shadow:6px 6px 0 rgba(20,20,20,.6)}
-.sp{display:grid;grid-template-columns:96px 1fr 128px;gap:18px;align-items:center;
-  padding:13px 20px;border-bottom:1px solid rgba(255,253,249,.14);font-size:14px}
-.sp:last-child{border-bottom:0}
-.sp .n{font-family:var(--display);font-size:22px;letter-spacing:.05em;color:var(--amarillo);line-height:1}
-.sp .e{color:var(--crema)}
-.sp .f{font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-align:right}
-.sp .f.ok{color:var(--amarillo)}
-.sp .f.go{color:#ffb3a0}
-.sp .f.plan{color:rgba(255,253,249,.45)}
+/* ---------- reproductor persistente ---------- */
+.player{position:absolute;left:0;top:var(--escena);width:var(--W);height:calc(var(--H) - var(--escena));
+  background:var(--crema-var);border-top:2.5px solid var(--tinta);z-index:10;color:var(--tinta)}
+.player > *{position:absolute}
+.pthumb{left:13px;top:26px;width:60px;height:60px;overflow:hidden;background:var(--azul);padding:0;border:0;cursor:pointer}
+.pthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ptitle{left:90px;top:35px;font-size:16px;font-weight:700;line-height:1.2;max-width:350px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.palbum{left:90px;top:60px;font-size:13px;line-height:1.2;color:var(--gris);max-width:360px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button{font:inherit;color:inherit}
+.ctl{background:transparent;border:0;padding:0;cursor:pointer;display:grid;place-items:center;color:var(--tinta)}
+.ctl:focus-visible,.circ:focus-visible{outline:2px solid var(--rojo);outline-offset:3px;border-radius:4px}
+.ctl svg{display:block;transition:transform .1s ease, opacity .15s}
+.ctl:hover svg{transform:scale(1.1)}
+.ctl:active svg{transform:scale(.92)}
+.circ{border-radius:50%;background:var(--tinta);color:var(--crema-var);border:0;padding:0;cursor:pointer;
+  display:grid;place-items:center;text-decoration:none;transition:transform .12s ease}
+.circ:hover{transform:scale(1.06)}
+.circ:active{transform:scale(.95)}
+.pplay{left:476px;top:32.5px;width:47px;height:47px}
+.pseek{left:548px;top:46px;width:681px;height:20px;cursor:pointer;touch-action:none}
+.pseek::before{content:"";position:absolute;left:0;right:0;top:8.25px;height:3.5px;background:var(--gris-claro)}
+.pseek i{position:absolute;left:0;top:8.25px;height:3.5px;width:0;background:var(--rojo)}
+.pseek b{position:absolute;left:0;top:2.5px;width:15px;height:15px;border-radius:50%;background:var(--tinta);transform:translateX(-50%);transition:transform .1s}
+.pseek:hover b{transform:translateX(-50%) scale(1.15)}
+.pcur{left:548px;top:72px;font-size:11px;line-height:1;color:var(--gris);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.pdur{left:1129px;top:72px;width:100px;text-align:right;font-size:11px;line-height:1;color:var(--gris);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.p-shuffle{left:1294px;top:36px;width:40px;height:40px}
+.p-shuffle[aria-pressed="true"]{color:var(--rojo)}
+.p-prev{left:1348.5px;top:36px;width:40px;height:40px}
+.p-next{left:1398.5px;top:36px;width:40px;height:40px}
+.p-vol{left:1451px;top:36px;width:38px;height:40px}
+.pvolbar{left:1487px;top:46px;width:78px;height:20px;cursor:pointer;touch-action:none}
+.pvolbar::before{content:"";position:absolute;left:0;right:0;top:9px;height:2.5px;background:var(--gris-claro)}
+.pvolbar i{position:absolute;left:0;top:9px;height:2.5px;width:100%;background:var(--tinta)}
+.pspot{top:36px;width:40px;height:40px}
+.pspot.a{left:1602px}
+.pspot.b{left:1656px;width:38px;height:38px;top:37px}
+.perr{right:18px;top:-24px;background:var(--rojo);color:var(--crema);font-size:10px;letter-spacing:.07em;
+  padding:3px 9px;border:2px solid var(--tinta)}
 
-/* ---------- pie ---------- */
-footer{margin-top:76px;padding-top:22px;border-top:2px solid rgba(255,253,249,.25);
-  display:flex;gap:26px;flex-wrap:wrap;font-size:11.5px;letter-spacing:.07em;
-  text-transform:uppercase;color:rgba(255,253,249,.55)}
-footer a{color:rgba(255,253,249,.8)}
-footer .r{margin-left:auto}
+@media (prefers-reduced-motion: reduce){
+  .seccion,.puerta .sign,.puerta .door,.circ,.ctl svg{transition:none !important}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="lienzo" id="lienzo">
 
-  <header>
-    <p class="eyebrow">Proyecto Final · Diseño Digital · Instituto Tecnológico ORT · 2026</p>
-    <div class="titulo">
-      <div class="uno">sueter7</div><div class="dos">La Sencilla Villa Quién</div>
-    </div>
+  <main class="escena" id="escena" aria-label="Andén de la Sencilla Villa Quién">
+    <h1 hidden>sueter7 — Todo salió bien en la Sencilla Villa Quién</h1>
+    <a class="logo" href="#" aria-label="sueter7 — volver al andén" data-ir=""></a>
+    <a class="proyecto" href="proyecto.html">Proyecto final ↗</a>
 
-    <p class="bajada">
-      Sitio oficial del disco <b>Todo salió bien en la Sencilla Villa Quién</b>.
-      No es una web de banda: es una ciudad chica hecha de andenes, cables y papeles,
-      donde las canciones esconden referencias y cartas que el visitante va encontrando
-      y guardando en su propio diario.
-    </p>
+    <a class="puerta" href="#sueter7" data-ir="sueter7" aria-label="Sueter7 — la banda"
+       style="left:129px;top:305.5px;width:282.5px;height:431px">
+      <img class="door" src="img/puerta-sueter7.webp" alt="" style="left:24.5px;top:110px;width:231px;height:321px">
+      <img class="sign" src="img/cartel-sueter7.webp" alt="" style="left:0;top:0;width:282.5px;height:94.5px">
+    </a>
+    <a class="puerta" href="#diario" data-ir="diario" aria-label="Diario"
+       style="left:543px;top:305.5px;width:277.5px;height:433px">
+      <img class="door" src="img/puerta-diario.webp" alt="" style="left:27.5px;top:111px;width:229.5px;height:322px">
+      <img class="sign" src="img/cartel-diario.webp" alt="" style="left:0;top:0;width:277.5px;height:95px">
+    </a>
+    <a class="puerta" href="#discos" data-ir="discos" aria-label="Discos y canciones"
+       style="left:951px;top:302.5px;width:304px;height:437.5px">
+      <img class="door" src="img/puerta-discos.webp" alt="" style="left:36.5px;top:112.5px;width:233px;height:325px">
+      <img class="sign" src="img/cartel-discos.webp" alt="" style="left:0;top:0;width:304px;height:100px">
+    </a>
+    <a class="puerta" href="#tienda" data-ir="tienda" aria-label="Tienda"
+       style="left:1394.5px;top:306px;width:284.5px;height:435px">
+      <img class="door" src="img/puerta-tienda.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
+      <img class="sign" src="img/cartel-tienda.webp" alt="" style="left:0;top:0;width:284.5px;height:109px">
+    </a>
+  </main>
 
-    <div class="ficha-proy">
-      <div><span class="k">Artista</span><span class="v">sueter7</span></div>
-      <div><span class="k">Disco</span><span class="v">8 temas · 45 min</span></div>
-      <div><span class="k">Pantallas</span><span class="v">11 + variantes</span></div>
-      <div><span class="k">Presentación</span><span class="v">24 nov 2026</span></div>
-    </div>
-  </header>
+  <div class="seccion cerrada" id="seccion" aria-hidden="true">
+    <iframe id="marco" title="Sección" src="about:blank"></iframe>
+  </div>
 
-  <section>
-    <h2>Lo que hay construido</h2>
-    <p class="sec-nota">
-      Todo lo de abajo está publicado y se puede abrir. Esta página se actualiza a medida que avanza el proyecto:
-      el enlace que estás viendo es el mismo que va a tener el sitio terminado.
-    </p>
+  <section class="player" id="player" aria-label="Reproductor">
+    <button class="pthumb" id="p-thumb" aria-label="Ver el disco"><img src="img/tapa-mini.jpg" alt=""></button>
+    <div class="ptitle" id="p-title">Escritorio</div>
+    <div class="palbum" id="p-sub">Todo Salió Bien en la Sencilla Villa Quién</div>
 
-    <div class="piezas">
+    <button class="circ pplay" id="p-play" aria-label="Reproducir">
+      <svg id="ico-play" width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M2 1.2v15.6c0 .8.9 1.3 1.6.9l12-7.8c.6-.4.6-1.3 0-1.7l-12-7.8C2.9-.1 2 .4 2 1.2z" fill="currentColor" transform="translate(1 0)"/></svg>
+      <svg id="ico-pause" width="14" height="18" viewBox="0 0 14 18" aria-hidden="true" hidden><rect x="0" y="0" width="4.6" height="18" rx="1" fill="currentColor"/><rect x="9.4" y="0" width="4.6" height="18" rx="1" fill="currentColor"/></svg>
+    </button>
 
-      <a class="pieza" href="discos.html">
-        <span class="cinta"></span>
-        <span class="estado curso">En construcción</span>
-        <h3>Discos y Canciones</h3>
-        <p>Primera pantalla construida en código con la estética definitiva: tipografías, paleta y
-           contenido reales. Faltan las ilustraciones.</p>
-        <span class="ver">Abrir →</span>
-      </a>
+    <div class="pseek" id="p-seek" role="slider" tabindex="0" aria-label="Posición del tema" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="p-fill"></i><b id="p-knob"></b></div>
+    <span class="pcur" id="p-cur">0:00</span>
+    <span class="pdur" id="p-dur">6:38</span>
 
-      <a class="pieza" href="prototipo.html">
-        <span class="cinta"></span>
-        <span class="estado listo">Navegable</span>
-        <h3>Prototipo completo</h3>
-        <p>Las once pantallas conectadas en baja fidelidad, con los dos recorridos de descubrimiento
-           funcionando de punta a punta.</p>
-        <span class="ver">Abrir →</span>
-      </a>
+    <button class="ctl p-shuffle" id="p-shuffle" aria-label="Aleatorio" aria-pressed="false">
+      <svg width="37" height="18" viewBox="0 0 37 18" fill="none" aria-hidden="true"><path d="M0 1.5h9c6 0 9.5 15 16 15h12M0 16.5h9c6 0 9.5-15 16-15h12" stroke="currentColor" stroke-width="2.2"/></svg>
+    </button>
+    <button class="ctl p-prev" id="p-prev" aria-label="Anterior">
+      <svg width="18" height="21" viewBox="0 0 18 21" aria-hidden="true"><rect x="0" y="0" width="3" height="21" fill="currentColor"/><path d="M17.5 0v21L3 10.5z" fill="currentColor"/></svg>
+    </button>
+    <button class="ctl p-next" id="p-next" aria-label="Siguiente">
+      <svg width="18" height="21" viewBox="0 0 18 21" aria-hidden="true"><rect x="15" y="0" width="3" height="21" fill="currentColor"/><path d="M.5 0v21L15 10.5z" fill="currentColor"/></svg>
+    </button>
+    <button class="ctl p-vol" id="p-mute" aria-label="Silenciar" aria-pressed="false">
+      <svg width="15" height="22" viewBox="0 0 15 22" aria-hidden="true"><path d="M0 7h5L14 0v22L5 15H0z" fill="currentColor"/><path id="ico-x" d="M3 20 L13 2" stroke="var(--rojo)" stroke-width="2.4" hidden/></svg>
+    </button>
+    <div class="pvolbar" id="p-vol-bar" role="slider" tabindex="0" aria-label="Volumen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="p-volfill"></i></div>
 
-      <a class="pieza" href="flujo.html">
-        <span class="cinta"></span>
-        <span class="estado listo">Documentado</span>
-        <h3>Mapa de flujo</h3>
-        <p>Cómo se mueve el visitante entre las once pantallas, con los dos caminos hacia cada sección
-           y la cadena de descubrimiento.</p>
-        <span class="ver">Abrir →</span>
-      </a>
-
-      <a class="pieza" href="reproductor.html">
-        <span class="cinta"></span>
-        <span class="estado listo">Propuesta</span>
-        <h3>Reproductor</h3>
-        <p>Estudio estético del reproductor persistente en cuatro estados, con la anatomía de cada
-           decisión de material.</p>
-        <span class="ver">Abrir →</span>
-      </a>
-
-      <div class="pieza vacia">
-        <span class="estado prox">Próximamente</span>
-        <h3>Inicio</h3>
-        <p>La entrada a la villa: carga, sonido y el primer paso al mapa.</p>
-      </div>
-
-      <div class="pieza vacia">
-        <span class="estado prox">Próximamente</span>
-        <h3>Diario sonoro</h3>
-        <p>Visualizador, letra sincronizada y el cuaderno donde se guardan los hallazgos.</p>
-      </div>
-
-    </div>
+    <a class="circ pspot a" href="https://open.spotify.com/search/sueter7" target="_blank" rel="noopener" aria-label="Escuchar en Spotify">
+      <svg width="13" height="15" viewBox="0 0 13 15" aria-hidden="true"><path d="M1 1.1v12.8c0 .7.8 1.1 1.4.7l9.8-6.4c.5-.3.5-1.1 0-1.4L2.4.4C1.8 0 1 .4 1 1.1z" fill="currentColor"/></svg>
+    </a>
+    <a class="circ pspot b" href="https://open.spotify.com/search/sueter7" target="_blank" rel="noopener" aria-label="Abrir sueter7 en Spotify">
+      <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true"><path d="M2 4.2C7.6 1.6 14.4 1.6 20 4.2M3.6 8.4c4.6-2 10.2-2 14.8 0M5.4 12.4c3.6-1.4 7.6-1.4 11.2 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>
+    </a>
+    <span class="perr" id="p-err" hidden>no se encuentra el audio</span>
   </section>
-
-  <section>
-    <h2>Documentos</h2>
-    <p class="sec-nota">Las entregas formales del proyecto, en PDF.</p>
-    <div class="piezas">
-      <a class="pieza" href="docs/anteproyecto-wireframes.pdf">
-        <span class="cinta"></span>
-        <span class="estado listo">Entregado</span>
-        <h3>Anteproyecto</h3>
-        <p>Dieciocho láminas: las pantallas de escritorio anotadas, la adaptación a celular y las
-           reglas transversales del sistema.</p>
-        <span class="ver">Ver PDF →</span>
-      </a>
-      <a class="pieza" href="docs/mapa-de-flujo.pdf">
-        <span class="cinta"></span>
-        <span class="estado listo">Entregado</span>
-        <h3>Flujo de usuario</h3>
-        <p>El diagrama en A3 con los dos recorridos a testear y las convenciones de lectura.</p>
-        <span class="ver">Ver PDF →</span>
-      </a>
-    </div>
-  </section>
-
-  <section>
-    <h2>Estado del proyecto</h2>
-    <p class="sec-nota">Siete sprints de dos semanas, de agosto a noviembre.</p>
-    <div class="sprints">
-      <div class="sp"><span class="n">Sprint 1</span><span class="e">Reuniones internas y concepto</span><span class="f ok">Completado</span></div>
-      <div class="sp"><span class="n">Sprint 2</span><span class="e">Web — Diseño y arquitectura</span><span class="f ok">Completado</span></div>
-      <div class="sp"><span class="n">Sprint 3</span><span class="e">Anteproyecto</span><span class="f ok">Completado</span></div>
-      <div class="sp"><span class="n">Sprint 4</span><span class="e">Web — Programación del prototipo</span><span class="f ok">Completado</span></div>
-      <div class="sp"><span class="n">Sprint 5</span><span class="e">Estética, redes y posteos</span><span class="f go">En curso</span></div>
-      <div class="sp"><span class="n">Sprint 6</span><span class="e">Realidad aumentada — Programación</span><span class="f plan">Planificado</span></div>
-      <div class="sp"><span class="n">Sprint 7</span><span class="e">Realidad aumentada — Diseño</span><span class="f plan">Planificado</span></div>
-    </div>
-  </section>
-
-  <footer>
-    <span>sueter7 · La Sencilla Villa Quién</span>
-    <span>Proyecto Final · ORT 2026</span>
-    <span class="r"><a href="https://github.com/martoknoll/sueter7-villa-quien">Código en GitHub</a></span>
-  </footer>
-
+  <audio id="au" preload="metadata"></audio>
 </div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const W=1728, H=1117;
+
+/* ---------- escala del lienzo ---------- */
+function fit(){
+  const k=Math.min(innerWidth/W, innerHeight/H);
+  const x=(innerWidth-W*k)/2, y=(innerHeight-H*k)/2;
+  $("lienzo").style.transform=`translate(${x}px,${y}px) scale(${k})`;
+}
+addEventListener("resize", fit); fit();
+
+/* ---------- navegación entre secciones ---------- */
+const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html", fechas:"fechas.html"};
+const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda", fechas:"Fechas"};
+const sec=$("seccion"), marco=$("marco");
+const quieto=matchMedia("(prefers-reduced-motion: reduce)");
+let abierta="";
+
+function recorte(nombre){
+  // la sección se abre desde la puerta que se tocó
+  const p=document.querySelector(`.puerta[data-ir="${nombre}"]`);
+  if(!p) return "inset(50% 50% 50% 50%)";
+  const l=parseFloat(p.style.left), t=parseFloat(p.style.top), w=parseFloat(p.style.width), h=parseFloat(p.style.height);
+  return `inset(${t}px ${W-l-w}px ${1016-t-h}px ${l}px)`;
+}
+function ir(nombre, conHistoria){
+  nombre = PAGINAS[nombre] ? nombre : "";
+  const actual = location.hash.slice(1);
+  if(conHistoria !== false && actual !== nombre){
+    history.pushState(null, "", nombre ? "#"+nombre : location.pathname+location.search);
+  }
+  mostrar(nombre);
+}
+function mostrar(nombre){
+  if(nombre===abierta) return;
+  const anterior=abierta; abierta=nombre;
+  sec.style.transition = quieto.matches ? "none" : "";
+  if(nombre){
+    const src=PAGINAS[nombre];
+    // replace() en vez de cambiar src: así el iframe no suma pasos al historial
+    // y el botón "atrás" del navegador sigue el hash de la estación
+    if(marco.dataset.pagina!==src){ marco.dataset.pagina=src; marco.contentWindow.location.replace(src); }
+    document.title = NOMBRES[nombre]+" — sueter7";
+    sec.style.clipPath = anterior ? "inset(0 0 0 0)" : recorte(nombre);
+    sec.classList.remove("cerrada"); sec.setAttribute("aria-hidden","false");
+    $("escena").setAttribute("aria-hidden","true"); $("escena").inert=true;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ sec.style.clipPath="inset(0 0 0 0)"; }));
+    setTimeout(()=>{ try{ marco.focus(); }catch(e){} }, 120);
+  }else{
+    document.title="sueter7 — La Sencilla Villa Quién";
+    sec.style.clipPath = recorte(anterior);
+    sec.classList.add("cerrada"); sec.setAttribute("aria-hidden","true");
+    $("escena").removeAttribute("aria-hidden"); $("escena").inert=false;
+    const p=document.querySelector(`.puerta[data-ir="${anterior}"]`); if(p) p.focus({preventScroll:true});
+  }
+}
+document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev=>{
+  ev.preventDefault(); ir(a.dataset.ir);
+}));
+addEventListener("popstate", ()=> mostrar(location.hash.slice(1)));
+addEventListener("keydown", ev=>{ if(ev.key==="Escape" && abierta) ir(""); });
+$("p-thumb").addEventListener("click", ()=> ir("discos"));
+
+/* ---------- reproductor ---------- */
+const DISCO="sueter7 - Todo Salió Bien en la Sencilla Villa Quién - ";
+const TRACKS=[
+  {n:1,t:"Escritorio",d:398},{n:2,t:"Confluencias",d:220},{n:3,t:"Enero Cuervo",d:333},
+  {n:4,t:"De Chungking a Mendoza",d:322},{n:5,t:"Mapache",d:252},{n:6,t:"Almohadas",d:311},
+  {n:7,t:"Miedos de Transporte",d:308},{n:8,t:"Todo Salió Bien (Carta para un amigo)",d:554}
+].map(x=>({...x, f:DISCO+String(x.n).padStart(2,"0")+" "+x.t+".mp3"}));
+
+const au=$("au");
+let cur=0, loaded=false, aleatorio=false, volumen=1;
+const mmss=s=>isFinite(s)?Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0"):"0:00";
+
+function guardar(){
+  try{ localStorage.setItem("s7-player", JSON.stringify({cur, t:au.currentTime||0, vol:volumen, muted:au.muted, aleatorio})); }catch(e){}
+}
+function cargar(i, reproducir, desde){
+  cur=(i+TRACKS.length)%TRACKS.length;
+  const tr=TRACKS[cur];
+  au.src=tr.f; loaded=true; $("p-err").hidden=true;
+  if(desde) au.addEventListener("loadedmetadata", ()=>{ try{ au.currentTime=desde; }catch(e){} }, {once:true});
+  $("p-title").textContent=tr.t;
+  $("p-dur").textContent=mmss(tr.d);
+  pintarTiempo(desde||0, tr.d);
+  if(reproducir) au.play().catch(()=>{});
+  avisar(); guardar();
+}
+function pintarTiempo(t, d){
+  const p=Math.min(100,(t/(d||1))*100);
+  $("p-fill").style.width=p+"%"; $("p-knob").style.left=p+"%";
+  $("p-cur").textContent=mmss(t);
+  $("p-seek").setAttribute("aria-valuenow", Math.round(p));
+}
+function sonando(){ return loaded && !au.paused; }
+function pintar(){
+  const s=sonando();
+  $("ico-play").toggleAttribute("hidden", s); $("ico-pause").toggleAttribute("hidden", !s);
+  $("p-play").setAttribute("aria-label", s?"Pausar":"Reproducir");
+  avisar();
+}
+function pintarVol(){
+  const v=au.muted?0:volumen;
+  $("p-volfill").style.width=(v*100)+"%";
+  $("ico-x").toggleAttribute("hidden", !(au.muted||volumen===0));
+  $("p-mute").setAttribute("aria-pressed", String(au.muted));
+  $("p-vol-bar").setAttribute("aria-valuenow", Math.round(v*100));
+}
+function alternar(){ if(!loaded){cargar(cur,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
+function siguiente(forzar){
+  if(aleatorio){ let i; do{ i=Math.floor(Math.random()*TRACKS.length); }while(i===cur); cargar(i,true); }
+  else if(cur<TRACKS.length-1 || forzar) cargar(cur+1,true);
+  else { au.pause(); pintar(); }
+}
+function tocarTema(n){
+  const i=TRACKS.findIndex(t=>t.n===n); if(i<0) return;
+  if(i===cur && loaded) alternar(); else cargar(i,true);
+}
+
+$("p-play").addEventListener("click", alternar);
+$("p-prev").addEventListener("click", ()=>{ if(au.currentTime>3){au.currentTime=0;return;} cargar(cur-1,true); });
+$("p-next").addEventListener("click", ()=> siguiente(true));
+$("p-shuffle").addEventListener("click", ()=>{ aleatorio=!aleatorio; $("p-shuffle").setAttribute("aria-pressed",String(aleatorio)); guardar(); });
+$("p-mute").addEventListener("click", ()=>{ au.muted=!au.muted; if(!au.muted&&volumen===0){volumen=.6;au.volume=volumen;} pintarVol(); guardar(); });
+
+au.addEventListener("play", pintar);
+au.addEventListener("pause", ()=>{ pintar(); guardar(); });
+au.addEventListener("ended", ()=> siguiente(false));
+let ultimoGuardado=0;
+au.addEventListener("timeupdate", ()=>{
+  pintarTiempo(au.currentTime, au.duration||TRACKS[cur].d);
+  if(Date.now()-ultimoGuardado>4000){ ultimoGuardado=Date.now(); guardar(); }
+});
+au.addEventListener("loadedmetadata", ()=> $("p-dur").textContent=mmss(au.duration));
+au.addEventListener("error", ()=>{ if(loaded){ $("p-err").hidden=false; pintar(); } });
+
+/* barras arrastrables (posición y volumen) */
+function arrastrable(el, alMover){
+  const pos=ev=>{ const r=el.getBoundingClientRect(); return Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width)); };
+  el.addEventListener("pointerdown", ev=>{
+    el.setPointerCapture(ev.pointerId); alMover(pos(ev));
+    const mover=e=>alMover(pos(e));
+    const soltar=()=>{ el.removeEventListener("pointermove",mover); el.removeEventListener("pointerup",soltar); guardar(); };
+    el.addEventListener("pointermove",mover); el.addEventListener("pointerup",soltar);
+  });
+}
+arrastrable($("p-seek"), f=>{
+  if(!loaded) cargar(cur,false);
+  const d=au.duration||TRACKS[cur].d; try{ au.currentTime=f*d; }catch(e){} pintarTiempo(f*d,d);
+});
+arrastrable($("p-vol-bar"), f=>{ volumen=f; au.volume=f; au.muted=false; pintarVol(); });
+$("p-seek").addEventListener("keydown", ev=>{
+  if(!loaded) return;
+  if(ev.key==="ArrowRight"){ au.currentTime=Math.min(au.duration||0,au.currentTime+5); ev.preventDefault(); }
+  if(ev.key==="ArrowLeft"){ au.currentTime=Math.max(0,au.currentTime-5); ev.preventDefault(); }
+});
+$("p-vol-bar").addEventListener("keydown", ev=>{
+  const d=ev.key==="ArrowRight"?.1:ev.key==="ArrowLeft"?-.1:0; if(!d) return;
+  ev.preventDefault(); volumen=Math.max(0,Math.min(1,volumen+d)); au.volume=volumen; au.muted=false; pintarVol(); guardar();
+});
+document.addEventListener("keydown", ev=>{
+  if(ev.code==="Space" && !/^(INPUT|TEXTAREA|BUTTON|A|SELECT)$/.test(document.activeElement.tagName)){
+    ev.preventDefault(); alternar();
+  }
+});
+
+/* estado guardado: retoma el tema donde quedó (en pausa) */
+(function retomar(){
+  let s=null; try{ s=JSON.parse(localStorage.getItem("s7-player")); }catch(e){}
+  if(s && Number.isInteger(s.cur)){
+    volumen = typeof s.vol==="number" ? s.vol : 1; au.volume=volumen; au.muted=!!s.muted;
+    aleatorio=!!s.aleatorio; $("p-shuffle").setAttribute("aria-pressed",String(aleatorio));
+    if(s.t>1) cargar(s.cur,false,s.t);
+    else { cur=s.cur; $("p-title").textContent=TRACKS[cur].t; $("p-dur").textContent=mmss(TRACKS[cur].d); }
+  }
+  pintarVol(); pintar();
+})();
+
+/* ---------- diálogo con la sección abierta ---------- */
+function avisar(){
+  try{ marco.contentWindow.postMessage({s7:"estado", n:TRACKS[cur].n, sonando:sonando()}, "*"); }catch(e){}
+}
+addEventListener("message", ev=>{
+  if(ev.source!==marco.contentWindow) return;
+  const m=ev.data||{};
+  if(m.s7==="hola") avisar();
+  else if(m.s7==="ir") ir(m.a||"");
+  else if(m.s7==="tema") tocarTema(+m.n);
+  else if(m.s7==="alternar") alternar();
+});
+marco.addEventListener("load", avisar);
+
+/* entrar directo a una sección (index.html#discos) */
+if(location.hash) mostrar(location.hash.slice(1));
+</script>
 </body>
 </html>

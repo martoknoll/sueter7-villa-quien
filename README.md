@@ -19,8 +19,11 @@ cuentan hallazgos, nunca puntos ni tiempos.
 
 | Archivo | Qué es |
 |---|---|
-| `index.html` | Portada del proyecto. Es la página que se abre al entrar. |
-| `discos.html` | Pantalla **Discos y Canciones** construida con la estética definitiva. |
+| `index.html` | **Inicio — la estación.** Andén con las cuatro puertas (Sueter7, Diario, Discos, Tienda) y el reproductor persistente. Las secciones se abren adentro de esta página, así la música no se corta al navegar. |
+| `discos.html` | Pantalla **Discos y Canciones** con la estética definitiva. Usa el reproductor de la estación. |
+| `sueter7.html`, `diario.html`, `tienda.html`, `fechas.html` | Secciones provisorias ("estación en obra"), ya conectadas a la navegación. |
+| `proyecto.html` | Portada del proyecto académico: piezas, documentos y sprints. |
+| `img/` | Escena de la estación, carteles, puertas y tapa en versión liviana. |
 | `prototipo.html` | Prototipo navegable de baja fidelidad, once pantallas conectadas. |
 | `flujo.html` | Mapa de flujo de usuario con las convenciones de lectura. |
 | `reproductor.html` | Estudio estético del reproductor persistente, cuatro estados. |
@@ -65,7 +68,7 @@ Las tres son gratuitas y tienen licencia para web.
 ## Cómo trabajar sobre esto
 
 Las páginas son HTML autocontenido: no hay build, ni dependencias, ni instalación.
-Se abren haciendo doble clic en el archivo. Para publicar un cambio, se sube el archivo
+Se abren haciendo doble clic en `index.html`; cada sección también tiene su dirección propia (`index.html#discos`, `#diario`, etc.). Si se abre una sección suelta, redirige a la estación. Para publicar un cambio, se sube el archivo
 modificado a la rama `main` y GitHub Pages lo actualiza solo en un par de minutos.
 
 ## Pendiente
@@ -73,4 +76,3 @@ modificado a la rama `main` y GitHub Pages lo actualiza solo en un par de minuto
 - Ilustraciones de tapa y las tres tapas de otros lanzamientos.
 - Letras con marcas de tiempo, por canción.
 - Textos de las nueve referencias secretas y las cinco cartas.
-- Audio de los ocho temas.

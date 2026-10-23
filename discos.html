@@ -24,6 +24,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none !important}
+.embebida .player,.embebida #au{display:none !important}
 html,body{height:100%}
 body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono);font-size:14px;overflow-x:hidden}.shell{max-width:none;margin:0;padding:0}
 .stage{margin:0;display:flex;justify-content:center;align-items:flex-start}
@@ -186,12 +187,12 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
     <div class="screen" id="screen">
       <div class="bg"></div>
       <nav class="nav">
-        <a href="index.html" style="left:0;width:88px">Inicio</a>
-        <a href="#" style="left:110px;width:111px">Sueter 7</a>
-        <a href="#" style="left:243px;width:92px">Diario</a>
-        <a href="#" class="on" style="left:357px;width:95px">Discos</a>
-        <a href="#" style="left:474px;width:96px">Tienda</a>
-        <a href="#" style="left:592px;width:98px">Fechas</a>
+        <a href="index.html" data-ir="" style="left:0;width:88px">Inicio</a>
+        <a href="index.html#sueter7" data-ir="sueter7" style="left:110px;width:111px">Sueter 7</a>
+        <a href="index.html#diario" data-ir="diario" style="left:243px;width:92px">Diario</a>
+        <a href="index.html#discos" data-ir="discos" class="on" aria-current="page" style="left:357px;width:95px">Discos</a>
+        <a href="index.html#tienda" data-ir="tienda" style="left:474px;width:96px">Tienda</a>
+        <a href="index.html#fechas" data-ir="fechas" style="left:592px;width:98px">Fechas</a>
       </nav>
       <svg class="flecha" viewBox="0 0 72 32" fill="none" aria-hidden="true">
         <path d="M2 16h63M52 5l14 11-14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/>
@@ -199,7 +200,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
       <div class="t-discos"><span>Discos</span></div>
       <div class="t-canciones"><span>&amp; Canciones</span></div>
       <div class="tapa">
-        <img src="cover.png" alt="Tapa de Todo salió bien en la Sencilla Villa Quién">
+        <img src="img/tapa-800.jpg" alt="Tapa de Todo salió bien en la Sencilla Villa Quién">
         <div class="lomo">
           <div class="pills"><i style="background:var(--crema)"></i><i style="background:var(--rojo)"></i><i style="background:var(--tinta)"></i></div>
           <span>sueter7 · Todo salió bien en la Sencilla Villa Quién · (1) Escritorio · (2) Confluencias · (3) Enero Cuervo · (4) De Chungking a Mendoza · (5) Mapache · (6) Almohadas · (7) Miedos de Transporte · (8) Todo Salió Bien</span>
@@ -259,7 +260,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
       <div class="cinta" style="left:150px;top:292px;width:96px;height:32px;transform:rotate(-22deg)"></div>
       <div class="cinta" style="left:520px;top:676px;width:96px;height:30px;transform:rotate(8deg)"></div>
       <div class="player" id="player">
-        <div class="pthumb"><img src="cover.png" alt=""></div>
+        <div class="pthumb"><img src="img/tapa-mini.jpg" alt=""></div>
         <div class="ptitle" id="p-title">Escritorio</div>
         <div class="palbum" id="p-sub">Todo Salió Bien en la Sencilla Villa Quién</div>
         <button class="pplay" id="p-play" aria-label="Reproducir"><img class="ico" id="ico-main" src="play.png" data-a="play.png" data-b="play-glitch.png" alt=""></button>
@@ -285,6 +286,12 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 </div>
 <script>
 "use strict";
+/* Esta página vive adentro de la estación (index.html), que tiene el reproductor
+   persistente. Si se abre suelta, se redirige ahí para que la música no se corte. */
+const EMBEBIDA = window.parent !== window;
+if(!EMBEBIDA) location.replace("index.html#discos");
+if(EMBEBIDA) document.documentElement.classList.add("embebida");
+const alPadre = m => { try{ window.parent.postMessage(m, "*"); }catch(e){} };
 function fit(){
   const s=document.getElementById("screen"), stage=s.parentElement;
   const k=Math.min(1, stage.parentElement.clientWidth/1920);
@@ -332,7 +339,7 @@ function pintarVol(){
   im.dataset.b = mudo ? "mute-glitch.png" : "vol-glitch.png";
   if(!/glitch/.test(im.src)) im.src=im.dataset.a;
 }
-function alternar(){ if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
+function alternar(){ if(EMBEBIDA){ alPadre({s7:"alternar"}); return; } if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
 function siguiente(forzar){
   if(aleatorio){ let i; do{ i=Math.floor(Math.random()*TRACKS.length); }while(TRACKS.length>1 && i===cur); cargar(i,true); }
   else if(cur<TRACKS.length-1 || forzar) cargar(cur+1,true);
@@ -349,6 +356,7 @@ $("p-shuffle").addEventListener("click", ()=>{
   im.dataset.a = aleatorio ? "shuffle-glitch.png" : "shuffle.png";
 });
 document.querySelectorAll(".tema[data-t]").forEach(b=>b.addEventListener("click", ()=>{
+  if(EMBEBIDA){ alPadre({s7:"tema", n:+b.dataset.t}); return; }
   const i=TRACKS.findIndex(t=>t.n===+b.dataset.t);
   if(i===cur && loaded) alternar(); else cargar(i,true);
 }));
@@ -380,6 +388,19 @@ document.addEventListener("keydown", ev=>{
     ev.preventDefault(); alternar();
   }
 });
+/* navegación y estado compartido con la estación */
+document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev=>{
+  if(!EMBEBIDA) return;
+  ev.preventDefault(); alPadre({s7:"ir", a:a.dataset.ir});
+}));
+window.addEventListener("message", ev=>{
+  const m=ev.data||{};
+  if(ev.source!==window.parent || m.s7!=="estado") return;
+  document.querySelectorAll(".tema[data-t]").forEach(b=>b.classList.toggle("son", +b.dataset.t===m.n));
+  $("btn-disco-txt").textContent = m.sonando ? "Pausar disco" : "Escuchar disco";
+});
+document.addEventListener("keydown", ev=>{ if(EMBEBIDA && ev.key==="Escape") alPadre({s7:"ir", a:""}); });
+if(EMBEBIDA) alPadre({s7:"hola"});
 </script>
 </body>
 </html>
