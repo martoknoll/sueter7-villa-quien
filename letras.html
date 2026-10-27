@@ -206,7 +206,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 
 @media (prefers-reduced-motion:reduce){ *{transition:none !important;scroll-behavior:auto !important} }
 </style>
-<script src="puente.js"></script>
+<script src="puente.js?v=20261026b"></script>
 </head>
 <body>
 <div class="stage">
@@ -1013,7 +1013,7 @@ const mmss = s => isFinite(s) ? Math.floor(s/60)+":"+String(Math.floor(s%60)).pa
 /* ---------- escalado de la pantalla de 1920 ---------- */
 function fit(){
   const s=$("screen"), stage=s.parentElement;
-  const k=Math.min(1, stage.parentElement.clientWidth/1920);
+  const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
   s.style.transform="scale("+k+")";
   stage.style.height=(1080*k)+"px";
 }

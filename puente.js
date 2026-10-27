@@ -32,7 +32,16 @@
 
   document.documentElement.classList.add("embebida");
   var estilo = document.createElement("style");
-  estilo.textContent = ".embebida #player,.embebida .player{display:none !important}";
+  /* en widescreen la pantalla de 1920 queda centrada: los costados siguen el fondo de cada sección */
+  var COSTADOS = {
+    "tienda.html": "#b8cbe4",
+    "sueter7.html": "#ece7dc",
+    "fechas.html": "var(--papel)",
+    "compra.html": "var(--papel)"
+  };
+  var costado = COSTADOS[archivo] || 'var(--papel,#e7dfd3) url("fondo.png") center/cover no-repeat';
+  estilo.textContent = ".embebida #player,.embebida .player{display:none !important}" +
+    "html.embebida,html.embebida body{overflow:hidden;background:" + costado + "}";
   document.head.appendChild(estilo);
 
   function alPadre(m){ try{ window.parent.postMessage(m, "*"); }catch(e){} }

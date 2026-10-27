@@ -100,7 +100,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 
 @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
-<script src="puente.js"></script>
+<script src="puente.js?v=20261026b"></script>
 </head>
 <body>
 <div class="stage">
@@ -216,7 +216,7 @@ dibujar();
 
 function fit(){
   const s=document.getElementById("screen"), stage=s.parentElement;
-  const k=Math.min(1, stage.parentElement.clientWidth/1920);
+  const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
   s.style.transform="scale("+k+")";
   stage.style.height=(1080*k)+"px";
 }

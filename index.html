@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
-<link rel="preload" as="image" href="img/estacion.webp">
+<link rel="preload" as="image" href="img/estacion-ancha.webp">
 <style>
 :root{
   --papel:#e7dfd3; --crema:#fffdf9; --crema-var:#f4f0e6;
@@ -17,18 +17,21 @@
   --display:"Bebas Neue","Arial Narrow",sans-serif;
   --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
   --W:1728px; --H:1117px; --escena:1016px;
+  --Wv:1728px; --off:0px;      /* ancho visible y corrimiento del centro: los ajusta fit() en widescreen */
 }
 *{box-sizing:border-box}
 [hidden]{display:none !important}
 html,body{margin:0;height:100%;background:var(--tinta);overflow:hidden}
 body{font-family:var(--mono);color:var(--tinta);-webkit-font-smoothing:antialiased}
 
-/* lienzo a 1728 x 1117 que se escala entero a la ventana */
-.lienzo{position:absolute;left:0;top:0;width:var(--W);height:var(--H);transform-origin:0 0;overflow:hidden;background:var(--crema-var)}
+/* lienzo de 1117 de alto que se escala a la ventana; a lo ancho crece hasta 2544
+   (widescreen) y la estación de 1728 queda centrada */
+.lienzo{position:absolute;left:0;top:0;width:var(--Wv);height:var(--H);transform-origin:0 0;overflow:hidden;background:var(--crema-var)}
+.fondo-ancho{position:absolute;left:0;top:0;width:var(--Wv);height:var(--escena);
+  background:url("img/estacion-ancha.webp") calc((var(--Wv) - 2544px) / 2) 0/2544px 1016px no-repeat}
 
 /* ---------- escena: la estación ---------- */
-.escena{position:absolute;left:0;top:0;width:var(--W);height:var(--escena);
-  background:url("img/estacion.webp") 0 0/100% 100% no-repeat}
+.escena{position:absolute;left:var(--off);top:0;width:var(--W);height:var(--escena)}
 .logo{position:absolute;left:70px;top:36px;width:350px;height:90px;border-radius:2px}
 .proyecto{position:absolute;left:18px;top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
   text-transform:uppercase;color:rgba(20,20,20,.5);text-decoration:none;padding:2px 4px}
@@ -44,15 +47,16 @@ body{font-family:var(--mono);color:var(--tinta);-webkit-font-smoothing:antialias
 .puerta:active .sign{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
 
 /* ---------- sección abierta (se carga adentro, la música sigue) ---------- */
-.seccion{position:absolute;left:0;top:0;width:var(--W);height:var(--escena);z-index:5;background:var(--papel);
+.seccion{position:absolute;left:0;top:0;width:var(--Wv);height:var(--escena);z-index:5;background:var(--papel);
   clip-path:inset(0 0 0 0);transition:clip-path .55s cubic-bezier(.7,0,.2,1), opacity .3s ease}
 .seccion iframe{display:block;width:100%;height:100%;border:0;background:var(--papel)}
 .seccion.cerrada{pointer-events:none;opacity:0}
 
 /* ---------- reproductor persistente ---------- */
-.player{position:absolute;left:0;top:var(--escena);width:var(--W);height:calc(var(--H) - var(--escena));
+.player{position:absolute;left:0;top:var(--escena);width:var(--Wv);height:calc(var(--H) - var(--escena));
   background:var(--crema-var);border-top:2.5px solid var(--tinta);z-index:10;color:var(--tinta)}
-.player > *{position:absolute}
+.pl-in{position:absolute;left:var(--off);top:0;width:var(--W);height:100%}
+.pl-in > *{position:absolute}
 .pthumb{left:13px;top:26px;width:60px;height:60px;overflow:hidden;background:var(--azul);padding:0;border:0;cursor:pointer}
 .pthumb img{width:100%;height:100%;object-fit:cover;display:block}
 .ptitle{left:90px;top:35px;font-size:16px;font-weight:700;line-height:1.2;max-width:350px;
@@ -92,7 +96,7 @@ button{font:inherit;color:inherit}
   padding:3px 9px;border:2px solid var(--tinta)}
 
 /* ---------- Mari, caminando por el andén ---------- */
-.piso{position:absolute;left:0;top:748px;width:var(--W);height:96px;cursor:pointer;z-index:1}
+.piso{position:absolute;left:calc(-1 * var(--off));top:748px;width:var(--Wv);height:96px;cursor:pointer;z-index:1}
 .mari{position:absolute;left:0;top:0;width:112px;height:208px;z-index:3;pointer-events:none;
   background:url("img/mari.png") 0 0/1344px 208px no-repeat;image-rendering:pixelated;
   transform-origin:50% 100%;will-change:transform,opacity}
@@ -105,6 +109,7 @@ button{font:inherit;color:inherit}
 </head>
 <body>
 <div class="lienzo" id="lienzo">
+  <div class="fondo-ancho" aria-hidden="true"></div>
 
   <main class="escena" id="escena" aria-label="Andén de la Sencilla Villa Quién">
     <h1 hidden>sueter7 — Todo salió bien en la Sencilla Villa Quién</h1>
@@ -139,7 +144,7 @@ button{font:inherit;color:inherit}
     <iframe id="marco" title="Sección" src="about:blank"></iframe>
   </div>
 
-  <section class="player" id="player" aria-label="Reproductor">
+  <section class="player" id="player" aria-label="Reproductor"><div class="pl-in">
     <button class="pthumb" id="p-thumb" aria-label="Ver el disco"><img src="img/tapa-mini.jpg" alt=""></button>
     <div class="ptitle" id="p-title">Escritorio</div>
     <div class="palbum" id="p-sub">Todo Salió Bien en la Sencilla Villa Quién</div>
@@ -174,7 +179,7 @@ button{font:inherit;color:inherit}
       <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true"><path d="M2 4.2C7.6 1.6 14.4 1.6 20 4.2M3.6 8.4c4.6-2 10.2-2 14.8 0M5.4 12.4c3.6-1.4 7.6-1.4 11.2 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>
     </a>
     <span class="perr" id="p-err" hidden>no se encuentra el audio</span>
-  </section>
+  </div></section>
   <audio id="au" preload="metadata"></audio>
 </div>
 
@@ -184,14 +189,23 @@ const $=id=>document.getElementById(id);
 const W=1728, H=1117;
 
 /* ---------- escala del lienzo ---------- */
+const WMAX=2544;                       // ancho de img/estacion-ancha.webp en px de 1x
+let Wv=W, OFF=0;
 function fit(){
-  const k=Math.min(innerWidth/W, innerHeight/H);
-  const x=(innerWidth-W*k)/2, y=(innerHeight-H*k)/2;
-  $("lienzo").style.transform=`translate(${x}px,${y}px) scale(${k})`;
+  let k=innerHeight/H;
+  Wv=Math.min(WMAX, Math.max(W, innerWidth/k));
+  if(Wv*k>innerWidth) k=innerWidth/Wv;          // pantallas angostas: manda el ancho
+  OFF=(Wv-W)/2;
+  const x=(innerWidth-Wv*k)/2, y=(innerHeight-H*k)/2;
+  const l=$("lienzo");
+  l.style.setProperty("--Wv", Wv+"px"); l.style.setProperty("--off", OFF+"px");
+  l.style.transform=`translate(${x}px,${y}px) scale(${k})`;
+  if(window.ANDEN){ ANDEN.x0=60-OFF; ANDEN.x1=1668+OFF; }
 }
 addEventListener("resize", fit); fit();
 
 /* ---------- navegación entre secciones ---------- */
+const VERSION="20261026b";             // cambiarla al publicar fuerza a recargar las secciones
 const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
   fechas:"fechas.html", letras:"letras.html", compra:"compra.html"};
 const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",
@@ -206,7 +220,7 @@ function recorte(nombre){
   const p=document.querySelector(`.puerta[data-ir="${nombre}"]`);
   if(!p) return "inset(50% 50% 50% 50%)";
   const l=parseFloat(p.style.left), t=parseFloat(p.style.top), w=parseFloat(p.style.width), h=parseFloat(p.style.height);
-  return `inset(${t}px ${W-l-w}px ${1016-t-h}px ${l}px)`;
+  return `inset(${t}px ${Wv-OFF-l-w}px ${1016-t-h}px ${OFF+l}px)`;
 }
 function ir(nombre, q){
   nombre = PAGINAS[nombre] ? nombre : "";
@@ -225,7 +239,7 @@ function mostrar(ruta){
   const anterior=partir(abierta)[0]; abierta=ruta;
   sec.style.transition = quieto.matches ? "none" : "";
   if(nombre){
-    const src=PAGINAS[nombre]+q;
+    const src=PAGINAS[nombre]+(q ? q+"&" : "?")+"v="+VERSION;
     // replace() en vez de cambiar src: así el iframe no suma pasos al historial
     // y el botón "atrás" del navegador sigue el hash de la estación
     if(marco.dataset.pagina!==src){ marco.dataset.pagina=src; marco.contentWindow.location.replace(src); }
@@ -254,7 +268,7 @@ document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev
    Sprite de 12 cuadros (img/mari.png, 28×52 px ampliado ×4):
    0–7 caminata de costado · 8–10 de espaldas · 11 de frente           */
 const mari=$("mari");
-const ANDEN={x0:60, x1:1670, y0:752, y1:832};
+const ANDEN=window.ANDEN={x0:60-OFF, x1:1668+OFF, y0:752, y1:832};
 const PUERTA_X={sueter7:252, diario:688, discos:1104, tienda:1544};
 const mp={x:820, y:818, dir:1, cuadro:11, ocupada:false, viaje:0};
 const escalaMari=y=>0.88+0.12*Math.max(0,Math.min(1,(y-ANDEN.y0)/(ANDEN.y1-ANDEN.y0)));
@@ -299,8 +313,8 @@ setInterval(()=>{
 }, 400);
 $("piso").addEventListener("click", ev=>{
   if(mp.ocupada) return;
-  const r=$("lienzo").getBoundingClientRect(), k=r.width/W;
-  caminarA((ev.clientX-r.left)/k, (ev.clientY-r.top)/k);
+  const r=$("lienzo").getBoundingClientRect(), k=r.width/Wv;
+  caminarA((ev.clientX-r.left)/k-OFF, (ev.clientY-r.top)/k);
 });
 async function entrarPorPuerta(nombre){
   if(mp.ocupada) return;
