@@ -233,7 +233,8 @@ function mostrar(ruta){
     sec.style.clipPath = anterior ? "inset(0 0 0 0)" : recorte(nombre);
     sec.classList.remove("cerrada"); sec.setAttribute("aria-hidden","false");
     $("escena").setAttribute("aria-hidden","true"); $("escena").inert=true;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{ sec.style.clipPath="inset(0 0 0 0)"; }));
+    void sec.offsetWidth;                         // fija el recorte inicial y anima desde la puerta
+    sec.style.clipPath="inset(0 0 0 0)";
     setTimeout(()=>{ try{ marco.focus(); }catch(e){} }, 120);
   }else{
     document.title="sueter7 — La Sencilla Villa Quién";
