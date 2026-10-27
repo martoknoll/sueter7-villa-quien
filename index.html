@@ -91,6 +91,13 @@ button{font:inherit;color:inherit}
 .perr{right:18px;top:-24px;background:var(--rojo);color:var(--crema);font-size:10px;letter-spacing:.07em;
   padding:3px 9px;border:2px solid var(--tinta)}
 
+/* ---------- Mari, caminando por el andén ---------- */
+.piso{position:absolute;left:0;top:748px;width:var(--W);height:96px;cursor:pointer;z-index:1}
+.mari{position:absolute;left:0;top:0;width:112px;height:208px;z-index:3;pointer-events:none;
+  background:url("img/mari.png") 0 0/1344px 208px no-repeat;image-rendering:pixelated;
+  transform-origin:50% 100%;will-change:transform,opacity}
+.mari.entra{transition:transform .38s ease-in, opacity .38s ease-in}
+
 @media (prefers-reduced-motion: reduce){
   .seccion,.puerta .sign,.puerta .door,.circ,.ctl svg{transition:none !important}
 }
@@ -103,6 +110,7 @@ button{font:inherit;color:inherit}
     <h1 hidden>sueter7 — Todo salió bien en la Sencilla Villa Quién</h1>
     <a class="logo" href="#" aria-label="sueter7 — volver al andén" data-ir=""></a>
     <a class="proyecto" href="proyecto.html">Proyecto final ↗</a>
+    <div class="piso" id="piso" title="Hacé clic en el andén para caminar" aria-hidden="true"></div>
 
     <a class="puerta" href="#sueter7" data-ir="sueter7" aria-label="Sueter7 — la banda"
        style="left:129px;top:305.5px;width:282.5px;height:431px">
@@ -124,6 +132,7 @@ button{font:inherit;color:inherit}
       <img class="door" src="img/puerta-tienda.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
       <img class="sign" src="img/cartel-tienda.webp" alt="" style="left:0;top:0;width:284.5px;height:109px">
     </a>
+    <div class="mari" id="mari" aria-hidden="true"></div>
   </main>
 
   <div class="seccion cerrada" id="seccion" aria-hidden="true">
@@ -232,11 +241,93 @@ function mostrar(ruta){
     sec.classList.add("cerrada"); sec.setAttribute("aria-hidden","true");
     $("escena").removeAttribute("aria-hidden"); $("escena").inert=false;
     const p=document.querySelector(`.puerta[data-ir="${anterior}"]`); if(p) p.focus({preventScroll:true});
+    salirPorPuerta(anterior);
   }
 }
 document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev=>{
-  ev.preventDefault(); ir(a.dataset.ir);
+  ev.preventDefault();
+  if(a.classList.contains("puerta")) entrarPorPuerta(a.dataset.ir); else ir(a.dataset.ir);
 }));
+
+/* ---------- Mari camina por el andén y entra por las puertas ----------
+   Sprite de 12 cuadros (img/mari.png, 28×52 px ampliado ×4):
+   0–7 caminata de costado · 8–10 de espaldas · 11 de frente           */
+const mari=$("mari");
+const ANDEN={x0:60, x1:1670, y0:752, y1:832};
+const PUERTA_X={sueter7:252, diario:688, discos:1104, tienda:1544};
+const mp={x:820, y:818, dir:1, cuadro:11, ocupada:false, viaje:0};
+const escalaMari=y=>0.88+0.12*Math.max(0,Math.min(1,(y-ANDEN.y0)/(ANDEN.y1-ANDEN.y0)));
+function pintarMari(){
+  mari.style.backgroundPosition=(-mp.cuadro*112)+"px 0";
+  const s=escalaMari(mp.y);
+  mari.style.transform=`translate(${mp.x-56}px,${mp.y-208}px) scale(${mp.dir<0?-s:s},${s})`;
+}
+let quietoDesde=null;
+const BANCO={x0:280, x1:650, y:824};                     // por delante del banco, nunca a través
+function caminarA(x,y){
+  x=Math.max(ANDEN.x0,Math.min(ANDEN.x1,x)); y=Math.max(ANDEN.y0,Math.min(ANDEN.y1,y));
+  if(x>BANCO.x0 && x<BANCO.x1) y=Math.max(y, BANCO.y);
+  const viaje=++mp.viaje;
+  if(quieto.matches){ mp.x=x; mp.y=y; mp.cuadro=11; pintarMari(); return Promise.resolve(); }
+  return new Promise(listo=>{
+    let previo=performance.now(), recorrido=0;
+    function paso(t){
+      if(viaje!==mp.viaje) return listo();               // otro clic la mandó a otro lado
+      const dt=Math.min(.05,(t-previo)/1000); previo=t;
+      const dx=x-mp.x, dy=y-mp.y, d=Math.hypot(dx,dy);
+      if(d<1.5){
+        mp.x=x; mp.y=y;
+        mp.cuadro = mp.cuadro>=8 && mp.cuadro<=10 ? 8 : 2;   // queda quieta en la última pose
+        pintarMari(); quietoDesde=performance.now(); return listo();
+      }
+      const v=Math.min(d, 250*dt);                           // 250 px por segundo
+      mp.x+=dx/d*v; mp.y+=dy/d*v; recorrido+=v;
+      if(Math.abs(dx)>=Math.abs(dy)*0.8){ mp.dir=dx<0?-1:1; mp.cuadro=Math.floor(recorrido/11)%8; }
+      else if(dy<0){ mp.dir=1; mp.cuadro=8+[1,0,2,0][Math.floor(recorrido/9)%4]; }  // se aleja: de espaldas
+      else { mp.dir=1; mp.cuadro=11; }
+      pintarMari(); requestAnimationFrame(paso);
+    }
+    quietoDesde=null; requestAnimationFrame(paso);
+  });
+}
+/* después de un rato quieta, se da vuelta y mira a la pantalla */
+setInterval(()=>{
+  if(quietoDesde && performance.now()-quietoDesde>1600 && mp.cuadro!==11 && !mp.ocupada){
+    mp.cuadro=11; mp.dir=1; pintarMari(); quietoDesde=null;
+  }
+}, 400);
+$("piso").addEventListener("click", ev=>{
+  if(mp.ocupada) return;
+  const r=$("lienzo").getBoundingClientRect(), k=r.width/W;
+  caminarA((ev.clientX-r.left)/k, (ev.clientY-r.top)/k);
+});
+async function entrarPorPuerta(nombre){
+  if(mp.ocupada) return;
+  const px=PUERTA_X[nombre];
+  if(quieto.matches || px==null){ ir(nombre); return; }
+  mp.ocupada=true;
+  const cruzaBanco=Math.min(mp.x,px)<BANCO.x1 && Math.max(mp.x,px)>BANCO.x0;
+  if(Math.abs(mp.x-px)>4){
+    if(cruzaBanco && mp.y<BANCO.y) await caminarA(mp.x, BANCO.y);   // primero sale de atrás del banco
+    await caminarA(px, cruzaBanco ? BANCO.y : Math.max(mp.y, 800));
+  }
+  await caminarA(px, ANDEN.y0);
+  mari.classList.add("entra");
+  mari.style.opacity="0";
+  mari.style.transform+=" translateY(-10px) scale(.86)";
+  await new Promise(r=>setTimeout(r, 360));
+  ir(nombre);
+}
+/* al volver al andén, sale por la misma puerta y queda mirando */
+function salirPorPuerta(nombre){
+  const px=PUERTA_X[nombre];
+  mari.classList.remove("entra");
+  if(px!=null){ mp.x=px; mp.y=ANDEN.y0+18; }
+  mp.cuadro=11; mp.dir=1; mp.ocupada=false; mp.viaje++;
+  mari.style.opacity="1"; pintarMari();
+  if(px!=null && !quieto.matches) setTimeout(()=>caminarA(px, 812), 420);
+}
+pintarMari();
 addEventListener("popstate", ()=> mostrar(decodeURIComponent(location.hash.slice(1))));
 addEventListener("keydown", ev=>{ if(ev.key==="Escape" && abierta) ir(""); });
 $("p-thumb").addEventListener("click", ()=> ir("discos"));

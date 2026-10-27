@@ -6,125 +6,694 @@
 <title>Diario — sueter7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Geist+Mono:wght@400;700&display=swap">
+<script src="puente.js"></script>
+<script src="lib/page-flip.browser.js"></script>
 <style>
 :root{
-  --papel:#e7dfd3; --crema:#fffdf9; --crema-var:#efe9de;
-  --tinta:#141414; --gris:#333; --rojo:#c9452c; --rojo-var:#d24426;
-  --amarillo:#e8c340; --azul:#2c61b2;
+  --papel:#e7dfd3; --hoja:#fbf7ee; --hoja-2:#f3ecdf; --crema:#fffdf9; --crema-var:#efe9de;
+  --tinta:#141414; --gris:#3a3a3a; --renglon:rgba(44,97,178,.20);
+  --rojo:#c9452c; --rojo-var:#d24426; --amarillo:#e8c340; --azul:#2c61b2;
   --display:"Bebas Neue","Arial Narrow",sans-serif;
-  --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --mono:"Geist Mono",ui-monospace,Menlo,monospace;
+  /* letra de las entradas del diario: cambiá por var(--mono) si se prefiere tipeada */
+  --mano:"Caveat","Segoe Print",cursive;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{background:var(--papel);color:var(--tinta);font-family:var(--mono);font-size:14px;overflow:hidden}
-.stage{display:flex;justify-content:center;align-items:flex-start}
-.screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;transform-origin:top center;background:var(--papel)}
-.bg{position:absolute;inset:0;background:var(--papel) url("fondo.png") center/cover no-repeat}
-.screen > *:not(.bg){position:absolute;z-index:2}
-.nav{left:1163px;top:39px;width:690px;height:44px}
+[hidden]{display:none !important}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
+
+/* ---------- pantalla 1920 × 1080 (fondo, navegación y títulos) ---------- */
+.stage{position:absolute;left:0;top:0;width:100%;display:flex;justify-content:center}
+.screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;transform-origin:top center;
+  background:var(--papel) url("fondo.png") center/cover no-repeat}
+.screen > *{position:absolute}
+.nav{left:1163px;top:39px;width:690px;height:44px;z-index:6}
 .nav a{position:absolute;top:0;height:44px;display:grid;place-items:center;
   font-family:var(--display);font-size:20px;letter-spacing:.09em;text-transform:uppercase;
-  background:var(--rojo);color:var(--crema);text-decoration:none;
+  background:var(--rojo);color:var(--crema);text-decoration:none;white-space:nowrap;
   border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta);line-height:1;padding-top:3px}
 .nav a.on{background:var(--amarillo);color:var(--tinta)}
 .nav a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
-.nav a:focus-visible{outline:3px solid var(--azul);outline-offset:3px}
 .volver{left:74px;top:52px;display:flex;align-items:center;gap:12px;text-decoration:none;
   font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta)}
-.volver svg{transform:rotate(180deg)}
 .volver:hover{color:var(--rojo)}
-.t-1{margin:0;left:87px;top:160px;padding:30px 44px 18px;background:var(--amarillo);
-  box-shadow:16px 16px 0 var(--tinta);transform:rotate(-2.2deg)}
-.t-1 span{font-family:var(--mono);font-weight:700;font-size:118px;line-height:.8;letter-spacing:-.02em;color:var(--tinta);text-transform:uppercase;white-space:nowrap}
-.t-2{left:150px;top:330px;padding:16px 26px 12px;background:var(--tinta);transform:rotate(-1.2deg)}
-.t-2 span{font-family:var(--mono);font-weight:700;font-size:40px;line-height:1;letter-spacing:-.02em;color:var(--crema);text-transform:uppercase;white-space:nowrap}
-.ficha{left:178px;top:470px;width:1000px;min-height:380px;background:var(--crema);
-  border:3px solid var(--tinta);box-shadow:8px 8px 0 var(--tinta);padding:44px 52px 48px}
-.sello{display:inline-block;margin:0 0 26px;font-family:var(--display);font-size:30px;letter-spacing:.1em;color:var(--rojo);
-  border:3px solid var(--rojo);padding:8px 18px 3px;transform:rotate(-3deg);margin:0 0 26px}
-.lugar{font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:.08em;margin:0 0 12px}
-.texto{font-family:var(--mono);font-size:19px;line-height:1.6;color:var(--gris);margin:0 0 38px;max-width:52ch}
-.botones{display:flex;gap:26px;align-items:center}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;height:54px;padding:4px 30px 0;
-  font-family:var(--display);font-size:26px;letter-spacing:.06em;text-transform:uppercase;line-height:1;text-decoration:none;
-  border:2.5px solid var(--tinta);box-shadow:6px 6px 0 var(--tinta);cursor:pointer}
-.btn:active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--tinta)}
-.btn:focus-visible{outline:3px solid var(--rojo);outline-offset:4px}
-.btn.escuchar{background:var(--azul);color:var(--crema)}
-.btn.escuchar:hover{filter:brightness(1.1)}
-.btn.otro{background:var(--crema);color:var(--tinta)}
-.btn.otro:hover{background:var(--amarillo)}
-.sticker{left:1300px;top:420px;width:230px;height:230px;border-radius:50%;background:var(--rojo-var);
-  border:2.5px solid var(--tinta);display:grid;place-items:center;transform:rotate(-9deg);box-shadow:6px 6px 0 rgba(20,20,20,.35)}
-.sticker::before{content:"";position:absolute;inset:11px;border:1.5px dashed rgba(255,253,249,.6);border-radius:50%}
-.sticker span{font-family:var(--mono);font-size:17px;font-weight:700;line-height:1.5;color:var(--crema);text-align:center}
-.cinta{background:linear-gradient(105deg, rgba(240,232,214,.62), rgba(226,215,192,.78) 45%, rgba(240,232,214,.6));
-  border-top:1px solid rgba(255,255,255,.45);border-bottom:1px solid rgba(20,20,20,.14);box-shadow:0 1px 3px rgba(20,20,20,.18);z-index:9}
+.t-diario{left:96px;top:118px;padding:16px 26px 8px;background:var(--amarillo);transform:rotate(-2.4deg);
+  box-shadow:10px 10px 0 var(--tinta);font-family:var(--mono);font-weight:700;font-size:64px;line-height:.85;
+  letter-spacing:-.02em;text-transform:uppercase;margin:0}
+.t-sub{left:118px;top:206px;padding:9px 16px 6px;background:var(--tinta);color:var(--crema);transform:rotate(-1.2deg);
+  font-family:var(--mono);font-weight:700;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
+.ayuda{left:96px;top:290px;width:250px;font-family:var(--mano);font-size:27px;line-height:1.12;color:var(--gris);transform:rotate(-2deg)}
+.ayuda b{color:var(--rojo);font-weight:700}
+
+/* controles abajo del libro */
+.ctrl{left:420px;top:968px;width:1080px;height:46px;display:flex;align-items:center;justify-content:center;gap:26px}
+.ctrl button{font-family:var(--display);font-size:22px;letter-spacing:.09em;height:44px;padding:4px 20px 0;cursor:pointer;
+  background:var(--crema);color:var(--tinta);border:2.5px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta)}
+.ctrl button:hover:not(:disabled){background:var(--amarillo)}
+.ctrl button:disabled{opacity:.35;cursor:default}
+.ctrl button:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
+.ctrl .pag{font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.12em;min-width:170px;text-align:center;
+  background:var(--tinta);color:var(--crema);padding:8px 14px}
+
+/* ---------- el libro (capa sin escalar: StPageFlip mide en píxeles reales) ---------- */
+#capa{position:absolute;z-index:5}
+#libro{width:100%;height:100%}
+.page{background:var(--hoja);overflow:hidden}
+.page .in{position:absolute;left:0;top:0;width:560px;height:780px;transform-origin:0 0;transform:scale(var(--s,1));overflow:hidden}
+/* lomo: sombra del lado de la costura */
+.page.izq .in::after,.page.der .in::after{content:"";position:absolute;top:0;bottom:0;width:46px;pointer-events:none}
+.page.izq .in::after{right:0;background:linear-gradient(90deg,transparent,rgba(20,20,20,.10))}
+.page.der .in::after{left:0;background:linear-gradient(270deg,transparent,rgba(20,20,20,.10))}
+
+/* hoja rayada */
+.rayada .in{background:
+  linear-gradient(90deg,transparent 66px,rgba(201,69,44,.45) 66px,rgba(201,69,44,.45) 68px,transparent 68px),
+  repeating-linear-gradient(180deg,transparent 0 31px,var(--renglon) 31px 32px) 0 118px/100% calc(100% - 150px) no-repeat,
+  var(--hoja)}
+.cabeza{position:absolute;left:84px;right:36px;top:40px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.cap{white-space:nowrap;font-family:var(--display);font-size:30px;letter-spacing:.06em;line-height:1;background:var(--tinta);color:var(--crema);padding:6px 12px 2px}
+.fecha{font-family:var(--mano);font-size:26px;color:var(--rojo);white-space:nowrap}
+.entrada{position:absolute;left:84px;right:40px;top:110px;bottom:52px;font-family:var(--mano);font-weight:500;
+  font-size:25px;line-height:32px;color:#1f2a44;overflow:hidden}
+.entrada p{margin:0 0 0}
+.entrada p + p{text-indent:22px}
+.entrada s{text-decoration-thickness:2px;color:#56607a}
+.entrada .firma{text-align:right;margin-top:6px;font-weight:700}
+.folio{position:absolute;bottom:20px;font-family:var(--mono);font-size:12px;color:#8b8478;letter-spacing:.1em}
+.izq .folio{left:30px}
+.der .folio{right:30px}
+
+/* hoja de recortes (pegados con cinta) */
+.recortes .in{background:var(--hoja-2)}
+.recortes .in::before{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
+  background-image:radial-gradient(rgba(20,20,20,.08) 1px,transparent 1.4px);background-size:7px 7px}
+.verso{position:absolute;left:46px;right:46px;top:52px;background:var(--amarillo);padding:22px 24px 18px;transform:rotate(-1.4deg);
+  box-shadow:6px 6px 0 var(--tinta);font-family:var(--mono);font-weight:700;font-size:21px;line-height:1.3;letter-spacing:-.01em}
+.verso small{display:block;margin-top:10px;font-size:11px;letter-spacing:.16em;font-weight:700;color:#5a4a10}
+.recorte{position:absolute;left:52px;right:52px;background:var(--crema);border:2px solid var(--tinta);padding:14px 18px 12px;
+  font-family:var(--mono);font-size:14px;line-height:1.5;box-shadow:4px 4px 0 rgba(20,20,20,.55)}
+.recorte .de{display:block;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--rojo);margin-bottom:6px}
+.recorte q{quotes:"«" "»";font-weight:700}
+.cinta{position:absolute;width:96px;height:28px;z-index:2;
+  background:linear-gradient(105deg,rgba(240,232,214,.7),rgba(226,215,192,.86) 45%,rgba(240,232,214,.68));
+  border-top:1px solid rgba(255,255,255,.5);border-bottom:1px solid rgba(20,20,20,.14)}
+.nota{position:absolute;font-family:var(--mano);font-weight:700;font-size:25px;line-height:1.1;color:var(--rojo)}
+.escuchar{position:absolute;left:52px;bottom:48px;display:inline-flex;align-items:center;gap:10px;cursor:pointer;
+  font-family:var(--display);font-size:21px;letter-spacing:.08em;padding:9px 16px 5px;
+  background:var(--azul);color:var(--crema);border:2.5px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta)}
+.escuchar:hover{filter:brightness(1.12)}
+.escuchar:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--tinta)}
+.escuchar.son{background:var(--rojo)}
+
+/* tapas */
+.tapa .in{background:var(--azul);color:var(--crema)}
+.tapa .in::before{content:"";position:absolute;inset:0;opacity:.35;
+  background-image:radial-gradient(rgba(10,20,50,.9) 1.6px,transparent 2px);background-size:9px 9px;
+  -webkit-mask-image:linear-gradient(160deg,#000,transparent 70%);mask-image:linear-gradient(160deg,#000,transparent 70%)}
+.etiqueta{position:absolute;left:70px;right:70px;top:190px;background:var(--crema);color:var(--tinta);border:3px solid var(--tinta);
+  box-shadow:10px 10px 0 var(--tinta);padding:30px 30px 26px;transform:rotate(-2deg);text-align:center}
+.etiqueta h2{margin:0;font-family:var(--display);font-size:120px;line-height:.82;letter-spacing:.04em}
+.etiqueta .de{font-family:var(--mano);font-size:40px;font-weight:700;color:var(--rojo);margin-top:8px}
+.etiqueta .disco{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.16em;margin-top:12px}
+.sello{position:absolute;width:150px;height:150px;border-radius:50%;background:var(--rojo-var);border:2.5px solid var(--tinta);
+  display:grid;place-items:center;text-align:center;transform:rotate(-10deg);
+  font-family:var(--mono);font-size:14px;font-weight:700;line-height:1.5;color:var(--crema)}
+.sello::before{content:"";position:absolute;inset:8px;border:1.5px dashed rgba(255,253,249,.6);border-radius:50%}
+.contratapa .in{background:var(--tinta);color:var(--crema)}
+.contratapa .in::before{content:"";position:absolute;inset:0;opacity:.18;
+  background-image:radial-gradient(var(--crema) 1.4px,transparent 1.8px);background-size:10px 10px}
+
+/* guarda e índice */
+.guarda .in{background:var(--crema-var)}
+.indice ol{list-style:none;margin:0;padding:0;position:absolute;left:84px;right:40px;top:120px}
+.indice li{border-bottom:1px solid rgba(20,20,20,.2)}
+.indice button{display:grid;grid-template-columns:42px 1fr 40px;align-items:baseline;width:100%;padding:11px 4px 9px;
+  background:transparent;border:0;cursor:pointer;text-align:left;font-family:var(--mono);font-size:16px;color:var(--tinta)}
+.indice button:hover{background:rgba(232,195,64,.45)}
+.indice button b{color:var(--rojo)}
+.indice button span:last-child{text-align:right;color:#7a7368;font-size:13px}
+
+/* bitácora de radio */
+.bitacora{position:absolute;left:46px;right:46px;top:46px;background:var(--crema);border:2px solid var(--tinta);
+  box-shadow:5px 5px 0 var(--tinta);font-family:var(--mono);font-size:12.5px}
+.bitacora h3{margin:0;padding:10px 14px 7px;background:var(--tinta);color:var(--crema);font-family:var(--display);
+  font-size:22px;letter-spacing:.08em;font-weight:400}
+.bitacora table{width:100%;border-collapse:collapse}
+.bitacora td{padding:7px 10px;border-top:1px dashed rgba(20,20,20,.3);vertical-align:top;line-height:1.35}
+.bitacora td:first-child{white-space:nowrap;font-weight:700}
+.bitacora td:nth-child(2){white-space:nowrap;color:var(--azul);font-weight:700}
+.bitacora td i{font-family:var(--mano);font-style:normal;font-size:19px;color:#1f2a44}
+/* la persiana: el sol de allá entrando por acá */
+.persiana{position:absolute;left:300px;top:404px;width:200px;height:200px;border:2px solid var(--tinta);overflow:hidden;
+  transform:rotate(3deg);box-shadow:4px 4px 0 rgba(20,20,20,.55);
+  background:
+   repeating-linear-gradient(172deg,rgba(255,214,140,.95) 0 9px,rgba(18,16,24,.95) 9px 22px),
+   #120f18}
+.persiana::after{content:"";position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,226,160,.9) 1px,transparent 1.6px),radial-gradient(rgba(255,226,160,.6) 1px,transparent 1.5px);
+  background-size:23px 19px,13px 17px;background-position:4px 7px,11px 2px;
+  -webkit-mask-image:linear-gradient(200deg,#000 10%,transparent 85%);mask-image:linear-gradient(200deg,#000 10%,transparent 85%)}
+
+/* horario de Mapache */
+.horario{position:absolute;left:300px;top:250px;width:212px;background:var(--crema);border:2px solid var(--tinta);
+  transform:rotate(2.5deg);box-shadow:4px 4px 0 rgba(20,20,20,.55);font-family:var(--mono);font-size:13px}
+.horario div{display:flex;justify-content:space-between;gap:8px;padding:5px 10px;border-top:1px solid rgba(20,20,20,.18)}
+.horario div:first-child{border-top:0;background:var(--azul);color:var(--crema);font-weight:700;letter-spacing:.12em;font-size:11px}
+.horario b{font-weight:700}
+
+/* palitos del insomnio */
+.palitos{position:absolute;left:52px;top:262px;right:52px;font-family:var(--mano);font-size:24px;color:#1f2a44}
+.palitos .marcas{font-family:var(--mono);font-size:30px;letter-spacing:.06em;color:var(--tinta);margin:4px 0 8px}
+.palitos .horas{display:flex;flex-wrap:wrap;gap:8px}
+.palitos .horas span{font-family:var(--mono);font-size:13px;font-weight:700;padding:3px 8px;border:1.5px solid var(--tinta);background:var(--crema)}
+
+/* boleto */
+.boleto{position:absolute;left:58px;top:250px;width:300px;height:142px;background:#f2dc8c;border:2px solid var(--tinta);
+  transform:rotate(-3deg);box-shadow:5px 5px 0 rgba(20,20,20,.6);font-family:var(--mono);padding:12px 16px}
+.boleto::before,.boleto::after{content:"";position:absolute;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;
+  background:var(--hoja-2);border:2px solid var(--tinta)}
+.boleto::before{left:-11px}.boleto::after{right:-11px}
+.boleto .linea{font-size:10.5px;font-weight:700;letter-spacing:.18em}
+.boleto .ida{font-family:var(--display);font-size:40px;line-height:1;margin:8px 0 4px}
+.boleto .ruta{font-size:13px;font-weight:700}
+.boleto .num{position:absolute;right:16px;top:12px;font-size:11px;color:var(--rojo);font-weight:700}
+
+/* carta */
+.carta .in{background:#fdfaf2}
+.carta .in::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;
+  background:repeating-linear-gradient(135deg,var(--rojo) 0 14px,var(--crema) 14px 28px,var(--azul) 28px 42px,var(--crema) 42px 56px)}
+.carta .entrada{top:118px;color:#1b1b1b}
+.estampilla{position:absolute;right:40px;top:30px;width:84px;height:104px;background:var(--azul);border:3px dotted var(--crema);
+  outline:2px solid var(--tinta);transform:rotate(5deg);display:grid;place-items:center;color:var(--crema);
+  font-family:var(--display);font-size:30px;line-height:.9;text-align:center}
+.estampilla small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em}
+.matasellos{position:absolute;right:96px;top:70px;width:110px;height:110px;border-radius:50%;border:2.5px solid rgba(201,69,44,.7);
+  display:grid;place-items:center;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
+  color:rgba(201,69,44,.8);transform:rotate(-14deg)}
+
+/* final del recorrido */
+.final .in{background:var(--tinta);color:var(--crema)}
+.cartel-final{position:absolute;left:44px;right:44px;top:150px;background:var(--amarillo);color:var(--tinta);border:3px solid var(--crema);
+  padding:28px 26px 22px;font-family:var(--display);font-size:66px;line-height:.9;letter-spacing:.02em;transform:rotate(-1.5deg)}
+.cartel-final small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.16em;margin-top:14px;font-weight:700}
+.final .recorte{color:var(--tinta)}
+
+/* mesa de luz */
+.libro-lomo{position:absolute;left:70px;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  border:2px solid var(--tinta);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--crema);box-shadow:3px 3px 0 rgba(20,20,20,.5)}
+.libro-lomo span:last-child{font-weight:400;font-size:11px;letter-spacing:.06em}
+
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
 </head>
 <body>
-<div class="stage">
+<div class="stage" id="stage">
   <div class="screen" id="screen">
-    <div class="bg"></div>
-    <a class="volver" href="index.html" data-ir="">
-      <svg width="56" height="26" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M2 16h63M52 5l14 11-14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/></svg>
+    <a class="volver" href="index.html">
+      <svg width="56" height="26" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/></svg>
       Volver al andén
     </a>
     <nav class="nav" aria-label="Secciones">
-        <a href="index.html" data-ir="" style="left:0px;width:88px">Inicio</a>
-        <a href="index.html#sueter7" data-ir="sueter7" style="left:110px;width:111px">Sueter 7</a>
-        <a href="index.html#diario" data-ir="diario" class="on" aria-current="page" style="left:243px;width:92px">Diario</a>
-        <a href="index.html#discos" data-ir="discos" style="left:357px;width:95px">Discos</a>
-        <a href="index.html#tienda" data-ir="tienda" style="left:474px;width:96px">Tienda</a>
-        <a href="index.html#fechas" data-ir="fechas" style="left:592px;width:98px">Fechas</a>
+      <a href="index.html" style="left:0;width:88px">Inicio</a>
+      <a href="sueter7.html" style="left:110px;width:111px">Sueter 7</a>
+      <a href="diario.html" class="on" aria-current="page" style="left:243px;width:92px">Diario</a>
+      <a href="discos.html" style="left:357px;width:95px">Discos</a>
+      <a href="tienda.html" style="left:474px;width:96px">Tienda</a>
+      <a href="fechas.html" style="left:592px;width:98px">Fechas</a>
     </nav>
-    <h1 class="t-1"><span>Diario</span></h1>
-    <div class="t-2"><span>Cuaderno de hallazgos</span></div>
-    <div class="ficha">
-      <p class="sello">Estación en obra</p>
-      <p class="lugar">LA CASILLA POSTAL</p>
-      <p class="texto">El cuaderno donde se guardan las referencias secretas y las cartas que vas encontrando en las letras y el visualizador. Cada hallazgo suma una página: acá no hay puntaje, hay recorrido.</p>
-      <div class="botones">
-        <button class="btn escuchar" id="btn-disco">
-          <svg width="16" height="20" viewBox="0 0 16 20" aria-hidden="true"><path d="M1 1v18l14-9z" fill="currentColor"/></svg>
-          <span id="btn-disco-txt">Escuchar el disco</span>
-        </button>
-        <a class="btn otro" href="index.html#discos" data-ir="discos">Ver discos</a>
-      </div>
+    <h1 class="t-diario">Diario</h1>
+    <div class="t-sub">de Mari</div>
+    <p class="ayuda">Arrastrá la punta de la hoja o usá las <b>flechas</b> para dar vuelta las páginas.</p>
+    <div class="ctrl">
+      <button type="button" id="ant" aria-label="Página anterior">← Anterior</button>
+      <span class="pag" id="pag">Tapa</span>
+      <button type="button" id="sig" aria-label="Página siguiente">Siguiente →</button>
     </div>
-    <div class="sticker"><span>GUARDÁ<br>LO QUE<br>ENCONTRÁS</span></div>
-    <div class="cinta" style="left:150px;top:452px;width:110px;height:36px;transform:rotate(-22deg)"></div>
-    <div class="cinta" style="left:1110px;top:838px;width:120px;height:36px;transform:rotate(14deg)"></div>
   </div>
 </div>
+
+<div id="capa">
+<div id="libro">
+
+  <!-- 1 · tapa -->
+  <div class="page tapa" data-density="hard"><div class="in">
+    <div class="cinta" style="left:-14px;top:70px;transform:rotate(-24deg);width:140px"></div>
+    <div class="etiqueta">
+      <h2>Diario</h2>
+      <div class="de">de Mari</div>
+      <div class="disco">TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN</div>
+    </div>
+    <div class="sello" style="right:46px;bottom:96px">NO<br>LEER<br>(EN SERIO)</div>
+    <div class="nota" style="left:60px;bottom:70px;color:var(--amarillo);font-size:30px;transform:rotate(-4deg)">7.039 MHz · jueves 03:00</div>
+  </div></div>
+
+  <!-- 2 · guarda -->
+  <div class="page guarda izq"><div class="in">
+    <div class="nota" style="left:60px;top:120px;right:60px;color:#1f2a44;font-weight:500;font-size:31px;line-height:1.25;transform:rotate(-1deg)">
+      Si encontrás este cuaderno, devolvelo a la casilla postal de la estación.<br><br>
+      No lo leas.<br><br>
+      Bueno, si ya lo estás leyendo, seguí. Capaz te sirve más a vos que a mí.
+    </div>
+    <div class="nota" style="right:60px;bottom:120px;transform:rotate(-3deg)">— M.</div>
+    <div class="folio">II</div>
+  </div></div>
+
+  <!-- 3 · índice -->
+  <div class="page indice der rayada"><div class="in">
+    <div class="cabeza"><span class="cap">Índice</span><span class="fecha">lo que hay acá</span></div>
+    <ol>
+      <li><button data-pag="3"><b>—</b><span>Quién escribe</span><span>4</span></button></li>
+      <li><button data-pag="5"><b>01</b><span>Escritorio</span><span>6</span></button></li>
+      <li><button data-pag="7"><b>02</b><span>Confluencias</span><span>8</span></button></li>
+      <li><button data-pag="9"><b>03</b><span>Enero Cuervo</span><span>10</span></button></li>
+      <li><button data-pag="11"><b>04</b><span>De Chungking a Mendoza</span><span>12</span></button></li>
+      <li><button data-pag="13"><b>05</b><span>Mapache</span><span>14</span></button></li>
+      <li><button data-pag="15"><b>06</b><span>Almohadas</span><span>16</span></button></li>
+      <li><button data-pag="17"><b>07</b><span>Miedos de Transporte</span><span>18</span></button></li>
+      <li><button data-pag="19"><b>08</b><span>Carta para un amigo</span><span>20</span></button></li>
+      <li><button data-pag="21"><b>—</b><span>Final del recorrido</span><span>22</span></button></li>
+    </ol>
+    <div class="folio">III</div>
+  </div></div>
+
+  <!-- 4 · quién escribe -->
+  <div class="page rayada izq"><div class="in">
+    <div class="cabeza"><span class="cap">Quién escribe</span><span class="fecha">primera página</span></div>
+    <div class="entrada">
+      <p>Me llamo Mari. Por ahora con eso alcanza; lo demás todavía lo estoy averiguando.</p>
+      <p>Vivo en la villa, lejos de la capital: dos horas de tren, si el tren viene. Acá nadie escucha lo que escucho, nadie dibuja, nadie se queda despierto buscando estaciones de números en la radio.</p>
+      <p>Casi todo lo que sé del mundo lo aprendí por una pantalla.</p>
+      <p>Este cuaderno es para lo que no le cuento a nadie. Si algún día me voy, que quede algo mío en algún lado.</p>
+    </div>
+    <div class="folio">4</div>
+  </div></div>
+
+  <!-- 5 · la villa -->
+  <div class="page recortes der"><div class="in">
+    <div class="recorte" style="top:52px;transform:rotate(1.2deg)">
+      <span class="de">La sencilla villa quién</span>
+      Un pueblo de calles de tierra, una estación, una antena en el techo de casa. Al final de la vía, la ciudad.
+    </div>
+    <div class="cinta" style="left:230px;top:40px;transform:rotate(-6deg)"></div>
+    <svg style="position:absolute;left:52px;top:196px" width="456" height="330" viewBox="0 0 456 330" fill="none" aria-label="Mapa dibujado de la villa">
+      <rect x="1" y="1" width="454" height="328" fill="#fffdf9" stroke="#141414" stroke-width="2"/>
+      <path d="M20 290 C 120 250, 180 200, 250 160 S 380 70, 440 40" stroke="#141414" stroke-width="5" stroke-dasharray="2 9" stroke-linecap="round"/>
+      <path d="M20 290 C 120 250, 180 200, 250 160 S 380 70, 440 40" stroke="#141414" stroke-width="1.5"/>
+      <rect x="54" y="240" width="54" height="40" fill="#e8c340" stroke="#141414" stroke-width="2"/>
+      <path d="M50 242 l31 -22 l31 22" stroke="#141414" stroke-width="2" fill="#d24426"/>
+      <path d="M96 222 v-46 M86 186 h20 M89 198 h14" stroke="#141414" stroke-width="2"/>
+      <circle cx="96" cy="172" r="4" fill="#d24426"/>
+      <rect x="226" y="146" width="66" height="24" fill="#2c61b2" stroke="#141414" stroke-width="2"/>
+      <rect x="392" y="22" width="52" height="36" fill="#141414"/>
+      <rect x="400" y="30" width="8" height="8" fill="#e8c340"/><rect x="416" y="30" width="8" height="8" fill="#e8c340"/><rect x="430" y="40" width="8" height="8" fill="#e8c340"/>
+      <text x="40" y="306" font-family="Caveat" font-size="22" fill="#1f2a44">mi casa (y la antena)</text>
+      <text x="222" y="196" font-family="Caveat" font-size="22" fill="#1f2a44">la estación</text>
+      <text x="300" y="86" font-family="Caveat" font-size="22" fill="#c9452c">la ciudad · 2 h</text>
+      <text x="300" y="300" font-family="Caveat" font-size="22" fill="#1f2a44">↓ al Sur</text>
+    </svg>
+    <div class="nota" style="left:70px;top:560px;width:420px;color:#1f2a44;font-weight:500;transform:rotate(-1.5deg)">
+      Cosas que me salvan: la radio, dibujar, los discos que nadie más conoce, las 3 de la mañana.
+    </div>
+    <div class="folio">5</div>
+  </div></div>
+
+  <!-- 6 · Escritorio -->
+  <div class="page rayada izq"><div class="in">
+    <div class="cabeza"><span class="cap">01 · Escritorio</span><span class="fecha">domingo, 3:12 a.m.</span></div>
+    <div class="entrada">
+      <p>No puedo dormir otra vez. Afuera no pasa nada; adentro de mi cabeza pasa todo.</p>
+      <p>Tengo cuadernos llenos de cosas que nunca salen del escritorio: canciones a medias, dibujos sin terminar, planes que arranco a la noche y se me olvidan a la mañana. Todos los que conozco están igual. Mucha cabeza, poca plata, nada de tiempo.</p>
+      <p>En casa ya tienen pensada la persona que tengo que ser. Yo todavía no sé quién soy.</p>
+      <p>Pero entre los cables de la radio y la pantalla siento que hay algo real esperándome. Alguien. Una vida que no entra en un escritorio.</p>
+    </div>
+    <div class="folio">6</div>
+  </div></div>
+
+  <!-- 7 · Escritorio, recortes -->
+  <div class="page recortes der"><div class="in">
+    <div class="verso">La vida no entra en un escritorio.<small>ESCRITORIO · VERSO 4</small></div>
+    <div class="recorte" style="top:220px;transform:rotate(1deg)">
+      <span class="de">Lo escuché en un capítulo de Hijitus</span>
+      <q>Aun en la tierra hay seres que no pueden dormir, atormentados por sus ambiciones personales.</q>
+    </div>
+    <div class="cinta" style="right:60px;top:206px;transform:rotate(8deg)"></div>
+    <div class="recorte" style="top:380px;transform:rotate(-1.2deg)">
+      <span class="de">The Tatami Galaxy</span>
+      <q>Tu cara denota gran impaciencia, estás insatisfecho.</q>
+    </div>
+    <div class="nota" style="left:70px;top:520px;transform:rotate(-3deg)">← me lo dijeron a mí, seguro</div>
+    <button class="escuchar" data-tema="1">▶ Escuchar Escritorio</button>
+    <div class="folio">7</div>
+  </div></div>
+
+  <!-- 8 · Confluencias -->
+  <div class="page rayada izq"><div class="in">
+    <div class="cabeza"><span class="cap">02 · Confluencias</span><span class="fecha">un martes de octubre</span></div>
+    <div class="entrada">
+      <p>Conocí a alguien. En persona: con cara, con voz, con manos. No por una pantalla.</p>
+      <p>No fue casual y tampoco lo busqué. Fue una de esas decisiones que se toman solas.</p>
+      <p>Vamos rápido, ya sé. Todos me lo dicen. Pero ¿de qué sirve navegar con miedo? Por primera vez una intención se vuelve acción.</p>
+      <p>Ya hubo roces. Silencios raros, cosas que no encajan, miedo de mostrar lo que soy. El muro se empieza a desdibujar y del otro lado no todo es color de rosa. Igual me animo. Prefiero tropezar que quedarme con las ganas.</p>
+    </div>
+    <div class="folio">8</div>
+  </div></div>
+
+  <!-- 9 · Confluencias, recortes -->
+  <div class="page recortes der"><div class="in">
+    <div class="verso" style="background:var(--rojo-var);color:var(--crema)">Tal vez sea pronto, pero ¿de qué sirve navegar con miedo a desembocar?<small style="color:#ffd9cc">CONFLUENCIAS · ESTRIBILLO</small></div>
+    <div class="recorte" style="top:250px;transform:rotate(1.4deg)">
+      <span class="de">Lo que vale</span>
+      Esa persona siempre va a llevar en la mirada cómo termine esto, para bien o para mal. Es el precio de arriesgarse a confluir.
+    </div>
+    <div class="cinta" style="left:70px;top:236px;transform:rotate(-10deg)"></div>
+    <div class="nota" style="left:84px;top:430px;width:380px;transform:rotate(-2deg)">primera vez que me animo a algo en la vida real. anotarlo.</div>
+    <button class="escuchar" data-tema="2">▶ Escuchar Confluencias</button>
+    <div class="folio">9</div>
+  </div></div>
+
+  <!-- 10 · Enero Cuervo -->
+  <div class="page rayada izq"><div class="in">
+    <div class="cabeza"><span class="cap">03 · Enero Cuervo</span><span class="fecha">2 de enero</span></div>
+    <div class="entrada">
+      <p>Diciembre hizo magia otra vez. Las fiestas, el calor, un mes entero en que todo parecía volver a acomodarse.</p>
+      <p>Ahora es enero y hay un cuervo en el cable de enfrente. No hace ruido, solo mira. Yo sé lo que viene.</p>
+      <p>Cada vez hablamos menos. Me cruzo su cara en el andén y no sé si saludar.</p>
+      <p>¿Qué hago con todo este tiempo? ¿Fue en vano? Tengo el presentimiento en el estómago hace semanas y hago lo que mejor me sale: lo ignoro. Un día más. Un mes más.</p>
+    </div>
+    <div class="folio">10</div>
+  </div></div>
+
+  <!-- 11 · Enero Cuervo, recortes -->
+  <div class="page recortes der"><div class="in">
+    <div class="verso" style="background:var(--tinta);color:var(--crema)">¿Qué hago con el tiempo muerto? Olvidar presentimientos.<small style="color:#bbb">ENERO CUERVO</small></div>
+    <div class="recorte" style="top:220px;transform:rotate(-1deg)">
+      <span class="de">Manal · Avellaneda Blues</span>
+      <q>Un trozo de este siglo</q>: todo el gris del conurbano llegando al Sur.
+    </div>
+    <div class="recorte" style="top:356px;transform:rotate(1.5deg)">
+      <span class="de">Escondido en la canción · Glue (2006)</span>
+      <q>¿Cómo puedo saber si una chica gusta de mí?</q>
+    </div>
+    <div class="cinta" style="right:70px;top:342px;transform:rotate(12deg)"></div>
+    <div class="nota" style="left:70px;top:500px;width:400px;transform:rotate(-2deg)">diciembre termina algo, enero empieza otra cosa. ojalá.</div>
+    <button class="escuchar" data-tema="3">▶ Escuchar Enero Cuervo</button>
+    <div class="folio">11</div>
+  </div></div>
+
+  <!-- 12 · De Chungking a Mendoza -->
+  <div class="page rayada izq"><div class="in">
+    <div class="cabeza"><span class="cap">04 · Chungking</span><span class="fecha">jueves, 3:00 (allá, 14:00)</span></div>
+    <div class="entrada">
+      <p>Hay alguien más. Nunca lo escribí porque escrito parece mentira.</p>
+      <p>Hace años, buscando estaciones de números en un WebSDR, me crucé con una voz desde Chungking. Hablamos toda la noche. Desde entonces, cada jueves a la misma hora, sintonizamos de nuevo. Sin fotos, sin redes, sin caras: solo la radio.</p>
+      <p>Le dije que vivo en Mendoza. No sé por qué. Tampoco sé si de verdad está en Chungking.</p>
+      <p>Prometemos conocernos. Sabemos que no va a pasar, y que si pasa se rompe algo. La persona perfecta vive en otro planeta.</p>
+    </div>
+    <div class="folio">12</div>
+  </div></div>
+
+  <!-- 13 · bitácora de radio -->
+  <div class="page recortes der"><div class="in">
+    <div class="bitacora">
+      <h3>Bitácora de radio</h3>
+      <table>
+        <tr><td>JUE 03:00</td><td>7.039 MHz</td><td><i>llegó clarito. allá llueve.</i></td></tr>
+        <tr><td>JUE 03:00</td><td>—</td><td><i>estática. esperé hasta las 4.</i></td></tr>
+        <tr><td>JUE 02:45</td><td>14.230 MHz</td><td><i>hablamos del viaje. otra vez.</i></td></tr>
+        <tr><td>JUE 03:10</td><td>7.039 MHz</td><td><i>"sigue sintonizando"</i></td></tr>
+      </table>
+    </div>
+    <div class="recorte" style="top:404px;right:280px;transform:rotate(-1.5deg);font-size:13px">
+      <span class="de">Tu sol amanecido</span>
+      Allá amanece cuando acá es de noche: su sol pasa por mi persiana y el polvo de la cama se hace estrellas.
+    </div>
+    <div class="persiana" aria-hidden="true"></div>
+    <div class="nota" style="left:56px;top:640px;width:300px;font-size:21px;transform:rotate(-1deg)">los saludos del final: un señor de Tres Arroyos y uno alemán desde Canadá</div>
+    <button class="escuchar" data-tema="4" style="left:auto;right:46px">▶ Escuchar</button>
+    <div class="folio">13</div>
+  </div></div>
+
+  <!-- 14 · Mapache -->
+  <div class="page rayada izq"><div class="in">
+    <div class="cabeza"><span class="cap">05 · Mapache</span><span class="fecha">sábado (nada que contar)</span></div>
+    <div class="entrada">
+      <p>Poco que contar. Otro sábado sin novedad.</p>
+      <p>Me levanto a las cinco para el tren, trabajo, después la facultad, después el tren de vuelta. Los renglones de los apuntes se me hacen espiral.</p>
+      <p>Ya no voy a visitar a nadie. Nos vamos alejando hasta quedarnos sin color.</p>
+      <p>Nadie me preguntó qué quería; me encargaron una misión y la cumplo. Dicen que arriba, en la cima, hay un colchón y voy a poder descansar.</p>
+      <p>No dicen que ahí no se sueña.</p>
+    </div>
+    <div class="folio">14</div>
+  </div></div>
+
+  <!-- 15 · Mapache, recortes -->
+  <div class="page recortes der"><div class="in">
+    <div class="verso">Alejándonos hasta que se quede sin color.<small>MAPACHE · ESTRIBILLO</small></div>
+    <div class="recorte" style="top:220px;right:280px;transform:rotate(-2deg)">
+      <span class="de">Glue (2006)</span>
+      <q>Se hizo de día.</q>
+    </div>
+    <div class="horario">
+      <div><span>MI SEMANA</span><span>LUN–VIE</span></div>
+      <div><b>05:10</b><span>despertador</span></div>
+      <div><b>05:42</b><span>tren</span></div>
+      <div><b>08:00</b><span>trabajo</span></div>
+      <div><b>15:00</b><span>facultad</span></div>
+      <div><b>21:30</b><span>tren de vuelta</span></div>
+      <div><b>23:50</b><span>casa</span></div>
+      <div><b>—</b><span>dibujar: nunca</span></div>
+    </div>
+    <div class="nota" style="left:64px;top:340px;width:220px;transform:rotate(-4deg)">la persona que me imaginaron, cumpliendo horario</div>
+    <button class="escuchar" data-tema="5">▶ Escuchar Mapache</button>
+    <div class="folio">15</div>
+  </div></div>
+
+  <!-- 16 · Almohadas -->
+  <div class="page rayada izq"><div class="in">
+    <div class="cabeza"><span class="cap">06 · Almohadas</span><span class="fecha">4:37 a.m.</span></div>
+    <div class="entrada">
+      <p>Hace semanas que tengo un eco escribiéndose en las paredes. Cada vez que lo quiero atrapar con palabras, se borra.</p>
+      <p><s>quiero irme</s> <s>no sé</s> <s>no puedo</s></p>
+      <p>La luna me mira con los ojos entreabiertos. Tengo caras sonriendo alrededor y no me alcanza. Sin decir nada. Sin dormir nada.</p>
+      <p>Hoy no voy a soñar. Me queda dar vueltas hasta que amanezca. Una hora más. Un segundo más.</p>
+      <p>¿Vos también guardás los pensamientos abajo de la almohada?</p>
+    </div>
+    <div class="folio">16</div>
+  </div></div>
+
+  <!-- 17 · Almohadas, recortes -->
+  <div class="page recortes der"><div class="in">
+    <div class="verso" style="background:var(--azul);color:var(--crema)">Hoy no voy a soñar, me queda girar al amanecer.<small style="color:#cfe0ff">ALMOHADAS</small></div>
+    <div class="palitos">
+      noches sin dormir este mes:
+      <div class="marcas">𝍸 𝍸 𝍸 |||</div>
+      <div class="horas"><span>01:12</span><span>02:40</span><span>03:55</span><span>04:37</span><span>05:02</span></div>
+    </div>
+    <div class="recorte" style="top:430px;transform:rotate(1.2deg)">
+      <span class="de">Al final del tema · Los Peques, vol. 2</span>
+      <q>Nuestra historia comienza una mañanita como cualquiera.</q>
+    </div>
+    <div class="nota" style="left:70px;top:560px;transform:rotate(-3deg)">y esa mañana me decidí.</div>
+    <button class="escuchar" data-tema="6">▶ Escuchar Almohadas</button>
+    <div class="folio">17</div>
+  </div></div>
+
+  <!-- 18 · Miedos de Transporte -->
+  <div class="page rayada izq"><div class="in">
+    <div class="cabeza"><span class="cap">07 · Miedos</span><span class="fecha">el último día</span></div>
+    <div class="entrada">
+      <p>Hoy pedí vernos una última vez. Ya no estamos juntos, pero es la única persona que me entendió en este lugar.</p>
+      <p>Me miró como si supiera. Dijo que estoy por derrapar. Puede ser. La raíz va a quebrar el pavimento: en casa no aceptan mis planes, ni quién soy. Quedarme ya no es una opción.</p>
+      <p>Empezar de cero en otra ciudad, sin nadie que me agarre si me caigo, es un salto de fe. Lo voy a dar igual.</p>
+      <p>Dame un recuerdo más. Un día más. Después, el tren.</p>
+    </div>
+    <div class="folio">18</div>
+  </div></div>
+
+  <!-- 19 · Miedos de Transporte, recortes -->
+  <div class="page recortes der"><div class="in">
+    <div class="boleto">
+      <span class="num">Nº 000007</span>
+      <div class="linea">FERROCARRIL · ANDÉN 7</div>
+      <div class="ida">Solo ida</div>
+      <div class="ruta">Villa Quién → ?</div>
+    </div>
+    <div class="cinta" style="left:40px;top:236px;transform:rotate(-14deg)"></div>
+    <div class="verso" style="top:56px;background:var(--rojo-var);color:var(--crema)">Quiero subir al tren y no bajarme nunca.<small style="color:#ffd9cc">MIEDOS DE TRANSPORTE</small></div>
+    <div class="recorte" style="top:424px;transform:rotate(-1deg)">
+      <span class="de">Clamor · «Escapar»</span>
+      Escapar de una ciudad <q>no es difícil, en verdad</q>.
+    </div>
+    <div class="recorte" style="top:532px;transform:rotate(1.4deg)">
+      <span class="de">Moebius (1996)</span>
+      <q>En el subte encontré la más poderosa máquina de mirar.</q>
+    </div>
+    <button class="escuchar" data-tema="7" style="left:auto;right:46px;bottom:36px">▶ Escuchar</button>
+    <div class="folio">19</div>
+  </div></div>
+
+  <!-- 20 · Carta, 1 -->
+  <div class="page carta izq"><div class="in">
+    <div class="cabeza" style="top:44px"><span class="cap">08 · Carta para un amigo</span></div>
+    <div class="entrada">
+      <p>Para quien se quedó en la villa:</p>
+      <p>No sé dónde voy a estar cuando leas esto. Tal vez en otra ciudad. Tal vez en la otra punta del mundo, tocando una puerta en Chungking.</p>
+      <p>Sé de las tardes que se mueren sin que nadie vea sus colores. Sé de las buenas ideas juntando polvo, y de la vergüenza de no sentirse invitado.</p>
+      <p>No te voy a mentir: no hay garantías. Muchos se quedan atrás.</p>
+    </div>
+    <div class="folio">20</div>
+  </div></div>
+
+  <!-- 21 · Carta, 2 -->
+  <div class="page carta der"><div class="in">
+    <div class="estampilla">VILLA<br>QUIÉN<small>CORREO</small></div>
+    <div class="matasellos">SALIÓ<br>DE LA<br>VILLA</div>
+    <div class="entrada" style="top:190px">
+      <p>Pero dejá la vergüenza de lado y contá lo que te pasa, antes de que se apague el fuego.</p>
+      <p>¿Qué más se puede hacer? Lanzarse y esperar que todo salga bien. No sé si es realista; es un motor.</p>
+      <p>El día va a llegar y vamos a decir que todo salió bien en la sencilla villa quién.</p>
+      <p class="firma">Puedo empezar de nuevo. Vos también. — M.</p>
+    </div>
+    <button class="escuchar" data-tema="8" style="bottom:38px">▶ Escuchar Todo Salió Bien</button>
+    <div class="folio">21</div>
+  </div></div>
+
+  <!-- 22 · final del recorrido -->
+  <div class="page final izq"><div class="in">
+    <div class="cartel-final">Final del recorrido. El tren es tuyo, cuidalo.<small>ALTAVOZ · LÍNEA ROCA</small></div>
+    <div class="recorte" style="top:476px;transform:rotate(1.2deg)">
+      <span class="de">Mafalda · la película</span>
+      <q>¡He decidido enfrentar la realidad! Así que apenas se ponga linda me avisan.</q>
+    </div>
+    <div class="recorte" style="top:600px;transform:rotate(-1.4deg)">
+      <span class="de">Escuchar a Dios (documental)</span>
+      El arte es de quien puede pagarlo. El resto <q>tenías que ser muy cabeza dura y darle, darle, darle</q>.
+    </div>
+    <div class="folio" style="color:#777">22</div>
+  </div></div>
+
+  <!-- 23 · mesa de luz -->
+  <div class="page recortes der"><div class="in">
+    <div class="cabeza" style="left:56px"><span class="cap">En la mesa de luz</span></div>
+    <div class="libro-lomo" style="top:150px;width:420px;background:var(--rojo-var);transform:rotate(-1deg)"><span>Realismo capitalista</span><span>M. Fisher</span></div>
+    <div class="libro-lomo" style="top:214px;width:400px;left:84px;background:var(--azul)"><span>El malestar sobrante</span><span>S. Bleichmar</span></div>
+    <div class="libro-lomo" style="top:278px;width:430px;left:64px;background:var(--tinta);transform:rotate(1deg)"><span>El malestar en la cultura</span><span>S. Freud</span></div>
+    <div class="nota" style="left:70px;top:356px;width:420px;color:#1f2a44;font-weight:500;transform:rotate(-1deg)">subrayado en Fisher: la hedonia depresiva. no poder hacer nada más que buscar placer.</div>
+    <div class="recorte" style="top:490px;transform:rotate(1deg)">
+      <span class="de">Casualidad</span>
+      <q>Aunque la sangre riegue el mundo</q> se parece sin querer a «La sangre», de Dámaso Alonso, en <i>Hijos de la ira</i>.
+    </div>
+    <button class="escuchar" data-tema="1" style="bottom:40px">▶ Escuchar el disco desde el principio</button>
+    <div class="folio">23</div>
+  </div></div>
+
+  <!-- 24 · contratapa -->
+  <div class="page contratapa" data-density="hard"><div class="in">
+    <div style="position:absolute;left:60px;right:60px;bottom:90px;font-family:var(--display);font-size:46px;line-height:.95;letter-spacing:.03em">
+      TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN
+      <div style="font-family:var(--mono);font-size:13px;letter-spacing:.16em;margin-top:14px;color:var(--amarillo)">SUETER 7 · 2026 · 8 TEMAS</div>
+    </div>
+  </div></div>
+
+</div>
+</div>
+
 <script>
 "use strict";
-/* Página de sección: vive adentro de la estación (index.html), que tiene el
-   reproductor persistente. Si se abre suelta, se redirige ahí. */
-const EMBEBIDA = window.parent !== window;
-if(!EMBEBIDA) location.replace("index.html#diario");
-const alPadre = m => { try{ window.parent.postMessage(m, "*"); }catch(e){} };
+const $=id=>document.getElementById(id);
+const screen=$("screen"), capa=$("capa");
+const BASE={x:400, y:150, w:1120, h:790};      // dónde va el libro en la pantalla de 1920
+
 function fit(){
-  const s=document.getElementById("screen"), stage=s.parentElement;
-  const k=Math.min(stage.parentElement.clientWidth/1920, window.innerHeight/1080);
-  s.style.transform="scale("+k+")"; stage.style.height=(1080*k)+"px";
+  const k=Math.min(innerWidth/1920, innerHeight/1080);
+  screen.style.transform="scale("+k+")";
+  const izq=(innerWidth-1920*k)/2;
+  capa.style.left=(izq+BASE.x*k)+"px"; capa.style.top=(BASE.y*k)+"px";
+  capa.style.width=(BASE.w*k)+"px";   capa.style.height=(BASE.h*k)+"px";
 }
-addEventListener("resize", fit); fit();
-document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev=>{
-  if(!EMBEBIDA) return; ev.preventDefault(); alPadre({s7:"ir", a:a.dataset.ir});
-}));
-document.getElementById("btn-disco").addEventListener("click", ()=> alPadre({s7:"alternar"}));
+fit();
+
+const libro=new St.PageFlip($("libro"), {
+  width:560, height:780, size:"stretch",
+  minWidth:160, maxWidth:2400, minHeight:222, maxHeight:3340,
+  showCover:true, maxShadowOpacity:.45, mobileScrollSupport:false,
+  flippingTime:850, usePortrait:true, startZIndex:0, autoSize:true
+});
+const paginas=document.querySelectorAll("#libro .page");
+libro.loadFromHTML(paginas);
+
+/* el contenido de cada hoja está diseñado a 560×780 y se escala al tamaño real */
+function escalarHojas(){
+  const r=libro.getBoundsRect && libro.getBoundsRect();
+  const ancho=r && r.pageWidth ? r.pageWidth : paginas[0].offsetWidth;
+  if(ancho) $("libro").style.setProperty("--s", ancho/560);
+}
+const TOTAL=paginas.length;
+function rotulo(i){
+  if(i===0) return "Tapa";
+  if(i>=TOTAL-1) return "Contratapa";
+  if(libro.getOrientation && libro.getOrientation()==="portrait") return "Página "+(i+1);
+  const a=i%2 ? i+1 : i;            // en doble página se ven dos
+  return "Páginas "+a+"–"+(a+1);
+}
+function actualizar(){
+  const i=libro.getCurrentPageIndex();
+  $("pag").textContent=rotulo(i);
+  $("ant").disabled=i===0;
+  $("sig").disabled=i>=TOTAL-1;
+  try{ sessionStorage.setItem("s7-diario-pag", String(i)); }catch(e){}
+}
+libro.on("flip", actualizar);
+libro.on("changeOrientation", ()=>{ escalarHojas(); actualizar(); });
+libro.on("init", ()=>{ escalarHojas(); actualizar(); });
+addEventListener("resize", ()=>{ fit(); setTimeout(escalarHojas, 60); });
+escalarHojas(); actualizar();
+
+$("ant").addEventListener("click", ()=>libro.flipPrev());
+$("sig").addEventListener("click", ()=>libro.flipNext());
+addEventListener("keydown", ev=>{
+  if(ev.key==="ArrowRight"){ ev.preventDefault(); libro.flipNext(); }
+  if(ev.key==="ArrowLeft"){ ev.preventDefault(); libro.flipPrev(); }
+});
+
+/* índice: salta a la página */
+document.querySelectorAll(".indice button[data-pag]").forEach(b=>
+  b.addEventListener("click", ev=>{ ev.stopPropagation(); libro.flip(+b.dataset.pag); }));
+
+/* volver a la página donde quedó, en la misma visita */
+try{
+  const i=+sessionStorage.getItem("s7-diario-pag");
+  if(i>0 && i<TOTAL) libro.turnToPage(i), actualizar();
+}catch(e){}
+
+/* botones de escuchar: le piden el tema al reproductor de la estación */
+const NOMBRE={1:"Escritorio",2:"Confluencias",3:"Enero Cuervo",4:"De Chungking a Mendoza",5:"Mapache",
+  6:"Almohadas",7:"Miedos de Transporte",8:"Todo Salió Bien"};
+let suena={n:0, sonando:false};
+function pintarBotones(){
+  document.querySelectorAll(".escuchar[data-tema]").forEach(b=>{
+    const n=+b.dataset.tema, activo=suena.sonando && suena.n===n;
+    b.classList.toggle("son", activo);
+    if(!b.dataset.txt) b.dataset.txt=b.textContent.replace(/^▶\s*/,"");
+    b.textContent=(activo?"❚❚ Pausar ":"▶ ")+(activo?NOMBRE[n]:b.dataset.txt);
+  });
+}
+document.querySelectorAll(".escuchar[data-tema]").forEach(b=>
+  b.addEventListener("click", ev=>{
+    ev.stopPropagation();
+    const n=+b.dataset.tema;
+    if(!window.S7 || !S7.alPadre) return;
+    if(suena.sonando && suena.n===n) S7.alPadre({s7:"pausa"});
+    else S7.alPadre({s7:"play", n});
+  }));
 addEventListener("message", ev=>{
   const m=ev.data||{};
   if(ev.source!==window.parent || m.s7!=="estado") return;
-  document.getElementById("btn-disco-txt").textContent = m.sonando ? "Pausar el disco" : "Escuchar el disco";
+  if(m.n!==suena.n || m.sonando!==suena.sonando){ suena={n:m.n, sonando:m.sonando}; pintarBotones(); }
 });
-document.addEventListener("keydown", ev=>{
-  if(ev.key==="Escape") alPadre({s7:"ir", a:""});
-  if(ev.code==="Space" && !/^(BUTTON|A)$/.test(document.activeElement.tagName)){ ev.preventDefault(); alPadre({s7:"alternar"}); }
-});
-alPadre({s7:"hola"});
+pintarBotones();
 </script>
 </body>
 </html>

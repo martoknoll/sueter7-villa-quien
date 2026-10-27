@@ -26,7 +26,8 @@ cuentan hallazgos, nunca puntos ni tiempos.
 | `tienda.html` | **Tienda** con carrito y cobro por Mercado Pago (el pago se abre en la ventana entera). |
 | `fechas.html` | **Próximas fechas**. |
 | `compra.html` | Vuelta de Mercado Pago: pago aprobado, pendiente o rechazado. |
-| `diario.html` | **Diario**, todavía provisorio ("estación en obra"). |
+| `diario.html` | **Diario de Mari**: libro de 24 páginas con la historia del disco, hecho con StPageFlip (`lib/`, licencia MIT). |
+| `img/mari.png` | Sprite en pixel art de Mari (caminata de costado, de espaldas y de frente) que camina por el andén y entra a las puertas. |
 | `puente.js` | Conecta cada sección con la estación: navegación y reproductor compartido. |
 | `proyecto.html` | Portada del proyecto académico: piezas, documentos y sprints. |
 | `img/` | Escena de la estación, carteles, puertas y tapa en versión liviana. |
