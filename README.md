@@ -28,6 +28,9 @@ cuentan hallazgos, nunca puntos ni tiempos.
 | `compra.html` | Vuelta de Mercado Pago: pago aprobado, pendiente o rechazado. |
 | `diario.html` | **Diario de Mari**: libro de 24 páginas con la historia del disco, hecho con StPageFlip (`lib/`, licencia MIT). |
 | `img/mari.png` | Sprite en pixel art de Mari (caminata de costado, de espaldas y de frente) que camina por el andén y entra a las puertas. |
+| `tu-version/` | **Tu versión**: la persona sube una foto, elige escena (colectivo, plaza o recital) y colores de la paleta, y recibe su retrato en el estilo collage de Suéter 7. Página completa (fuera de la estación): se entra por el botón "Tu versión" del menú o por el cartel "Creá tu versión" del andén. |
+| `api/generate.ts` | Función de Vercel que genera la imagen con OpenAI. La key vive solo en el servidor; la foto se procesa en memoria y no se guarda. |
+| `vercel.json` | Tiempo máximo de la función y el archivo de referencia de estilo que lleva. |
 | `puente.js` | Conecta cada sección con la estación: navegación y reproductor compartido. |
 | `proyecto.html` | Portada del proyecto académico: piezas, documentos y sprints. |
 | `img/` | Escena de la estación, carteles, puertas y tapa en versión liviana. |
@@ -77,6 +80,18 @@ Las tres son gratuitas y tienen licencia para web.
 Las páginas son HTML autocontenido: no hay build, ni dependencias, ni instalación.
 Se abren haciendo doble clic en `index.html`; cada sección también tiene su dirección propia (`index.html#discos`, `#diario`, etc.). Si se abre una sección suelta, redirige a la estación. Para publicar un cambio, se sube el archivo
 modificado a la rama `main` y GitHub Pages lo actualiza solo en un par de minutos.
+
+### Tu versión: configuración
+
+La generación corre en Vercel (`sueter7-villa-quien.vercel.app/api/generate`); GitHub Pages es estático y le pide la imagen a esa dirección.
+En Vercel → Settings → Environment Variables:
+
+| Variable | Obligatoria | Qué es |
+|---|---|---|
+| `OPENAI_API_KEY` | Sí | Key de OpenAI. Sin ella la página funciona en modo demo (muestra la imagen de referencia). |
+| `OPENAI_IMAGE_MODEL` | No | Modelo de imagen; por defecto `gpt-image-2.5-sunburst`. |
+
+Nunca se usa `NEXT_PUBLIC_…` ni se manda la key al navegador.
 
 ## Pendiente
 

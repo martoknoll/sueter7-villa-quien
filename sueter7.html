@@ -45,8 +45,13 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .fundido.on{opacity:1}
 
 @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+/* acceso a "Tu versión" junto a la navegación que trae el diseño */
+.nav-tv{position:absolute;z-index:7;height:44px;width:134px;display:grid;place-items:center;
+  font-family:"Bebas Neue","Arial Narrow",sans-serif;font-size:20px;letter-spacing:.09em;text-transform:uppercase;line-height:1;padding-top:3px;
+  background:#c9452c;color:#fffdf9;text-decoration:none;border:2px solid #141414;box-shadow:3px 3px 0 #141414}
+.nav-tv:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #141414}
 </style>
-<script src="puente.js?v=20261026b"></script>
+<script src="puente.js?v=20261029a"></script>
 </head>
 <body>
 <div class="stage">
@@ -61,6 +66,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
     <a class="zona" href="discos.html"  style="left:1577px;top:22px;width:95px;height:44px"  aria-label="Discos"></a>
     <a class="zona" href="tienda.html"  style="left:1694px;top:22px;width:96px;height:44px"  aria-label="Tienda"></a>
     <a class="zona" href="fechas.html"  style="left:1812px;top:22px;width:98px;height:44px"  aria-label="Fechas"></a>
+    <a class="nav-tv" href="tu-version/" style="left:1072px;top:22px">Tu versión</a>
 
     <a class="btn-discos" href="discos.html" aria-label="Ir a Discos"></a>
 

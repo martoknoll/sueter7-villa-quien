@@ -55,6 +55,12 @@
     var url;
     try{ url = new URL(href, location.href); }catch(e){ return; }
     if(url.origin !== location.origin) return;
+    /* "Tu versión" es una página completa, fuera de la estación */
+    if(/\/tu-version(\/|$)/.test(url.pathname)){
+      ev.preventDefault(); ev.stopPropagation();
+      try{ window.top.location.href = url.href; }catch(e){ location.href = url.href; }
+      return;
+    }
     var destino = url.pathname.split("/").pop();
     if(!(destino in PAGINAS)) return;
     ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
