@@ -121,30 +121,40 @@ button{font:inherit;color:inherit}
   background:url("img/mari.png") 0 0/1344px 208px no-repeat;image-rendering:pixelated;
   transform-origin:50% 100%;will-change:transform,opacity}
 .mari.entra{transition:transform .38s ease-in, opacity .38s ease-in}
+.mobile-swipe{display:none}
 
 /* ---------- portada mobile ----------
-   En pantallas angostas la estación deja de reducirse entera: las puertas
-   pasan a una grilla táctil 2×2 y el reproductor queda siempre accesible. */
+   Una puerta por pantalla, con scroll horizontal y encastre entre estaciones. */
 @media (max-width:700px) and (orientation:portrait){
   html,body{width:100%;height:100%;min-height:100%;background:var(--crema-var);overflow:hidden}
   .lienzo{position:fixed;inset:0;width:100vw!important;height:100dvh!important;transform:none!important;
     overflow:hidden;background:var(--crema-var)}
   .fondo-ancho{width:100vw!important;height:calc(100dvh - 132px);
     background:url("fondo.png") center/cover no-repeat;filter:contrast(.95)}
-  .escena{left:0!important;top:0;width:100vw;height:calc(100dvh - 132px);overflow:hidden}
+  .escena{left:0!important;top:0;width:100vw;height:calc(100dvh - 132px);overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;touch-action:pan-x}
+  .escena::-webkit-scrollbar{display:none}
+  .escena::after{content:"";position:absolute;left:calc(400vw - 1px);top:0;width:1px;height:1px}
 
-  .logo{left:16px;top:15px;width:145px;height:47px;z-index:4;color:var(--tinta);text-decoration:none}
+  .logo{position:fixed;left:16px;top:15px;width:145px;height:47px;z-index:5;color:var(--tinta);text-decoration:none}
   .logo::before{content:"SUETER";font-family:var(--display);font-size:35px;line-height:47px;letter-spacing:.01em}
   .logo::after{content:"7";margin-left:7px;font-family:var(--display);font-size:35px;line-height:47px;color:var(--rojo)}
-  .proyecto{left:auto;right:12px;top:17px;z-index:4;font-size:8px;background:rgba(255,253,249,.88);
+  .proyecto{position:fixed;left:auto;right:12px;top:17px;z-index:5;font-size:8px;background:rgba(255,253,249,.88);
     border:1.5px solid var(--tinta);padding:5px 7px;box-shadow:3px 3px 0 var(--tinta)}
 
-  .puerta{transform-origin:0 0;z-index:2;touch-action:manipulation}
+  .puerta{transform-origin:0 0;z-index:2;touch-action:manipulation;scroll-snap-align:center;scroll-snap-stop:always}
   .puerta:hover .sign,.puerta:focus-visible .sign{transform:none;box-shadow:none}
   .puerta:active{filter:brightness(1.08) saturate(1.25)}
   .piso,.mari{display:none}
 
-  .cartel-tv{left:16px!important;right:16px;top:auto!important;bottom:10px;width:auto;height:50px;z-index:4;
+  .mobile-swipe{position:fixed;display:flex;align-items:center;gap:8px;left:50%;top:67px;z-index:5;
+    transform:translateX(-50%);padding:4px 8px;background:rgba(255,253,249,.88);border:1.5px solid var(--tinta);
+    font-size:7px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+  .mobile-swipe i{display:block;width:6px;height:6px;border:1px solid var(--tinta);border-radius:50%;background:transparent}
+  .mobile-swipe i.activo{background:var(--rojo)}
+
+  .cartel-tv{position:fixed;left:16px!important;right:16px;top:auto!important;bottom:142px;width:auto;height:50px;z-index:5;
     display:flex;align-items:center;gap:8px;padding:7px 12px;transform:rotate(-.5deg);box-shadow:4px 4px 0 #090909}
   .cartel-tv:hover,.cartel-tv:focus-visible{transform:translate(-2px,-2px) rotate(-.5deg);box-shadow:6px 6px 0 #090909}
   .ctv-cinta,.ctv-foto{display:none}
@@ -186,6 +196,9 @@ button{font:inherit;color:inherit}
     <h1 hidden>sueter7 — Todo salió bien en la Sencilla Villa Quién</h1>
     <a class="logo" href="#" aria-label="sueter7 — volver al andén" data-ir=""></a>
     <a class="proyecto" href="proyecto.html">Proyecto final ↗</a>
+    <div class="mobile-swipe" aria-hidden="true">
+      <span>deslizá</span><i class="activo"></i><i></i><i></i><i></i><span>→</span>
+    </div>
     <div class="piso" id="piso" title="Hacé clic en el andén para caminar" aria-hidden="true"></div>
 
     <a class="puerta" href="#sueter7" data-ir="sueter7" aria-label="Sueter7 — la banda"
@@ -277,25 +290,16 @@ puertasMobile.forEach(p=>{
 });
 let Wv=W, OFF=0;
 function ordenarPuertasMobile(){
-  const altoEscena=innerHeight-132, cabecera=64, cta=70, separacion=8;
-  const filas=[
-    [document.querySelector('[data-ir="sueter7"]'),document.querySelector('[data-ir="diario"]')],
-    [document.querySelector('[data-ir="discos"]'),document.querySelector('[data-ir="tienda"]')]
-  ];
-  const anchoMax=Math.max(...filas.map(f=>f.reduce((n,p)=>n+parseFloat(p.style.width),0)));
+  const altoEscena=innerHeight-132, cabecera=100, cta=78;
+  const anchoMax=Math.max(...puertasMobile.map(p=>parseFloat(p.style.width)));
   const altoPuerta=Math.max(...puertasMobile.map(p=>parseFloat(p.style.height)));
-  const escala=Math.max(.32,Math.min(.7,(innerWidth-44)/anchoMax,(altoEscena-cabecera-cta-separacion)/(altoPuerta*2)));
-  const altoTotal=altoPuerta*escala*2+separacion;
-  const y0=cabecera+Math.max(2,(altoEscena-cabecera-cta-altoTotal)/2);
-  filas.forEach((fila,i)=>{
-    const anchoFila=fila.reduce((n,p)=>n+parseFloat(p.style.width)*escala,0)+12;
-    let x=Math.max(12,(innerWidth-anchoFila)/2);
-    fila.forEach(p=>{
-      p.style.left=x+"px";
-      p.style.top=(y0+i*(altoPuerta*escala+separacion))+"px";
-      p.style.transform=`scale(${escala})`;
-      x+=parseFloat(p.style.width)*escala+12;
-    });
+  const escala=Math.max(.36,Math.min(1.12,(innerWidth-48)/anchoMax,(altoEscena-cabecera-cta)/altoPuerta));
+  const y=cabecera+Math.max(0,(altoEscena-cabecera-cta-altoPuerta*escala)/2);
+  puertasMobile.forEach((p,i)=>{
+    const ancho=parseFloat(p.style.width)*escala;
+    p.style.left=(i*innerWidth+(innerWidth-ancho)/2)+"px";
+    p.style.top=y+"px";
+    p.style.transform=`scale(${escala})`;
   });
 }
 function restaurarPuertasDesktop(){
@@ -326,6 +330,14 @@ function fit(){
   if(window.ANDEN){ ANDEN.x0=60-OFF; ANDEN.x1=1668+OFF; }
 }
 addEventListener("resize", fit); fit();
+
+/* marca la puerta visible durante el scroll horizontal de mobile */
+const puntosMobile=[...document.querySelectorAll(".mobile-swipe i")];
+$("escena").addEventListener("scroll", ()=>{
+  if(!portadaMobile.matches) return;
+  const pagina=Math.max(0,Math.min(puertasMobile.length-1,Math.round($("escena").scrollLeft/innerWidth)));
+  puntosMobile.forEach((p,i)=>p.classList.toggle("activo",i===pagina));
+}, {passive:true});
 
 /* ---------- navegación entre secciones ---------- */
 const VERSION="20261029a";             // cambiarla al publicar fuerza a recargar las secciones
