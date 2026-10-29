@@ -316,10 +316,10 @@ function ordenarPuertasMobile(){
   const altoPuerta=Math.max(...puertasMobile.map(p=>parseFloat(p.style.height)));
   const escala=Math.max(.36,Math.min(1.12,(innerWidth-48)/anchoMax,(altoEscena-cabecera-cta)/altoPuerta));
   const y=cabecera+Math.max(0,(altoEscena-cabecera-cta-altoPuerta*escala)/2);
-  pasoMobile=innerWidth*.78;               // deja visible 15–20% de la próxima puerta
+  pasoMobile=innerWidth*.72;               // la próxima puerta entra cerca de un cuarto de pantalla
   puertasMobile.forEach((p,i)=>{
     const ancho=parseFloat(p.style.width)*escala;
-    const centro=innerWidth/2+i*pasoMobile;
+    const centro=innerWidth*.45+i*pasoMobile;
     p.style.left=(centro-ancho/2)+"px";
     p.style.top=y+"px";
     p.style.transform=`scale(${escala})`;
