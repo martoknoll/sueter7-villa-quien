@@ -122,6 +122,57 @@ button{font:inherit;color:inherit}
   transform-origin:50% 100%;will-change:transform,opacity}
 .mari.entra{transition:transform .38s ease-in, opacity .38s ease-in}
 
+/* ---------- portada mobile ----------
+   En pantallas angostas la estación deja de reducirse entera: las puertas
+   pasan a una grilla táctil 2×2 y el reproductor queda siempre accesible. */
+@media (max-width:700px) and (orientation:portrait){
+  html,body{width:100%;height:100%;min-height:100%;background:var(--crema-var);overflow:hidden}
+  .lienzo{position:fixed;inset:0;width:100vw!important;height:100dvh!important;transform:none!important;
+    overflow:hidden;background:var(--crema-var)}
+  .fondo-ancho{width:100vw!important;height:calc(100dvh - 132px);
+    background:url("fondo.png") center/cover no-repeat;filter:contrast(.95)}
+  .escena{left:0!important;top:0;width:100vw;height:calc(100dvh - 132px);overflow:hidden}
+
+  .logo{left:16px;top:15px;width:145px;height:47px;z-index:4;color:var(--tinta);text-decoration:none}
+  .logo::before{content:"SUETER";font-family:var(--display);font-size:35px;line-height:47px;letter-spacing:.01em}
+  .logo::after{content:"7";margin-left:7px;font-family:var(--display);font-size:35px;line-height:47px;color:var(--rojo)}
+  .proyecto{left:auto;right:12px;top:17px;z-index:4;font-size:8px;background:rgba(255,253,249,.88);
+    border:1.5px solid var(--tinta);padding:5px 7px;box-shadow:3px 3px 0 var(--tinta)}
+
+  .puerta{transform-origin:0 0;z-index:2;touch-action:manipulation}
+  .puerta:hover .sign,.puerta:focus-visible .sign{transform:none;box-shadow:none}
+  .puerta:active{filter:brightness(1.08) saturate(1.25)}
+  .piso,.mari{display:none}
+
+  .cartel-tv{left:16px!important;right:16px;top:auto!important;bottom:10px;width:auto;height:50px;z-index:4;
+    display:flex;align-items:center;gap:8px;padding:7px 12px;transform:rotate(-.5deg);box-shadow:4px 4px 0 #090909}
+  .cartel-tv:hover,.cartel-tv:focus-visible{transform:translate(-2px,-2px) rotate(-.5deg);box-shadow:6px 6px 0 #090909}
+  .ctv-cinta,.ctv-foto{display:none}
+  .ctv-sello{right:9px;top:-13px;width:39px;height:39px;font-size:8px}
+  .ctv-kicker{font-size:7px;flex:0 0 auto}
+  .ctv-titulo{margin:0;font-size:0;line-height:1;white-space:nowrap}
+  .ctv-titulo::after{content:"CREÁ TU VERSIÓN";font-size:24px}
+  .ctv-pie{left:auto;right:9px;bottom:5px;font-size:7px}
+
+  .seccion{width:100vw;height:calc(100dvh - 132px)}
+  .player{left:0;top:calc(100dvh - 132px);width:100vw;height:132px;border-top-width:3px}
+  .pl-in{left:0;top:0;width:100vw;height:100%}
+  .pthumb{left:12px;top:10px;width:52px;height:52px}
+  .ptitle{left:76px;top:12px;max-width:calc(100vw - 128px);font-size:14px}
+  .palbum{left:76px;top:34px;max-width:calc(100vw - 128px);font-size:10px;line-height:1.25}
+  .pplay{left:13px;top:76px;width:42px;height:42px}
+  .p-prev{left:64px;top:77px;width:36px;height:40px}
+  .p-next{left:103px;top:77px;width:36px;height:40px}
+  .pseek{left:151px;top:78px;width:calc(100vw - 165px);height:24px}
+  .pseek::before,.pseek i{top:10px;height:4px}
+  .pseek b{top:4px;width:16px;height:16px}
+  .pcur{left:151px;top:108px;font-size:9px}
+  .pdur{left:auto;right:14px;top:108px;width:auto;font-size:9px}
+  .p-shuffle,.p-vol,.pvolbar,.pspot.a{display:none}
+  .pspot.b{left:auto;right:12px;top:13px;width:36px;height:36px}
+  .perr{right:10px;top:-24px}
+}
+
 @media (prefers-reduced-motion: reduce){
   .seccion,.puerta .sign,.puerta .door,.circ,.ctl svg{transition:none !important}
 }
@@ -218,8 +269,52 @@ const W=1728, H=1117;
 
 /* ---------- escala del lienzo ---------- */
 const WMAX=2544;                       // ancho de img/estacion-ancha.webp en px de 1x
+const portadaMobile=matchMedia("(max-width:700px) and (orientation:portrait)");
+const puertasMobile=[...document.querySelectorAll(".puerta")];
+puertasMobile.forEach(p=>{
+  p.dataset.desktopLeft=p.style.left;
+  p.dataset.desktopTop=p.style.top;
+});
 let Wv=W, OFF=0;
+function ordenarPuertasMobile(){
+  const altoEscena=innerHeight-132, cabecera=64, cta=70, separacion=8;
+  const filas=[
+    [document.querySelector('[data-ir="sueter7"]'),document.querySelector('[data-ir="diario"]')],
+    [document.querySelector('[data-ir="discos"]'),document.querySelector('[data-ir="tienda"]')]
+  ];
+  const anchoMax=Math.max(...filas.map(f=>f.reduce((n,p)=>n+parseFloat(p.style.width),0)));
+  const altoPuerta=Math.max(...puertasMobile.map(p=>parseFloat(p.style.height)));
+  const escala=Math.max(.32,Math.min(.7,(innerWidth-44)/anchoMax,(altoEscena-cabecera-cta-separacion)/(altoPuerta*2)));
+  const altoTotal=altoPuerta*escala*2+separacion;
+  const y0=cabecera+Math.max(2,(altoEscena-cabecera-cta-altoTotal)/2);
+  filas.forEach((fila,i)=>{
+    const anchoFila=fila.reduce((n,p)=>n+parseFloat(p.style.width)*escala,0)+12;
+    let x=Math.max(12,(innerWidth-anchoFila)/2);
+    fila.forEach(p=>{
+      p.style.left=x+"px";
+      p.style.top=(y0+i*(altoPuerta*escala+separacion))+"px";
+      p.style.transform=`scale(${escala})`;
+      x+=parseFloat(p.style.width)*escala+12;
+    });
+  });
+}
+function restaurarPuertasDesktop(){
+  puertasMobile.forEach(p=>{
+    p.style.left=p.dataset.desktopLeft;
+    p.style.top=p.dataset.desktopTop;
+    p.style.transform="";
+  });
+}
 function fit(){
+  if(portadaMobile.matches){
+    Wv=innerWidth; OFF=0;
+    const l=$("lienzo");
+    l.style.setProperty("--Wv",Wv+"px"); l.style.setProperty("--off","0px");
+    l.style.transform="none";
+    ordenarPuertasMobile();
+    return;
+  }
+  restaurarPuertasDesktop();
   let k=innerHeight/H;
   Wv=Math.min(WMAX, Math.max(W, innerWidth/k));
   if(Wv*k>innerWidth) k=innerWidth/Wv;          // pantallas angostas: manda el ancho
@@ -245,6 +340,7 @@ let abierta="";          /* la ruta abierta: nombre + consulta, p. ej. "letras?t
 const partir=ruta=>{ const i=ruta.indexOf("?"); return i<0 ? [ruta,""] : [ruta.slice(0,i), ruta.slice(i)]; };
 function recorte(nombre){
   // la sección se abre desde la puerta que se tocó (o desde el centro si no tiene puerta)
+  if(portadaMobile.matches) return "inset(50% 50% 50% 50%)";
   const p=document.querySelector(`.puerta[data-ir="${nombre}"]`);
   if(!p) return "inset(50% 50% 50% 50%)";
   const l=parseFloat(p.style.left), t=parseFloat(p.style.top), w=parseFloat(p.style.width), h=parseFloat(p.style.height);
@@ -348,7 +444,7 @@ async function entrarPorPuerta(nombre){
   if(mp.ocupada) return;
   const px=PUERTA_X[nombre];
   const salir=()=>{ if(nombre==="tu-version") location.href="tu-version/"; else ir(nombre); };
-  if(quieto.matches || px==null){ salir(); return; }
+  if(portadaMobile.matches || quieto.matches || px==null){ salir(); return; }
   mp.ocupada=true;
   const cruzaBanco=Math.min(mp.x,px)<BANCO.x1 && Math.max(mp.x,px)>BANCO.x0;
   if(Math.abs(mp.x-px)>4){
