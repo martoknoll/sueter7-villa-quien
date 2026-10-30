@@ -299,3 +299,7 @@ html,body.avatar-studio-page{margin:0;background:#e7dfd3;overflow-x:hidden}
 @media (min-width:1024px){
   .avatar-studio .studio-layout:not(.con-resultado) .result-panel{max-height:640px}
 }
+/* menú escalado igual que en las secciones de la estación (lo ubica el script de index.html) */
+.avatar-studio .sitio-nav.nav-escala{position:absolute;display:block;width:838px;height:48px;max-width:none;margin:0;padding:0;transform-origin:0 0}
+.avatar-studio .sitio-nav.nav-escala a{position:absolute;top:0;height:44px;padding:3px 0 0;font-size:20px;letter-spacing:.09em}
+.avatar-studio .sitio-nav:not(.nav-escala) a{position:static;width:auto !important}

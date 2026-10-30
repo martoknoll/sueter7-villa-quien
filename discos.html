@@ -110,8 +110,10 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 .tapa img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .tapa img.chica{image-rendering:pixelated}
 /* transición al cambiar de disco */
-.tapa,.pie,.vinilo .giro,.ficha .cambia{transition:opacity .25s ease,transform .25s ease}
-.cambiando .tapa,.cambiando .pie,.cambiando .vinilo .giro,.cambiando .ficha .cambia{opacity:0;transform:translateY(10px)}
+.tapa,.pie,.ficha .cambia{transition:opacity .25s ease,transform .25s ease}
+.vinilo .label{transition:opacity .25s ease}
+.cambiando .tapa,.cambiando .pie,.cambiando .ficha .cambia{opacity:0;transform:translateY(10px)}
+.cambiando .vinilo .label{opacity:0}
 .pie{left:152px;top:650px;width:206px;height:62px;background:var(--tinta);color:var(--crema);
   padding:7px 10px;font-family:var(--display);font-size:19px;line-height:1.02;letter-spacing:.02em;z-index:1}
 
@@ -123,16 +125,14 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;padding:12px}
 .vinilo .label b{font-family:var(--mono);font-weight:700;font-size:44px;line-height:.86;letter-spacing:-.02em}
 .vinilo .label span{font-family:var(--display);font-size:12px;line-height:.95;letter-spacing:.01em}
-/* el vinilo gira mientras suena un tema y se asoma un poco más de la tapa */
-.vinilo{transition:transform .6s cubic-bezier(.3,1.2,.5,1)}
-.vinilo.gira{transform:translateX(56px)}
+/* cuando suena un tema el vinilo sale del sobre, empieza a girar; cuando para, frena y se guarda
+   (el giro lo maneja el script, así frena de a poco y no salta) */
+.vinilo{transition:transform .75s cubic-bezier(.45,0,.2,1)}
+.vinilo.afuera{transform:translateX(130px)}
 .vinilo .giro{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;
   background:conic-gradient(from 0deg,transparent 0 9%,rgba(255,255,255,.10) 11%,transparent 14% 46%,rgba(255,255,255,.08) 49%,transparent 52% 71%,rgba(255,255,255,.12) 73%,transparent 76%)}
-.vinilo.gira .giro{animation:girar 1.8s linear infinite}
 .vinilo::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
   background:linear-gradient(125deg,transparent 30%,rgba(255,255,255,.10) 45%,transparent 58%)}
-@keyframes girar{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.vinilo.gira .giro{animation:none}}
 .vinilo .hole{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;
   border-radius:50%;background:var(--papel);border:1.5px solid var(--tinta);z-index:2}
 
@@ -458,11 +458,33 @@ const DISCOS = [
   {id:"flores", titulo:"Las Flores", pie:"LAS FLORES<br>BAUTIBIT · 2026",
    anio:"2026", meta:"BAUTIBIT · 2026 · 1 CANCIÓN", lanz:"Bautibit · 2026 · 1 canción",
    desc:"Colaboración de Sueter 7 con Bautibit.",
-   tapa:"flores.png", mini:"flores.png", chica:true, label:"LF", labelTxt:"BAUTIBIT<br>× SUETER 7",
+   tapa:"img/tapa-flores.jpg", mini:"img/tapa-flores.jpg", label:"LF", labelTxt:"BAUTIBIT<br>× SUETER 7",
    labelColor:"var(--rojo)", labelTinta:"var(--crema)", spotify:"https://open.spotify.com/search/Las%20Flores%20Bautibit",
    temas:[{t:"Las Flores",d:"—"}]}
 ];
 let actual=0;
+
+/* ---------- el tocadiscos: sale del sobre → gira → frena → se guarda ---------- */
+const vin=document.querySelector(".vinilo"), giro=vin.querySelector(".giro");
+const RPM=200;                         /* grados por segundo (≈ 33 rpm) */
+let ang=0, vel=0, objetivo=0, quiereSonar=false, tSalida=null, ultimoT=0;
+function tocadiscos(on){
+  if(on===quiereSonar) return;
+  quiereSonar=on; clearTimeout(tSalida);
+  if(on){
+    vin.classList.add("afuera");                       /* primero sale del sobre */
+    tSalida=setTimeout(()=>{ if(quiereSonar) objetivo=RPM; }, 700);   /* después arranca a girar */
+  }else objetivo=0;                                    /* frena; cuando se detiene, se guarda */
+}
+function cuadro(t){
+  const dt=Math.min(.05,(t-(ultimoT||t))/1000); ultimoT=t;
+  const acel = objetivo>vel ? 260 : 320;               /* grados/s² para arrancar y frenar */
+  if(vel<objetivo) vel=Math.min(objetivo, vel+acel*dt); else if(vel>objetivo) vel=Math.max(objetivo, vel-acel*dt);
+  if(vel>0){ ang=(ang+vel*dt)%360; giro.style.transform="rotate("+ang+"deg)"; }
+  else if(!quiereSonar && vin.classList.contains("afuera")) vin.classList.remove("afuera");
+  requestAnimationFrame(cuadro);
+}
+requestAnimationFrame(cuadro);
 function filasTemas(d){
   const lista = d.propio ? TRACKS.map(t=>({n:t.n, t:t.t, d:mmss(t.d)})) : d.temas.map((t,i)=>({n:i+1, t:t.t, d:t.d}));
   return lista.map((t,i)=>{
@@ -525,7 +547,7 @@ function pintar(){
   $("p-play").setAttribute("aria-label", son?"Pausar":"Reproducir");
   const d=DISCOS[actual];
   $("btn-disco-txt").textContent = d.propio ? (son?"Pausar disco":"Escuchar disco") : "Escuchar en Spotify";
-  document.querySelector(".vinilo").classList.toggle("gira", son && d.propio);
+  tocadiscos(son && d.propio);
 }
 function alternar(){ if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
 

@@ -243,7 +243,7 @@ button{font:inherit;color:inherit}
 @keyframes tv-latido-m{0%,100%{box-shadow:4px 4px 0 #090909}50%{box-shadow:4px 4px 0 #090909,0 0 0 5px rgba(232,194,41,.75)}}
 
 @media (prefers-reduced-motion: reduce){
-  .seccion,.puerta .sign,.puerta .door,.circ,.ctl svg{transition:none !important}
+  .seccion,.puerta .sign,.circ,.ctl svg{transition:none !important}
   .mobile-swipe span:last-child{animation:none !important}
   .cartel-tv,.ctv-sello,.ctv-pie,.frase-in{animation:none !important}
 }
@@ -431,7 +431,7 @@ $("escena").addEventListener("scroll", ()=>{
 }, {passive:true});
 
 /* ---------- navegación entre secciones ---------- */
-const VERSION="20261030b";             // cambiarla al publicar fuerza a recargar las secciones
+const VERSION="20261030c";             // cambiarla al publicar fuerza a recargar las secciones
 const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
   fechas:"fechas.html", letras:"letras.html", compra:"compra.html"};
 const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",
@@ -555,7 +555,7 @@ function caminarA(x,y){
   x=Math.max(ANDEN.x0,Math.min(ANDEN.x1,x)); y=Math.max(ANDEN.y0,Math.min(ANDEN.y1,y));
   if(x>BANCO.x0 && x<BANCO.x1) y=Math.max(y, BANCO.y);
   const viaje=++mp.viaje;
-  if(quieto.matches){ mp.x=x; mp.y=y; mp.cuadro=11; pintarMari(); return Promise.resolve(); }
+  /* Mari camina siempre: el recorrido es parte de la navegación, no un adorno */
   return new Promise(listo=>{
     let previo=performance.now(), recorrido=0;
     function paso(t){
@@ -567,7 +567,7 @@ function caminarA(x,y){
         mp.cuadro = mp.cuadro>=8 && mp.cuadro<=10 ? 8 : 2;   // queda quieta en la última pose
         pintarMari(); quietoDesde=performance.now(); return listo();
       }
-      const v=Math.min(d, 250*dt);                           // 250 px por segundo
+      const v=Math.min(d, 330*dt);                           // 330 px por segundo
       mp.x+=dx/d*v; mp.y+=dy/d*v; recorrido+=v;
       if(Math.abs(dx)>=Math.abs(dy)*0.8){ mp.dir=dx<0?-1:1; mp.cuadro=Math.floor(recorrido/11)%8; }
       else if(dy<0){ mp.dir=1; mp.cuadro=8+[1,0,2,0][Math.floor(recorrido/9)%4]; }  // se aleja: de espaldas
@@ -601,7 +601,7 @@ async function entrarPorPuerta(nombre){
     }
     salir(); return;
   }
-  if(quieto.matches || px==null){ salir(); return; }
+  if(px==null){ salir(); return; }
   mp.ocupada=true;
   const cruzaBanco=Math.min(mp.x,px)<BANCO.x1 && Math.max(mp.x,px)>BANCO.x0;
   if(Math.abs(mp.x-px)>4){
@@ -628,13 +628,13 @@ function salirPorPuerta(nombre){
   const px=PUERTA_X[nombre];
   mari.classList.remove("entra"); mari.style.filter="";
   const puerta=document.querySelector(`.puerta[data-ir="${nombre}"]`);
-  if(puerta && !quieto.matches && !portadaMobile.matches){
+  if(puerta && !portadaMobile.matches){
     puerta.classList.add("abierta"); setTimeout(()=>puerta.classList.remove("abierta"), 900);
   }
   if(px!=null){ mp.x=px; mp.y=ANDEN.y0+18; }
   mp.cuadro=11; mp.dir=1; mp.ocupada=false; mp.viaje++;
   mari.style.opacity="1"; pintarMari();
-  if(px!=null && !quieto.matches) setTimeout(()=>caminarA(px, 812), 420);
+  if(px!=null) setTimeout(()=>caminarA(px, 812), 420);
 }
 pintarMari();
 addEventListener("popstate", ()=> mostrar(decodeURIComponent(location.hash.slice(1))));

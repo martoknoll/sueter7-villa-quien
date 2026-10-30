@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
-<link rel="stylesheet" href="estudio.css?v=1">
+<link rel="stylesheet" href="estudio.css?v=20261030c">
 </head>
 <body class="avatar-studio-page">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -32,14 +32,33 @@
 
   <!-- navegación del sitio (la misma que en las secciones de la estación) -->
   <nav class="sitio-nav" aria-label="Secciones de sueter7">
-    <a href="../index.html">Inicio</a>
-    <a href="../index.html#sueter7">Sueter 7</a>
-    <a href="../index.html#diario">Diario</a>
-    <a href="../index.html#discos">Discos</a>
-    <a href="../index.html#tienda">Tienda</a>
-    <a href="../index.html#fechas">Fechas</a>
-    <a href="./" class="on" aria-current="page">Tu versión</a>
+    <a href="./" class="on" aria-current="page" style="left:0;width:134px">Tu versión</a>
+    <a href="../index.html" style="left:148px;width:88px">Inicio</a>
+    <a href="../index.html#sueter7" style="left:258px;width:111px">Sueter 7</a>
+    <a href="../index.html#diario" style="left:391px;width:92px">Diario</a>
+    <a href="../index.html#discos" style="left:505px;width:95px">Discos</a>
+    <a href="../index.html#tienda" style="left:622px;width:96px">Tienda</a>
+    <a href="../index.html#fechas" style="left:740px;width:98px">Fechas</a>
   </nav>
+  <script>
+  /* el menú se escala y se ubica exactamente como en las secciones de la estación */
+  (function(){
+    var nav=document.currentScript.previousElementSibling;
+    function ubicar(){
+      var head=document.querySelector(".collage-header");
+      if(innerWidth<=900){ nav.classList.remove("nav-escala"); nav.style.cssText=""; if(head) head.style.marginTop=""; return; }
+      var k=innerHeight/1117, Wv=Math.min(2950,Math.max(2172,innerWidth/k));
+      if(Wv*k>innerWidth) k=innerWidth/Wv;
+      var x0=(innerWidth-Wv*k)/2, y0=Math.max(0,(innerHeight-1117*k)/2);
+      var k2=Math.min(Wv/1920,1016/1080), K=k*k2;
+      var izq=x0+k*(Wv-1920*k2)/2;
+      nav.classList.add("nav-escala");
+      nav.style.left=(izq+1015*K)+"px"; nav.style.top=(y0+39*K)+"px"; nav.style.transform="scale("+K+")";
+      if(head) head.style.marginTop=Math.max(0,y0+39*K+48*K-10)+"px";
+    }
+    addEventListener("resize",ubicar); addEventListener("DOMContentLoaded",ubicar); ubicar();
+  })();
+  </script>
 
   <header class="collage-header">
     <div class="brand-lockup" aria-label="Suéter 7 — Tu versión del otro lado">
@@ -180,6 +199,6 @@
   </footer>
 </main>
 
-<script src="estudio.js?v=1"></script>
+<script src="estudio.js?v=20261030c"></script>
 </body>
 </html>

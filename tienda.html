@@ -39,7 +39,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   border:2.5px solid var(--tinta);box-shadow:10px 10px 0 var(--tinta);z-index:5}
 .prod .foto{position:absolute;left:30px;top:40px;width:304px;height:266px;
   display:grid;place-items:center}
-.prod .foto img{max-width:100%;max-height:100%;display:block;-webkit-user-drag:none}
+.prod .foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;-webkit-user-drag:none}
 /* el contenido de la tarjeta cambia con un fundido cuando se usan las flechas */
 .prod .cont{position:absolute;inset:0;transition:opacity .22s ease,transform .22s ease}
 .prod.cambiando .cont{opacity:0;transform:translateY(8px)}
@@ -70,7 +70,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   padding:12px 18px 8px;font-family:var(--display);font-size:30px;letter-spacing:.06em}
 .sumado .cab button{background:transparent;border:0;font-size:22px;cursor:pointer;color:var(--tinta);padding:2px 6px}
 .sumado .cuerpo{display:grid;grid-template-columns:110px 1fr;gap:20px;align-items:center;padding:22px 24px 10px}
-.sumado .cuerpo .mini{width:110px;height:110px;border:2.5px solid var(--tinta);background:#fff;display:grid;place-items:center}
+.sumado .cuerpo .mini{width:110px;height:110px;border:2.5px solid var(--tinta);background:var(--crema);display:grid;place-items:center}
 .sumado .cuerpo .mini img{max-width:88%;max-height:88%}
 .sumado .nom{font-family:var(--display);font-size:32px;line-height:1;letter-spacing:.02em}
 .sumado .sub{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-top:6px}
@@ -136,7 +136,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .items{flex:1;overflow:auto;padding:12px 32px}
 .item{display:grid;grid-template-columns:66px 1fr auto;gap:16px;align-items:center;
   padding:16px 0;border-bottom:1px solid rgba(20,20,20,.18)}
-.item .mini{width:66px;height:66px;border:2px solid var(--tinta);background:#fff;display:grid;place-items:center}
+.item .mini{width:66px;height:66px;border:2px solid var(--tinta);background:var(--crema);display:grid;place-items:center}
 .item .mini img{max-width:88%;max-height:88%;display:block}
 .item .nom{font-family:var(--display);font-size:24px;line-height:1;letter-spacing:.02em}
 .item .sub{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-top:4px}
@@ -244,7 +244,12 @@ const PRODUCTOS = [
   {id:"llavero", tipo:"Llavero", nombre:"Llavero del Andén",   precio:7500,  img:"p-llavero.png"},
   {id:"vinilo",  tipo:"Vinilo",  nombre:"Todo Salió Bien LP",  precio:48000, img:"p-vinilo.png"},
   {id:"poster",  tipo:"Póster",  nombre:"Póster Escritorio",   precio:12000, img:"p-poster.png"},
-  {id:"fanzine", tipo:"Fanzine", nombre:"Diario de Mari",      precio:9500,  img:"p-fanzine.png"}
+  {id:"fanzine", tipo:"Fanzine", nombre:"Diario de Mari",      precio:9500,  img:"p-fanzine.png"},
+  {id:"medias",  tipo:"Medias",  nombre:"Medias sue7er",       precio:8500,  img:"p-medias.jpg"},
+  {id:"botella", tipo:"Botella", nombre:"Botella térmica",     precio:21000, img:"p-botella.jpg"},
+  {id:"cuaderno",tipo:"Librería",nombre:"Cuaderno + lapicera", precio:11000, img:"p-cuaderno.jpg"},
+  {id:"pua",     tipo:"Púa",     nombre:"Púa sue7er",          precio:2500,  img:"p-pua.jpg"},
+  {id:"tote",    tipo:"Tote bag",nombre:"See the good",        precio:14000, img:"p-tote.jpg"}
 ];
 
 /* La dirección de la función que crea el checkout de Mercado Pago.
