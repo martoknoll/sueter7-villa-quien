@@ -277,3 +277,19 @@ html,body.avatar-studio-page{margin:0;background:#e7dfd3;overflow-x:hidden}
   .avatar-studio *,.avatar-studio *::before,.avatar-studio *::after{scroll-behavior:auto !important;animation-duration:.01ms !important;
     animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
+
+/* ---------------------------------------------------------------------
+   Márgenes: en pantallas grandes, todo más contenido y con aire a los costados
+   --------------------------------------------------------------------- */
+@media (min-width:901px){
+  .avatar-studio .sitio-nav,
+  .avatar-studio .collage-header{max-width:1240px;padding-left:56px;padding-right:56px}
+  .avatar-studio .studio-layout{max-width:1240px;gap:32px;padding:16px 56px 88px}
+  .avatar-studio .studio-layout.con-resultado{max-width:980px}
+  .avatar-studio .brand-lockup{width:min(600px,92vw)}
+  .avatar-studio .brand-title-yellow,.avatar-studio .brand-title-black{font-size:clamp(2.4rem,5.4vw,5.2rem)}
+  .avatar-studio .process-nav,.avatar-studio .edition-stamp{right:56px}
+}
+@media (min-width:1024px){
+  .avatar-studio .studio-layout:not(.con-resultado) .result-panel{max-height:780px}
+}

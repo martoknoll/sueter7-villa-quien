@@ -26,8 +26,17 @@
   --azul:#2c61b2;
   --verde:#1db954;
   --display:"Bebas Neue","Haettenschweiler","Arial Narrow",sans-serif;
+  /* pixelada de los títulos: PP NeueBit si está instalada / subida; si no, Tiny5 */
+  --pixel:"PP NeueBit","Tiny5",monospace;
+  --grano-oscuro:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.25 -.6'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+  --grano-claro:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.6 -.6'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
   --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 }
+@font-face{font-family:"PP NeueBit";src:local("PP NeueBit Bold"),local("PPNeueBit-Bold"),url("tu-version/fonts/PPNeueBit-Bold.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+2122}
+@font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin-ext.woff2") format("woff2");font-display:swap;
+  unicode-range:U+0100-02BA,U+1E00-1E9F}
 *{box-sizing:border-box}
 [hidden]{display:none !important}
 body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size:14px}
@@ -51,6 +60,9 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   background:var(--papel) url("fondo.png") center/cover no-repeat}
 .screen > *:not(.bg){position:absolute;z-index:2}
 .screen > .vinilo{z-index:1}
+/* adentro de la estación el fondo lo pone la página entera (puente.js), así no se corta en los costados */
+.embebida .screen{background:transparent}
+.embebida .bg{display:none}
 
 /* ---------- cinta adhesiva ---------- */
 .cinta{
@@ -79,12 +91,15 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   box-shadow:16px 16px 0 var(--tinta);transform:rotate(-2.2deg);
   display:grid;place-items:center;
 }
-.t-discos span{font-family:var(--mono);font-weight:700;font-size:104px;line-height:.8;letter-spacing:-.02em;color:var(--tinta);text-transform:uppercase}
+.t-discos span{font-family:var(--pixel);font-weight:400;font-size:112px;line-height:.8;letter-spacing:-.01em;color:var(--tinta);text-transform:uppercase}
+/* fondos granulados de los títulos */
+.t-discos{background:var(--grano-oscuro),var(--amarillo);background-size:160px 160px,auto}
+.t-canciones,.otros-lbl{background:var(--grano-claro),var(--tinta) !important;background-size:160px 160px,auto !important}
 .t-canciones{
   left:548px;top:194px;width:350px;height:90px;background:var(--tinta);transform:rotate(-1.2deg);
   display:grid;place-items:center;
 }
-.t-canciones span{font-family:var(--mono);font-weight:700;font-size:48px;line-height:1;letter-spacing:-.02em;color:var(--crema);text-transform:uppercase}
+.t-canciones span{font-family:var(--pixel);font-weight:400;font-size:50px;line-height:1;letter-spacing:-.02em;color:var(--crema);text-transform:uppercase}
 
 /* ---------- tapa del LP ---------- */
 .tapa{left:178px;top:308px;width:389px;height:389px;background:var(--crema);
@@ -109,6 +124,14 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;padding:12px}
 .vinilo .label b{font-family:var(--mono);font-weight:700;font-size:44px;line-height:.86;letter-spacing:-.02em}
 .vinilo .label span{font-family:var(--display);font-size:12px;line-height:.95;letter-spacing:.01em}
+/* el vinilo gira mientras suena un tema */
+.vinilo .label{transition:transform .4s}
+.vinilo.gira .label{animation:girar 2.4s linear infinite}
+.vinilo::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 30deg,transparent 0 20%,rgba(255,255,255,.07) 25%,transparent 32% 70%,rgba(255,255,255,.05) 75%,transparent 82%)}
+.vinilo.gira::after{animation:girar 2.4s linear infinite}
+@keyframes girar{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.vinilo.gira .label,.vinilo.gira::after{animation:none}}
 .vinilo .hole{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;
   border-radius:50%;background:var(--papel);border:1.5px solid var(--tinta);z-index:2}
 
@@ -150,7 +173,7 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   border:2.5px solid var(--tinta);box-shadow:6px 6px 0 var(--tinta);cursor:pointer;padding-top:4px}
 .btn.escuchar{left:35px;top:404px;width:280px;height:50px;background:var(--azul);color:var(--crema)}
 .btn.escuchar:hover{filter:brightness(1.1)}
-.btn.comprar{left:340px;top:404px;width:250px;height:50px;background:var(--crema);color:var(--tinta)}
+.btn.comprar{left:340px;top:404px;width:250px;height:50px;background:var(--crema);color:var(--tinta);text-decoration:none}
 .btn.comprar:hover{background:var(--amarillo)}
 .plats{position:absolute;left:638px;top:415px;font-family:var(--mono);font-size:14px;color:var(--gris);letter-spacing:.03em}
 
@@ -166,7 +189,7 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 /* ---------- otros lanzamientos ---------- */
 .otros-lbl{left:86px;top:750px;width:381px;height:56px;background:var(--tinta);display:grid;place-items:center;
   transform:rotate(-.8deg)}
-.otros-lbl span{font-family:var(--mono);font-weight:700;font-size:26px;letter-spacing:.01em;color:var(--crema);text-transform:uppercase}
+.otros-lbl span{font-family:var(--pixel);font-weight:400;font-size:28px;letter-spacing:.01em;color:var(--crema);text-transform:uppercase}
 .lanz{width:540px;height:100px;background:var(--crema);border:2.5px solid var(--tinta);
   box-shadow:6px 6px 0 var(--tinta);display:grid;grid-template-columns:76px 1fr 96px;gap:20px;align-items:center;padding:0 12px}
 .lanz .mini{width:76px;height:76px;border:2px solid var(--tinta);background:var(--crema-var);overflow:hidden;
@@ -175,7 +198,7 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 .lanz .mini span{font-family:var(--mono);font-size:8px;line-height:1.3;color:var(--rojo);letter-spacing:.03em}
 .lanz h3{font-family:var(--display);font-size:34px;line-height:.95;letter-spacing:.02em;margin:0 0 4px;color:var(--tinta)}
 .lanz p{font-family:var(--mono);font-size:14px;color:var(--gris);margin:0;letter-spacing:.02em}
-.lanz .esc{width:96px;height:28px;display:grid;place-items:center;background:var(--crema);
+.lanz .esc{width:96px;height:28px;display:grid;place-items:center;background:var(--crema);text-decoration:none;
   border:2px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta);
   font-family:var(--display);font-size:17px;letter-spacing:.08em;color:var(--tinta);cursor:pointer;padding-top:2px}
 .lanz .esc:hover{background:var(--amarillo)}
@@ -277,9 +300,6 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
         <a href="tu-version/" class="tv" style="left:-148px;width:134px">Tu versión</a>
       </nav>
 
-      <svg class="flecha" viewBox="0 0 72 32" fill="none" aria-hidden="true">
-        <path d="M2 16h63M52 5l14 11-14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/>
-      </svg>
 
       <div class="t-discos"><span>Discos</span></div>
       <div class="t-canciones"><span>&amp; Canciones</span></div>
@@ -324,7 +344,7 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
           <svg width="16" height="20" viewBox="0 0 16 20" aria-hidden="true"><path d="M1 1v18l14-9z" fill="currentColor"/></svg>
           <span id="btn-disco-txt">Escuchar disco</span>
         </button>
-        <button class="btn comprar">Comprar vinilo</button>
+        <a class="btn comprar" href="tienda.html?producto=vinilo">Comprar vinilo</a>
         <span class="plats">Spotify · YouTube · Bandcamp</span>
       </div>
 
@@ -339,19 +359,19 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
       <div class="otros-lbl"><span>Otros lanzamientos</span></div>
 
       <div class="lanz" style="left:87px;top:809px">
-        <div class="mini"><img src="diario.png" alt="Tapa de Diario"></div>
+        <div class="mini"><img src="img/tapa-diario.png" alt="Tapa de Diario"></div>
         <div><h3>Diario</h3><p>16 min · 2025 · 5 canciones</p></div>
-        <button class="esc">Escuchar</button>
+        <a class="esc" href="https://open.spotify.com/search/sueter7%20diario" target="_blank" rel="noopener">Escuchar</a>
       </div>
       <div class="lanz" style="left:687px;top:809px">
         <div class="mini"><img src="bts.png" alt="Tapa de BTS (Sueter 7 — Remix)"></div>
         <div><h3>BTS (Sueter 7 — Remix)</h3><p>Anabel G. · 2026 · 1 canción</p></div>
-        <button class="esc">Escuchar</button>
+        <a class="esc" href="https://open.spotify.com/search/BTS%20sueter%207%20remix" target="_blank" rel="noopener">Escuchar</a>
       </div>
       <div class="lanz" style="left:1290px;top:830px">
         <div class="mini"><img src="flores.png" alt="Tapa de Las Flores"></div>
         <div><h3>Las Flores</h3><p>Bautibit · 2026 · 1 canción</p></div>
-        <button class="esc">Escuchar</button>
+        <a class="esc" href="https://open.spotify.com/search/Las%20Flores%20Bautibit" target="_blank" rel="noopener">Escuchar</a>
       </div>
 
       <!-- cintas -->
@@ -443,6 +463,7 @@ function pintar(){
   $("ico-play").hidden=son; $("ico-pause").hidden=!son;
   $("p-play").setAttribute("aria-label", son?"Pausar":"Reproducir");
   $("btn-disco-txt").textContent=son?"Pausar disco":"Escuchar disco";
+  document.querySelector(".vinilo").classList.toggle("gira", son);
 }
 function alternar(){ if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
 

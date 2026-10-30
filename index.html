@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
-<link rel="preload" as="image" href="img/estacion-ancha.webp">
+<link rel="preload" as="image" href="img/estacion-5.webp">
 <style>
 :root{
   --papel:#e7dfd3; --crema:#fffdf9; --crema-var:#f4f0e6;
@@ -16,23 +16,23 @@
   --rojo:#c9452c; --amarillo:#e8c340; --azul:#2c61b2;
   --display:"Bebas Neue","Arial Narrow",sans-serif;
   --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
-  --W:1728px; --H:1117px; --escena:1016px;
-  --Wv:1728px; --off:0px;      /* ancho visible y corrimiento del centro: los ajusta fit() en widescreen */
+  --W:2172px; --H:1117px; --escena:1016px;
+  --Wv:2172px; --off:0px;      /* ancho visible y corrimiento del centro: los ajusta fit() en widescreen */
 }
 *{box-sizing:border-box}
 [hidden]{display:none !important}
-html,body{margin:0;height:100%;background:var(--tinta);overflow:hidden}
+html,body{margin:0;height:100%;background:var(--crema-var);overflow:hidden}
 body{font-family:var(--mono);color:var(--tinta);-webkit-font-smoothing:antialiased}
 
-/* lienzo de 1117 de alto que se escala a la ventana; a lo ancho crece hasta 2544
-   (widescreen) y la estación de 1728 queda centrada */
+/* lienzo de 1117 de alto que se escala a la ventana; a lo ancho crece hasta 2950
+   (widescreen) y la estación de 2172 (cinco puertas) queda centrada */
 .lienzo{position:absolute;left:0;top:0;width:var(--Wv);height:var(--H);transform-origin:0 0;overflow:hidden;background:var(--crema-var)}
 .fondo-ancho{position:absolute;left:0;top:0;width:var(--Wv);height:var(--escena);
-  background:url("img/estacion-ancha.webp") calc((var(--Wv) - 2544px) / 2) 0/2544px 1016px no-repeat}
+  background:url("img/estacion-5.webp") calc(var(--off) - 437px) 0/3000px 1016px no-repeat}
 
 /* ---------- escena: la estación ---------- */
 .escena{position:absolute;left:var(--off);top:0;width:var(--W);height:var(--escena)}
-.logo{position:absolute;left:70px;top:36px;width:350px;height:90px;border-radius:2px}
+.logo{position:absolute;left:41px;top:36px;width:350px;height:90px;border-radius:2px}
 .proyecto{position:absolute;left:18px;top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
   text-transform:uppercase;color:rgba(20,20,20,.5);text-decoration:none;padding:2px 4px}
 .proyecto:hover{color:var(--rojo)}
@@ -55,7 +55,7 @@ body{font-family:var(--mono);color:var(--tinta);-webkit-font-smoothing:antialias
 /* ---------- reproductor persistente ---------- */
 .player{position:absolute;left:0;top:var(--escena);width:var(--Wv);height:calc(var(--H) - var(--escena));
   background:var(--crema-var);border-top:2.5px solid var(--tinta);z-index:10;color:var(--tinta)}
-.pl-in{position:absolute;left:var(--off);top:0;width:var(--W);height:100%}
+.pl-in{position:absolute;left:calc(var(--off) + (var(--W) - 1728px) / 2);top:0;width:1728px;height:100%}
 .pl-in > *{position:absolute}
 .pthumb{left:13px;top:26px;width:60px;height:60px;overflow:hidden;background:var(--azul);padding:0;border:0;cursor:pointer}
 .pthumb img{width:100%;height:100%;object-fit:cover;display:block}
@@ -74,13 +74,15 @@ button{font:inherit;color:inherit}
 .circ:hover{transform:scale(1.06)}
 .circ:active{transform:scale(.95)}
 .pplay{left:476px;top:32.5px;width:47px;height:47px}
-.pseek{left:548px;top:46px;width:681px;height:20px;cursor:pointer;touch-action:none}
+.pseek{left:548px;top:46px;width:626px;height:20px;cursor:pointer;touch-action:none}
 .pseek::before{content:"";position:absolute;left:0;right:0;top:8.25px;height:3.5px;background:var(--gris-claro)}
 .pseek i{position:absolute;left:0;top:8.25px;height:3.5px;width:0;background:var(--rojo)}
 .pseek b{position:absolute;left:0;top:2.5px;width:15px;height:15px;border-radius:50%;background:var(--tinta);transform:translateX(-50%);transition:transform .1s}
 .pseek:hover b{transform:translateX(-50%) scale(1.15)}
 .pcur{left:548px;top:72px;font-size:11px;line-height:1;color:var(--gris);font-variant-numeric:tabular-nums;letter-spacing:.02em}
-.pdur{left:1129px;top:72px;width:100px;text-align:right;font-size:11px;line-height:1;color:var(--gris);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.pdur{left:1074px;top:72px;width:100px;text-align:right;font-size:11px;line-height:1;color:var(--gris);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.p-tren{left:1232px;top:36px;width:44px;height:40px}
+.p-tren[aria-pressed="false"]{opacity:.55}
 .p-shuffle{left:1294px;top:36px;width:40px;height:40px}
 .p-shuffle[aria-pressed="true"]{color:var(--rojo)}
 .p-prev{left:1348.5px;top:36px;width:40px;height:40px}
@@ -97,12 +99,31 @@ button{font:inherit;color:inherit}
 
 /* ---------- cartel "Creá tu versión" pegado en la pared ---------- */
 @font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap}
-.cartel-tv{position:absolute;left:1274px;top:438px;width:112px;height:196px;z-index:2;display:block;text-decoration:none;color:#090909;
+.cartel-tv{position:absolute;left:1245px;top:438px;width:112px;height:196px;z-index:2;display:block;text-decoration:none;color:#090909;
   background:#f7f1e8;border:2.5px solid #090909;box-shadow:5px 5px 0 #090909;transform:rotate(-2.5deg);transition:transform .16s,box-shadow .16s;
   padding:22px 10px 8px;font-family:var(--mono)}
 .cartel-tv::before{content:"";position:absolute;inset:0;opacity:.14;pointer-events:none;
   background-image:radial-gradient(#090909 .9px,transparent 1.1px);background-size:4px 4px}
-.cartel-tv:hover,.cartel-tv:focus-visible{transform:rotate(-1deg) translate(-3px,-4px);box-shadow:8px 9px 0 #090909;outline:none}
+.cartel-tv{transform-origin:50% -10px;animation:tv-hamaca 3.4s ease-in-out infinite}
+.cartel-tv:hover,.cartel-tv:focus-visible{animation-play-state:paused;transform:rotate(-1deg) translate(-3px,-4px);box-shadow:8px 9px 0 #090909;outline:none}
+@keyframes tv-hamaca{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(2deg)}}
+.ctv-sello{animation:tv-latido 1.6s ease-in-out infinite}
+@keyframes tv-latido{0%,100%{transform:rotate(12deg) scale(1)}50%{transform:rotate(12deg) scale(1.18)}}
+.ctv-pie{animation:tv-pie 1.6s ease-in-out infinite}
+@keyframes tv-pie{0%,100%{background:#e8c229}50%{background:#fffdf9}}
+
+/* ---------- cartel colgado del techo con la frase ---------- */
+.frase{position:absolute;left:1086px;top:146px;z-index:2;transform:translateX(-50%);pointer-events:none}
+.frase-in{position:relative;transform-origin:50% -44px;animation:frase-hamaca 6s ease-in-out infinite}
+.frase-in::before,.frase-in::after{content:"";position:absolute;top:-44px;width:3px;height:46px;
+  background:repeating-linear-gradient(180deg,#1a1a1a 0 5px,#5a5a5a 5px 7px)}
+.frase-in::before{left:46px}
+.frase-in::after{right:46px}
+.frase-cartel{display:block;white-space:nowrap;background:#efe9de;color:#141414;border:3px solid #141414;
+  box-shadow:6px 7px 0 rgba(10,10,10,.55);padding:11px 28px 6px;font-family:var(--display);font-size:33px;
+  letter-spacing:.07em;line-height:1;text-transform:uppercase}
+.frase-cartel b{color:var(--rojo);font-weight:400}
+@keyframes frase-hamaca{0%,100%{transform:rotate(-.9deg)}50%{transform:rotate(.9deg)}}
 .cartel-tv:focus-visible{outline:3px solid var(--crema);outline-offset:4px}
 .ctv-cinta{position:absolute;left:23px;top:-12px;width:66px;height:20px;transform:rotate(4deg);
   background:rgba(231,223,211,.82);border-left:1px solid rgba(9,9,9,.18);border-right:1px solid rgba(9,9,9,.18)}
@@ -160,7 +181,8 @@ button{font:inherit;color:inherit}
   .puerta.abriendo .door{transform:perspective(650px) rotateY(-18deg) translateX(-4px);filter:brightness(.8)}
   .puerta:hover .sign,.puerta:focus-visible .sign{transform:translate(-2px,-2px);box-shadow:8px 9px 0 var(--tinta)}
   .puerta:active{filter:brightness(1.08) saturate(1.25)}
-  .piso,.mari{display:none}
+  .piso,.mari,.frase{display:none}
+  .cartel-tv{animation:tv-latido-m 1.8s ease-in-out infinite}
 
   .mobile-swipe{position:fixed;display:flex;align-items:center;gap:8px;left:50%;top:67px;z-index:5;
     transform:translateX(-50%);padding:4px 8px;background:rgba(255,253,249,.88);border:1.5px solid var(--tinta);
@@ -196,15 +218,18 @@ button{font:inherit;color:inherit}
   .pcur{left:151px;top:108px;font-size:9px}
   .pdur{left:auto;right:14px;top:108px;width:auto;font-size:9px}
   .p-shuffle,.p-vol,.pvolbar,.pspot.a{display:none}
+  .p-tren{left:auto;right:56px;top:13px;width:38px;height:36px}
   .pspot.b{left:auto;right:12px;top:13px;width:36px;height:36px}
   .perr{right:10px;top:-24px}
 }
 
 @keyframes indicar-swipe{to{transform:translateX(4px)}}
+@keyframes tv-latido-m{0%,100%{box-shadow:4px 4px 0 #090909}50%{box-shadow:4px 4px 0 #090909,0 0 0 5px rgba(232,194,41,.75)}}
 
 @media (prefers-reduced-motion: reduce){
   .seccion,.puerta .sign,.puerta .door,.circ,.ctl svg{transition:none !important}
   .mobile-swipe span:last-child{animation:none !important}
+  .cartel-tv,.ctv-sello,.ctv-pie,.frase-in{animation:none !important}
 }
 </style>
 </head>
@@ -217,30 +242,36 @@ button{font:inherit;color:inherit}
     <a class="logo" href="#" aria-label="sueter7 — volver al andén" data-ir=""></a>
     <a class="proyecto" href="proyecto.html">Proyecto final ↗</a>
     <div class="mobile-swipe" aria-hidden="true">
-      <span>deslizá</span><i class="activo"></i><i></i><i></i><i></i><span>→</span>
+      <span>deslizá</span><i class="activo"></i><i></i><i></i><i></i><i></i><span>→</span>
     </div>
     <div class="piso" id="piso" title="Hacé clic en el andén para caminar" aria-hidden="true"></div>
 
     <a class="puerta" href="#sueter7" data-ir="sueter7" aria-label="Sueter7 — la banda"
-       style="left:129px;top:305.5px;width:282.5px;height:431px">
+       style="left:100px;top:305.5px;width:282.5px;height:431px">
       <img class="door" src="img/puerta-sueter7.webp" alt="" style="left:24.5px;top:110px;width:231px;height:321px">
       <img class="sign" src="img/cartel-sueter7.webp" alt="" style="left:0;top:0;width:282.5px;height:94.5px">
     </a>
     <a class="puerta" href="#diario" data-ir="diario" aria-label="Diario"
-       style="left:543px;top:305.5px;width:277.5px;height:433px">
+       style="left:514px;top:305.5px;width:277.5px;height:433px">
       <img class="door" src="img/puerta-diario.webp" alt="" style="left:27.5px;top:111px;width:229.5px;height:322px">
       <img class="sign" src="img/cartel-diario.webp" alt="" style="left:0;top:0;width:277.5px;height:95px">
     </a>
     <a class="puerta" href="#discos" data-ir="discos" aria-label="Discos y canciones"
-       style="left:951px;top:302.5px;width:304px;height:437.5px">
+       style="left:922px;top:302.5px;width:304px;height:437.5px">
       <img class="door" src="img/puerta-discos.webp" alt="" style="left:36.5px;top:112.5px;width:233px;height:325px">
       <img class="sign" src="img/cartel-discos.webp" alt="" style="left:0;top:0;width:304px;height:100px">
     </a>
     <a class="puerta" href="#tienda" data-ir="tienda" aria-label="Tienda"
-       style="left:1394.5px;top:306px;width:284.5px;height:435px">
+       style="left:1365.5px;top:306px;width:284.5px;height:435px">
       <img class="door" src="img/puerta-tienda.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
       <img class="sign" src="img/cartel-tienda.webp" alt="" style="left:0;top:0;width:284.5px;height:109px">
     </a>
+    <a class="puerta" href="#fechas" data-ir="fechas" aria-label="Próximas fechas"
+       style="left:1787.5px;top:306px;width:284.5px;height:435px">
+      <img class="door" src="img/puerta-fechas.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
+      <img class="sign" src="img/cartel-fechas.webp" alt="" style="left:0;top:0;width:284.5px;height:109px">
+    </a>
+    <div class="frase" aria-hidden="true"><div class="frase-in"><span class="frase-cartel"><b>//</b> A veces avanzar es animarse a tomar otro tren <b>//</b></span></div></div>
     <a class="cartel-tv" id="cartel-tv" href="tu-version/" aria-label="Creá tu versión: convertí tu foto en un personaje de Suéter 7">
       <span class="ctv-cinta" aria-hidden="true"></span>
       <span class="ctv-sello" aria-hidden="true">NUEVO</span>
@@ -270,6 +301,9 @@ button{font:inherit;color:inherit}
     <span class="pcur" id="p-cur">0:00</span>
     <span class="pdur" id="p-dur">6:38</span>
 
+    <button class="ctl p-tren" id="p-tren" aria-label="Sonido de tren al cambiar de sección" aria-pressed="true" title="Sonido de tren: activado">
+      <svg width="30" height="26" viewBox="0 0 30 26" fill="none" aria-hidden="true"><rect x="5" y="1.5" width="20" height="17" rx="4" stroke="currentColor" stroke-width="2.2"/><path d="M5 10h20" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="14.2" r="1.6" fill="currentColor"/><circle cx="20" cy="14.2" r="1.6" fill="currentColor"/><path d="M9 19l-4 5.5M21 19l4 5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path id="ico-tren-x" d="M2 24L28 2" stroke="var(--rojo)" stroke-width="2.6" hidden/></svg>
+    </button>
     <button class="ctl p-shuffle" id="p-shuffle" aria-label="Aleatorio" aria-pressed="false">
       <svg width="37" height="18" viewBox="0 0 37 18" fill="none" aria-hidden="true"><path d="M0 1.5h9c6 0 9.5 15 16 15h12M0 16.5h9c6 0 9.5-15 16-15h12" stroke="currentColor" stroke-width="2.2"/></svg>
     </button>
@@ -298,10 +332,10 @@ button{font:inherit;color:inherit}
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const W=1728, H=1117;
+const W=2172, H=1117;
 
 /* ---------- escala del lienzo ---------- */
-const WMAX=2544;                       // ancho de img/estacion-ancha.webp en px de 1x
+const WMAX=2950;                       // hasta dónde alcanza img/estacion-5.webp a lo ancho
 const portadaMobile=matchMedia("(max-width:700px) and (orientation:portrait)");
 const puertasMobile=[...document.querySelectorAll(".puerta")];
 puertasMobile.forEach(p=>{
@@ -351,7 +385,7 @@ function fit(){
   const l=$("lienzo");
   l.style.setProperty("--Wv", Wv+"px"); l.style.setProperty("--off", OFF+"px");
   l.style.transform=`translate(${x}px,${y}px) scale(${k})`;
-  if(window.ANDEN){ ANDEN.x0=60-OFF; ANDEN.x1=1668+OFF; }
+  if(window.ANDEN){ ANDEN.x0=40-OFF; ANDEN.x1=W-40+OFF; }
 }
 addEventListener("resize", fit); fit();
 
@@ -364,7 +398,7 @@ $("escena").addEventListener("scroll", ()=>{
 }, {passive:true});
 
 /* ---------- navegación entre secciones ---------- */
-const VERSION="20261029a";             // cambiarla al publicar fuerza a recargar las secciones
+const VERSION="20261030a";             // cambiarla al publicar fuerza a recargar las secciones
 const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
   fechas:"fechas.html", letras:"letras.html", compra:"compra.html"};
 const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",
@@ -382,8 +416,53 @@ function recorte(nombre){
   const l=parseFloat(p.style.left), t=parseFloat(p.style.top), w=parseFloat(p.style.width), h=parseFloat(p.style.height);
   return `inset(${t}px ${Wv-OFF-l-w}px ${1016-t-h}px ${OFF+l}px)`;
 }
+/* ---------- sonido de tren: suena sólo al entrar o cambiar de sección (nunca solo) ---------- */
+let trenOn=true; try{ trenOn=localStorage.getItem("s7-tren")!=="0"; }catch(e){}
+let ctxTren=null;
+function pintarTren(){
+  $("p-tren").setAttribute("aria-pressed", String(trenOn));
+  $("p-tren").title="Sonido de tren: "+(trenOn?"activado":"silenciado");
+  $("ico-tren-x").toggleAttribute("hidden", trenOn);
+}
+function trenPasa(){
+  if(!trenOn) return;
+  try{
+    ctxTren=ctxTren||new (window.AudioContext||window.webkitAudioContext)();
+    const c=ctxTren, t0=c.currentTime+.02, dur=2.6;
+    if(c.state==="suspended") c.resume();
+    const sal=c.createGain(); sal.gain.value=.32; sal.connect(c.destination);
+    // ruido para el rodar del tren
+    const buf=c.createBuffer(1, c.sampleRate*dur, c.sampleRate), d=buf.getChannelData(0);
+    let ult=0; for(let i=0;i<d.length;i++){ const b=Math.random()*2-1; ult=(ult+.02*b)/1.02; d[i]=ult*3.2; }
+    const ruido=c.createBufferSource(); ruido.buffer=buf;
+    const lp=c.createBiquadFilter(); lp.type="lowpass"; lp.frequency.setValueAtTime(260,t0);
+    lp.frequency.linearRampToValueAtTime(900,t0+dur*.45); lp.frequency.linearRampToValueAtTime(220,t0+dur);
+    const env=c.createGain(); env.gain.setValueAtTime(0.0001,t0);
+    env.gain.exponentialRampToValueAtTime(1,t0+dur*.42); env.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    ruido.connect(lp).connect(env).connect(sal); ruido.start(t0); ruido.stop(t0+dur);
+    // el traqueteo de las ruedas sobre las juntas
+    for(let k=0;k<9;k++){
+      const tk=t0+.18+k*.25;
+      [0,.075].forEach(dt=>{
+        const o=c.createOscillator(), g=c.createGain(), f=c.createBiquadFilter();
+        o.type="square"; o.frequency.value=70+Math.random()*12; f.type="bandpass"; f.frequency.value=420;
+        const fuerza=Math.sin(Math.PI*(k+.5)/9)*.55;
+        g.gain.setValueAtTime(0.0001,tk+dt); g.gain.exponentialRampToValueAtTime(fuerza+.001,tk+dt+.008);
+        g.gain.exponentialRampToValueAtTime(0.0001,tk+dt+.09);
+        o.connect(f).connect(g).connect(sal); o.start(tk+dt); o.stop(tk+dt+.1);
+      });
+    }
+  }catch(e){}
+}
+$("p-tren").addEventListener("click", ()=>{
+  trenOn=!trenOn; try{ localStorage.setItem("s7-tren", trenOn?"1":"0"); }catch(e){}
+  pintarTren(); if(trenOn) trenPasa();
+});
+pintarTren();
+
 function ir(nombre, q){
   nombre = PAGINAS[nombre] ? nombre : "";
+  if(nombre && partir(abierta)[0]!==nombre) trenPasa();
   q = nombre ? (q||"") : "";
   if(nombre==="letras" && !q) q="?tema="+TRACKS[cur].n;   // las letras abren en el tema que suena
   const ruta = nombre + q;
@@ -428,9 +507,9 @@ document.querySelectorAll("[data-ir]").forEach(a=>a.addEventListener("click", ev
    Sprite de 12 cuadros (img/mari.png, 28×52 px ampliado ×4):
    0–7 caminata de costado · 8–10 de espaldas · 11 de frente           */
 const mari=$("mari");
-const ANDEN=window.ANDEN={x0:60-OFF, x1:1668+OFF, y0:752, y1:832};
-const PUERTA_X={sueter7:252, diario:688, discos:1104, tienda:1544, "tu-version":1325};
-const mp={x:820, y:818, dir:1, cuadro:11, ocupada:false, viaje:0};
+const ANDEN=window.ANDEN={x0:40-OFF, x1:W-40+OFF, y0:752, y1:832};
+const PUERTA_X={sueter7:223, diario:659, discos:1075, tienda:1515, fechas:1937, "tu-version":1296};
+const mp={x:791, y:818, dir:1, cuadro:11, ocupada:false, viaje:0};
 const escalaMari=y=>0.88+0.12*Math.max(0,Math.min(1,(y-ANDEN.y0)/(ANDEN.y1-ANDEN.y0)));
 function pintarMari(){
   mari.style.backgroundPosition=(-mp.cuadro*112)+"px 0";
@@ -438,7 +517,7 @@ function pintarMari(){
   mari.style.transform=`translate(${mp.x-56}px,${mp.y-208}px) scale(${mp.dir<0?-s:s},${s})`;
 }
 let quietoDesde=null;
-const BANCO={x0:280, x1:650, y:824};                     // por delante del banco, nunca a través
+const BANCO={x0:251, x1:621, y:824};                     // por delante del banco, nunca a través
 function caminarA(x,y){
   x=Math.max(ANDEN.x0,Math.min(ANDEN.x1,x)); y=Math.max(ANDEN.y0,Math.min(ANDEN.y1,y));
   if(x>BANCO.x0 && x<BANCO.x1) y=Math.max(y, BANCO.y);

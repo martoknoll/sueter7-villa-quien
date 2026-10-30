@@ -28,6 +28,8 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
 .stage{position:absolute;left:0;top:0;width:100%;display:flex;justify-content:center}
 .screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;transform-origin:top center;
   background:var(--papel) url("fondo.png") center/cover no-repeat}
+/* adentro de la estación el fondo lo pone la página entera (puente.js), así no se corta en los costados */
+.embebida .screen{background:transparent}
 .screen > *{position:absolute}
 .nav{left:1163px;top:39px;width:690px;height:44px;z-index:6}
 .nav a{position:absolute;top:0;height:44px;display:grid;place-items:center;
@@ -44,7 +46,11 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
   letter-spacing:-.02em;text-transform:uppercase;margin:0}
 .t-sub{left:118px;top:206px;padding:9px 16px 6px;background:var(--tinta);color:var(--crema);transform:rotate(-1.2deg);
   font-family:var(--mono);font-weight:700;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
-.ayuda{left:96px;top:290px;width:250px;font-family:var(--mano);font-size:27px;line-height:1.12;color:var(--gris);transform:rotate(-2deg)}
+/* instrucción en un papelito, para que se lea sobre el fondo tramado */
+.ayuda{left:92px;top:292px;width:262px;margin:0;padding:16px 18px 14px;background:var(--crema);border:2.5px solid var(--tinta);
+  box-shadow:6px 6px 0 var(--tinta);font-family:var(--mono);font-size:17px;font-weight:700;line-height:1.45;color:var(--tinta);transform:rotate(-2deg)}
+.ayuda::before{content:"";position:absolute;left:50%;top:-14px;width:84px;height:24px;transform:translateX(-50%) rotate(3deg);
+  background:rgba(226,215,192,.86);border-left:1px solid rgba(20,20,20,.15);border-right:1px solid rgba(20,20,20,.15)}
 .ayuda b{color:var(--rojo);font-weight:700}
 
 /* controles abajo del libro */
@@ -226,7 +232,7 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
     </nav>
     <h1 class="t-diario">Diario</h1>
     <div class="t-sub">de Mari</div>
-    <p class="ayuda">Arrastrá la punta de la hoja o usá las <b>flechas</b> para dar vuelta las páginas.</p>
+    <p class="ayuda">Arrastrá la esquina de la hoja o usá las <b>flechas</b> para dar vuelta las páginas.</p>
     <div class="ctrl">
       <button type="button" id="ant" aria-label="Página anterior">← Anterior</button>
       <span class="pag" id="pag">Tapa</span>
@@ -240,7 +246,7 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
 
   <!-- 1 · tapa -->
   <div class="page tapa" data-density="hard"><div class="in">
-    <div class="cinta" style="left:-14px;top:70px;transform:rotate(-24deg);width:140px"></div>
+    <div class="cinta" style="left:-38px;top:26px;transform:rotate(-45deg);width:170px;height:34px"></div>
     <div class="etiqueta">
       <h2>Diario</h2>
       <div class="de">de Mari</div>

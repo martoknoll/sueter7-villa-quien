@@ -20,7 +20,9 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-family:var(--mono)}
-.stage{display:flex;justify-content:center;align-items:flex-start}
+/* el fondo sigue a los costados: la misma imagen, ensanchada, detrás de la pantalla de 1920 */
+.stage{display:flex;justify-content:center;align-items:flex-start;
+  background:var(--papel) url("sobre-fondo-ancho.jpg") center top/auto 100% no-repeat}
 
 .screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;
   transform-origin:top center;background:var(--papel)}
@@ -31,9 +33,13 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   border:2.5px solid transparent;transition:border-color .14s}
 .zona:hover,.zona:focus-visible{border-color:var(--tinta);outline:none}
 
-.btn-discos{position:absolute;left:168px;top:891px;width:411px;height:34px;z-index:4;
-  display:block;cursor:pointer;transition:transform .1s}
-.btn-discos:hover{transform:translate(-1px,-1px)}
+.btn-discos{position:absolute;left:160px;top:872px;width:424px;height:66px;z-index:4;
+  display:flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;text-decoration:none;
+  background:#2c61b2;color:var(--crema);border:3px solid var(--tinta);box-shadow:8px 8px 0 var(--tinta);
+  font-family:var(--display);font-size:34px;letter-spacing:.14em;line-height:1;padding-top:4px;text-transform:uppercase;
+  transition:transform .1s,box-shadow .1s,background .14s}
+.btn-discos:hover{transform:translate(-2px,-2px);box-shadow:10px 10px 0 var(--tinta);background:#3570c8}
+.btn-discos:active{transform:translate(3px,3px);box-shadow:4px 4px 0 var(--tinta)}
 .btn-discos:focus-visible{outline:2px solid var(--tinta);outline-offset:3px}
 
 .pronto{position:absolute;z-index:8;background:var(--rojo);color:var(--crema);
@@ -68,7 +74,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
     <a class="zona" href="fechas.html"  style="left:1812px;top:22px;width:98px;height:44px"  aria-label="Fechas"></a>
     <a class="nav-tv" href="tu-version/" style="left:1072px;top:22px">Tu versión</a>
 
-    <a class="btn-discos" href="discos.html" aria-label="Ir a Discos"></a>
+    <a class="btn-discos" href="discos.html">Discos <span aria-hidden="true">→</span></a>
 
     <div class="pronto" id="pronto">PRONTO</div>
     <div class="fundido" id="fundido"></div>

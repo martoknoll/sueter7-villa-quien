@@ -22,7 +22,8 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-family:var(--mono)}
-.stage{display:flex;justify-content:center;align-items:flex-start}
+.stage{position:relative;display:flex;justify-content:center;align-items:flex-start;
+  background:#b8cbe4 url("tienda-fondo-ancho.jpg") center top/auto 100% no-repeat}
 
 .screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;
   transform-origin:top center;background:var(--papel)}
@@ -39,9 +40,50 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .prod .foto{position:absolute;left:30px;top:40px;width:304px;height:266px;
   display:grid;place-items:center}
 .prod .foto img{max-width:100%;max-height:100%;display:block;-webkit-user-drag:none}
+/* el contenido de la tarjeta cambia con un fundido cuando se usan las flechas */
+.prod .cont{position:absolute;inset:0;transition:opacity .22s ease,transform .22s ease}
+.prod.cambiando .cont{opacity:0;transform:translateY(8px)}
+.prod.marcado{animation:marcar 1.1s ease 2}
+@keyframes marcar{0%,100%{box-shadow:10px 10px 0 var(--tinta)}50%{box-shadow:10px 10px 0 var(--tinta),0 0 0 8px var(--amarillo)}}
+
+/* ===== flechas del carrusel ===== */
+.flecha{position:absolute;top:478px;width:96px;height:96px;z-index:6;display:grid;place-items:center;cursor:pointer;
+  background:transparent;border:0;padding:0;color:#d24426;transition:transform .12s}
+.flecha svg{display:block;filter:drop-shadow(3px 3px 0 #141414)}
+.flecha.izq{left:52px}
+.flecha.der{left:1756px}
+.flecha:hover{transform:scale(1.12)}
+.flecha.izq:hover{transform:translateX(-6px) scale(1.12)}
+.flecha.der:hover{transform:translateX(6px) scale(1.12)}
+.flecha:active{transform:scale(.94)}
+.flecha:focus-visible{outline:3px solid #141414;outline-offset:2px}
+.puntos{position:absolute;left:173px;width:1534px;top:858px;z-index:6;display:flex;justify-content:center;gap:12px}
+.puntos button{width:16px;height:16px;padding:0;border-radius:50%;border:2.5px solid var(--tinta);background:var(--crema);cursor:pointer}
+.puntos button.on{background:var(--rojo)}
+
+/* ===== aviso al sumar al carrito ===== */
+.sumado{position:absolute;left:50%;top:300px;width:520px;z-index:12;background:var(--crema);border:3px solid var(--tinta);
+  box-shadow:12px 12px 0 var(--tinta);transform:translate(-50%,24px) rotate(-1deg);opacity:0;pointer-events:none;
+  transition:opacity .22s ease,transform .22s cubic-bezier(.3,1.4,.6,1)}
+.sumado.on{opacity:1;pointer-events:auto;transform:translate(-50%,0) rotate(-1deg)}
+.sumado .cab{display:flex;align-items:center;justify-content:space-between;background:var(--amarillo);border-bottom:3px solid var(--tinta);
+  padding:12px 18px 8px;font-family:var(--display);font-size:30px;letter-spacing:.06em}
+.sumado .cab button{background:transparent;border:0;font-size:22px;cursor:pointer;color:var(--tinta);padding:2px 6px}
+.sumado .cuerpo{display:grid;grid-template-columns:110px 1fr;gap:20px;align-items:center;padding:22px 24px 10px}
+.sumado .cuerpo .mini{width:110px;height:110px;border:2.5px solid var(--tinta);background:#fff;display:grid;place-items:center}
+.sumado .cuerpo .mini img{max-width:88%;max-height:88%}
+.sumado .nom{font-family:var(--display);font-size:32px;line-height:1;letter-spacing:.02em}
+.sumado .sub{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-top:6px}
+.sumado .pre{font-size:18px;font-weight:700;margin-top:10px}
+.sumado .acciones{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 24px 24px}
+.sumado .acciones button{height:50px;font-family:var(--display);font-size:22px;letter-spacing:.08em;padding-top:3px;cursor:pointer;
+  border:2.5px solid var(--tinta);box-shadow:5px 5px 0 var(--tinta);background:var(--crema);color:var(--tinta);transition:transform .1s}
+.sumado .acciones button.prin{background:var(--amarillo)}
+.sumado .acciones button:hover{transform:translate(-1px,-1px)}
+.sumado .total-mini{padding:0 24px;font-size:13px;color:var(--gris);letter-spacing:.04em}
 .prod .tipo{position:absolute;left:0;right:0;top:318px;text-align:center;
   font-size:12px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--gris)}
-.prod h2{position:absolute;left:0;right:0;top:344px;margin:0;text-align:center;
+.prod h2{position:absolute;left:14px;right:14px;top:344px;margin:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   font-family:var(--display);font-size:38px;line-height:1;letter-spacing:.02em;color:var(--tinta)}
 .prod .precio{position:absolute;left:0;right:0;top:410px;text-align:center;
   font-size:17px;letter-spacing:.04em;color:var(--tinta)}
@@ -50,7 +92,6 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   font-family:var(--display);font-size:18px;letter-spacing:.1em;color:var(--tinta);padding-top:2px;
   border:2px solid var(--tinta);box-shadow:5px 5px 0 var(--tinta);
   background:var(--amarillo);transition:transform .1s,box-shadow .1s}
-.prod .comprar.azul{background:var(--azul);color:#fffdf9}
 .prod .comprar:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--tinta)}
 .prod .comprar:focus-visible{outline:2px solid var(--rojo);outline-offset:3px}
 
@@ -78,6 +119,9 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .velo{position:absolute;inset:0;background:rgba(10,10,12,.5);opacity:0;pointer-events:none;
   transition:opacity .25s;z-index:10}
 .velo.on{opacity:1;pointer-events:auto}
+/* el mismo velo sobre los costados, para que el oscurecido llegue a todo el ancho */
+.velo-costados{position:absolute;inset:0;background:rgba(10,10,12,.5);opacity:0;pointer-events:none;transition:opacity .25s}
+.velo-costados.on{opacity:1}
 
 .panel{position:absolute;right:0;top:0;bottom:0;width:470px;background:var(--crema);
   border-left:3px solid var(--tinta);z-index:11;transform:translateX(102%);
@@ -132,6 +176,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 </head>
 <body>
 <div class="stage">
+  <div class="velo-costados" id="velo2"></div>
   <div class="screen" id="screen">
     <img class="fondo" src="tienda-fondo.jpg" alt="Tienda de sueter7 sobre un fondo de medios tonos azul">
 
@@ -144,6 +189,21 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
     <a class="nav-tv" href="tu-version/" style="left:1062px;top:36px">Tu versión</a>
 
     <div id="productos"></div>
+    <button class="flecha izq" id="ant" aria-label="Productos anteriores">
+      <svg width="86" height="44" viewBox="0 0 86 44" fill="none" aria-hidden="true"><path d="M84 22H8M26 4L6 22l20 18" stroke="currentColor" stroke-width="7" stroke-linecap="square"/></svg>
+    </button>
+    <button class="flecha der" id="sig" aria-label="Más productos">
+      <svg width="86" height="44" viewBox="0 0 86 44" fill="none" aria-hidden="true"><path d="M2 22h76M60 4l20 18-20 18" stroke="currentColor" stroke-width="7" stroke-linecap="square"/></svg>
+    </button>
+    <div class="puntos" id="puntos"></div>
+
+    <div class="sumado" id="sumado" role="dialog" aria-label="Producto sumado al carrito" aria-hidden="true">
+      <div class="cab"><span>¡Sumado al carrito!</span><button id="sumado-x" aria-label="Cerrar">✕</button></div>
+      <div class="cuerpo"><div class="mini"><img id="sumado-img" src="" alt=""></div>
+        <div><div class="nom" id="sumado-nom"></div><div class="sub" id="sumado-tipo"></div><div class="pre" id="sumado-pre"></div></div></div>
+      <div class="total-mini" id="sumado-total"></div>
+      <div class="acciones"><button id="seguir">Seguir mirando</button><button class="prin" id="ver-carrito">Ver carrito</button></div>
+    </div>
 
 
     <button class="chip" id="chip" aria-label="Abrir el carrito">Carrito <i class="n" id="chip-n" data-cero="1">0</i></button>
@@ -178,30 +238,80 @@ const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
    link: pegá la URL de venta. Vacío = el botón avisa PRONTO.
    ========================================================== */
 const PRODUCTOS = [
-  {id:"gorra",   tipo:"Gorra",   nombre:"Viscera S.7.", precio:15000, img:"p-gorra.png",   color:"amarillo"},
-  {id:"remera",  tipo:"Remera",  nombre:"Viscera S.7.", precio:15000, img:"p-remera.png",  color:"azul"},
-  {id:"buzo",    tipo:"Buzo",    nombre:"Viscera S.7.", precio:15000, img:"p-buzo.png",    color:"amarillo"},
-  {id:"llavero", tipo:"Llavero", nombre:"Viscera S.7.", precio:15000, img:"p-llavero.png", color:"amarillo"}
+  {id:"gorra",   tipo:"Gorra",   nombre:"Visera Villa Quién",  precio:18000, img:"p-gorra.png"},
+  {id:"remera",  tipo:"Remera",  nombre:"Remera Enero Cuervo", precio:24000, img:"p-remera.png"},
+  {id:"buzo",    tipo:"Buzo",    nombre:"Buzo Almohadas",      precio:42000, img:"p-buzo.png"},
+  {id:"llavero", tipo:"Llavero", nombre:"Llavero del Andén",   precio:7500,  img:"p-llavero.png"},
+  {id:"vinilo",  tipo:"Vinilo",  nombre:"Todo Salió Bien LP",  precio:48000, img:"p-vinilo.png"},
+  {id:"poster",  tipo:"Póster",  nombre:"Póster Escritorio",   precio:12000, img:"p-poster.png"},
+  {id:"fanzine", tipo:"Fanzine", nombre:"Diario de Mari",      precio:9500,  img:"p-fanzine.png"}
 ];
 
 /* La dirección de la función que crea el checkout de Mercado Pago.
    Es el proyecto de Vercel: si alguna vez cambia el nombre del
-   proyecto, hay que cambiar esta línea y nada más.                */
+   proyecto, hay que cambiar esta línea y nada más.
+   OJO: los precios que cobra los define esa función, no esta página.
+   Si cambiás precios o sumás productos acá, hay que cargarlos allá también. */
 const API = "https://sueter7-villa-quien.vercel.app/api/checkout";
 
 const plata = n => "$" + n.toLocaleString("es-AR");
 
-const X0 = 173, PASO = 390;          /* dónde arranca la primera y cada cuánto va la siguiente */
+const X0 = 173, PASO = 390, VISIBLES = 4;   /* dónde arranca la primera, cada cuánto va la siguiente, cuántas se ven */
 const esc = s => String(s).replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 
-$("productos").innerHTML = PRODUCTOS.map((p,i)=>`
-  <article class="prod" style="left:${X0 + i*PASO}px">
-    <div class="foto"><img src="${esc(p.img)}" alt="${esc(p.tipo)} ${esc(p.nombre)}"></div>
+/* ==========================================================
+   EL CARRUSEL — siempre hay 4 tarjetas en pantalla; las flechas
+   corren los productos de a uno (y dan la vuelta al llegar al final)
+   ========================================================== */
+let ini = 0;
+$("productos").innerHTML = Array.from({length:VISIBLES}, (_,i)=>`
+  <article class="prod" style="left:${X0 + i*PASO}px"><div class="cont"></div></article>`).join("");
+const tarjetas = [...document.querySelectorAll(".prod")];
+function contenido(p, i){
+  return `<div class="foto"><img src="${esc(p.img)}" alt="${esc(p.tipo)} ${esc(p.nombre)}"></div>
     <div class="tipo">${esc(p.tipo)}</div>
     <h2>${esc(p.nombre)}</h2>
     <div class="precio">${plata(p.precio)}</div>
-    <button class="comprar ${p.color==="azul"?"azul":""}" data-i="${i}">Comprar</button>
-  </article>`).join("");
+    <button class="comprar" data-i="${i}">Comprar</button>`;
+}
+function pintarProductos(animar){
+  tarjetas.forEach((t,k)=>{
+    const i = (ini + k) % PRODUCTOS.length;
+    const poner = ()=>{ t.querySelector(".cont").innerHTML = contenido(PRODUCTOS[i], i); t.dataset.id = PRODUCTOS[i].id; };
+    if(!animar || quieto){ poner(); return; }
+    t.classList.add("cambiando");
+    setTimeout(()=>{ poner(); t.classList.remove("cambiando"); }, 200 + k*45);
+  });
+  const total = PRODUCTOS.length;
+  $("puntos").innerHTML = PRODUCTOS.map((p,i)=>`<button class="${i===ini?"on":""}" data-ir="${i}" aria-label="Ver desde ${esc(p.tipo)}"></button>`).join("");
+  const hay = total > VISIBLES;
+  $("ant").hidden = $("sig").hidden = $("puntos").hidden = !hay;
+}
+function mover(d){ ini = (ini + d + PRODUCTOS.length) % PRODUCTOS.length; pintarProductos(true); }
+$("ant").addEventListener("click", ()=>mover(-1));
+$("sig").addEventListener("click", ()=>mover(1));
+$("puntos").addEventListener("click", ev=>{ const b=ev.target.closest("button"); if(b){ ini=+b.dataset.ir; pintarProductos(true); } });
+document.addEventListener("keydown", ev=>{
+  if($("panel").classList.contains("on") || $("sumado").classList.contains("on")) return;
+  if(ev.key==="ArrowRight") mover(1);
+  if(ev.key==="ArrowLeft") mover(-1);
+});
+$("productos").addEventListener("click", ev=>{
+  const b = ev.target.closest(".comprar"); if(!b) return;
+  agregar(PRODUCTOS[+b.dataset.i].id);
+});
+pintarProductos(false);
+
+/* llegar con ?producto=vinilo (por ejemplo desde "Comprar vinilo" en Discos) lo muestra y lo marca */
+(function(){
+  const id = new URLSearchParams(location.search).get("producto");
+  const i = PRODUCTOS.findIndex(p=>p.id===id);
+  if(i<0) return;
+  if(i >= VISIBLES) ini = Math.min(i, PRODUCTOS.length - VISIBLES);
+  pintarProductos(false);
+  const t = tarjetas.find(t=>t.dataset.id===id);
+  if(t) setTimeout(()=>t.classList.add("marcado"), 400);
+})();
 
 /* ==========================================================
    EL CARRITO
@@ -224,7 +334,23 @@ function totalPesos(){
 }
 function agregar(id){
   carrito[id] = (carrito[id]||0) + 1;
-  guardar(); pintarCarrito(); latir();
+  guardar(); pintarCarrito(); latir(); avisoSumado(id);
+}
+/* el aviso que aparece al sumar un producto */
+function avisoSumado(id){
+  const p = PRODUCTOS.find(x=>x.id===id); if(!p) return;
+  $("sumado-img").src = p.img; $("sumado-img").alt = p.tipo;
+  $("sumado-nom").textContent = p.nombre; $("sumado-tipo").textContent = p.tipo;
+  $("sumado-pre").textContent = plata(p.precio);
+  const u = unidades();
+  $("sumado-total").textContent = `En tu carrito: ${u} ${u===1?"producto":"productos"} · ${plata(totalPesos())}`;
+  $("sumado").classList.add("on"); $("sumado").setAttribute("aria-hidden","false");
+  $("velo").classList.add("on"); $("velo2").classList.add("on");
+  setTimeout(()=>$("ver-carrito").focus(), 60);
+}
+function cerrarSumado(){
+  $("sumado").classList.remove("on"); $("sumado").setAttribute("aria-hidden","true");
+  if(!$("panel").classList.contains("on")){ $("velo").classList.remove("on"); $("velo2").classList.remove("on"); }
 }
 function cambiar(id, d){
   carrito[id] = (carrito[id]||0) + d;
@@ -283,18 +409,17 @@ $("items").addEventListener("click", ev=>{
 
 function abrir(v){
   $("panel").classList.toggle("on", v);
-  $("velo").classList.toggle("on", v);
+  $("velo").classList.toggle("on", v); $("velo2").classList.toggle("on", v);
   $("panel").setAttribute("aria-hidden", String(!v));
   if(v) $("cerrar").focus();
 }
 $("chip").addEventListener("click", ()=>abrir(true));
 $("cerrar").addEventListener("click", ()=>abrir(false));
-$("velo").addEventListener("click", ()=>abrir(false));
-document.addEventListener("keydown", ev=>{ if(ev.key==="Escape") abrir(false); });
-
-document.querySelectorAll(".comprar").forEach(b=>{
-  b.addEventListener("click", ()=> agregar(PRODUCTOS[+b.dataset.i].id));
-});
+$("velo").addEventListener("click", ()=>{ cerrarSumado(); abrir(false); });
+document.addEventListener("keydown", ev=>{ if(ev.key==="Escape"){ cerrarSumado(); abrir(false); } });
+$("sumado-x").addEventListener("click", cerrarSumado);
+$("seguir").addEventListener("click", cerrarSumado);
+$("ver-carrito").addEventListener("click", ()=>{ cerrarSumado(); abrir(true); });
 
 /* ==========================================================
    FINALIZAR — le pide a nuestra función que arme el checkout

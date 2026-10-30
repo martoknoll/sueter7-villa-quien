@@ -27,13 +27,13 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-family:var(--mono)}
-.stage{display:flex;justify-content:center;align-items:flex-start}
+.stage{position:relative;display:flex;justify-content:center;align-items:flex-start;background:var(--papel)}
 
 .screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;
-  transform-origin:top center;background:var(--papel)}
+  transform-origin:top center;background:transparent}
 
-/* ===== la foto en medios tonos, teñida del color que toque ===== */
-.foto{position:absolute;inset:0;background-color:var(--tinte);
+/* ===== la foto en medios tonos, en blanco y negro, a todo el ancho ===== */
+.foto{position:absolute;inset:0;z-index:0;background-color:var(--tinte);
   -webkit-mask-image:url("fechas-foto.png");mask-image:url("fechas-foto.png");
   -webkit-mask-size:cover;mask-size:cover;
   -webkit-mask-position:center;mask-position:center;
@@ -50,11 +50,16 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 
 /* ===== títulos ===== */
 .flecha{position:absolute;left:477px;top:60px;width:72px;height:32px;z-index:3}
-.t-proximas{position:absolute;left:468px;top:145px;width:540px;height:134px;background:var(--amarillo);
-  transform:rotate(-2.4deg);display:grid;place-items:center;z-index:3;box-shadow:14px 14px 0 rgba(10,10,12,.45)}
+.t-proximas{position:absolute;left:468px;top:145px;width:540px;height:134px;
+  transform:rotate(-2.4deg);display:grid;place-items:center;z-index:3}
 .t-proximas span{font-family:var(--display);font-size:104px;line-height:.8;letter-spacing:.01em;color:var(--tinta)}
-.t-fechas{position:absolute;left:1021px;top:170px;width:378px;height:112px;background:var(--tinta);
+.t-fechas{position:absolute;left:1021px;top:170px;width:378px;height:112px;
   transform:rotate(-4.2deg);display:grid;place-items:center;z-index:3}
+/* el fondo de cada título lleva los bordes "comidos" (filtro #comido del SVG) */
+.t-proximas::before,.t-fechas::before{content:"";position:absolute;inset:-6px;z-index:-1;filter:url(#comido)}
+.t-proximas::before{background:var(--amarillo);box-shadow:14px 14px 0 rgba(10,10,12,.45)}
+.t-fechas::before{background:var(--tinta)}
+.t-proximas span,.t-fechas span{position:relative}
 .t-fechas span{font-family:var(--display);font-size:86px;line-height:.8;letter-spacing:.02em;color:var(--crema)}
 
 /* ===== tarjetas ===== */
@@ -71,10 +76,10 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .dia .num{font-family:var(--display);font-size:50px;line-height:.86;color:var(--claro);padding-top:4px}
 .dia .mes{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.11em;
   text-transform:uppercase;color:var(--crema)}
-.fecha h2{position:absolute;left:152px;top:38px;margin:0;width:640px;
+.fecha h2{position:absolute;left:152px;top:30px;margin:0;width:640px;
   font-family:var(--display);font-size:34px;line-height:1;letter-spacing:.02em;color:var(--tinta);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fecha .donde{position:absolute;left:154px;top:86px;font-family:var(--mono);font-size:15px;
+.fecha .donde{position:absolute;left:154px;top:76px;margin:0;font-family:var(--mono);font-size:22px;
   letter-spacing:.03em;color:var(--gris)}
 .fecha .donde b{color:var(--tinta);font-weight:700}
 .entradas{position:absolute;left:812px;top:54px;width:132px;height:44px;display:grid;place-items:center;
@@ -103,9 +108,15 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 <script src="puente.js?v=20261029a"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="comido" x="-5%" y="-10%" width="110%" height="120%">
+    <feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="7" result="r"/>
+    <feDisplacementMap in="SourceGraphic" in2="r" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 <div class="stage">
+  <div class="foto"></div>
   <div class="screen" id="screen">
-    <div class="foto"></div>
 
     <nav class="nav">
       <a href="index.html"   style="left:0;width:88px">Inicio</a>
@@ -156,25 +167,18 @@ const ANTERIORES = [
 /* ==========================================================
    EL COLOR DEL FONDO — cambia solo en cada visita
    ========================================================== */
+/* blanco y negro: la foto en negro sobre papel; el amarillo queda para los acentos */
 const COLORES = [
-  {n:"azul",     acento:"#2c61b2", tinte:"#15233b", claro:"#8aa6da", sobre:"#fffdf9"},
-  {n:"rojo",     acento:"#d24426", tinte:"#401b16", claro:"#e8977f", sobre:"#fffdf9"},
-  {n:"amarillo", acento:"#e8c229", tinte:"#443a15", claro:"#f0d77d", sobre:"#141414"},
-  {n:"violeta",  acento:"#6b4ec0", tinte:"#251e3e", claro:"#ab9ade", sobre:"#fffdf9"}
+  {n:"bn", acento:"#e8c340", tinte:"#141414", claro:"#e8c340", sobre:"#141414"}
 ];
 
 function pintar(){
-  let previo = null;
-  try{ previo = sessionStorage.getItem("s7-fechas-color"); }catch(e){}
-  let opciones = COLORES.filter(c => c.n !== previo);
-  if(!opciones.length) opciones = COLORES;
-  const c = opciones[Math.floor(Math.random()*opciones.length)];
+  const c = COLORES[0];
   const r = document.documentElement.style;
   r.setProperty("--acento", c.acento);
   r.setProperty("--tinte",  c.tinte);
   r.setProperty("--claro",  c.claro);
   r.setProperty("--sobre",  c.sobre);
-  try{ sessionStorage.setItem("s7-fechas-color", c.n); }catch(e){}
 }
 pintar();
 
