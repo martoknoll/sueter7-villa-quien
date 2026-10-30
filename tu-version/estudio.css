@@ -283,13 +283,19 @@ html,body.avatar-studio-page{margin:0;background:#e7dfd3;overflow-x:hidden}
    --------------------------------------------------------------------- */
 @media (min-width:901px){
   .avatar-studio .sitio-nav,
-  .avatar-studio .collage-header{max-width:1240px;padding-left:56px;padding-right:56px}
-  .avatar-studio .studio-layout{max-width:1240px;gap:32px;padding:16px 56px 88px}
-  .avatar-studio .studio-layout.con-resultado{max-width:980px}
-  .avatar-studio .brand-lockup{width:min(600px,92vw)}
-  .avatar-studio .brand-title-yellow,.avatar-studio .brand-title-black{font-size:clamp(2.4rem,5.4vw,5.2rem)}
-  .avatar-studio .process-nav,.avatar-studio .edition-stamp{right:56px}
+  .avatar-studio .collage-header{max-width:1100px;padding-left:64px;padding-right:64px}
+  .avatar-studio .collage-header{min-height:0;padding-bottom:4px}
+  .avatar-studio .studio-layout{max-width:1100px;gap:28px;padding:12px 64px 96px}
+  .avatar-studio .studio-layout.con-resultado{max-width:880px}
+  .avatar-studio .brand-lockup{width:min(500px,92vw)}
+  .avatar-studio .brand-title-yellow,.avatar-studio .brand-title-black{font-size:clamp(2.2rem,4.4vw,4.2rem)}
+  .avatar-studio .process-nav,.avatar-studio .edition-stamp{right:64px}
+  .avatar-studio .paper-panel{padding:20px 22px}
+  .avatar-studio .paper-panel h1{font-size:1.9rem}
+  .avatar-studio .paper-panel h2{font-size:1.3rem}
+  .avatar-studio .upload-window{min-height:190px}
+  .avatar-studio .collage-arrow{font-size:3rem}
 }
 @media (min-width:1024px){
-  .avatar-studio .studio-layout:not(.con-resultado) .result-panel{max-height:780px}
+  .avatar-studio .studio-layout:not(.con-resultado) .result-panel{max-height:640px}
 }

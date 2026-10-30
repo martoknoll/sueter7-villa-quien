@@ -92,9 +92,12 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   display:grid;place-items:center;
 }
 .t-discos span{font-family:var(--pixel);font-weight:400;font-size:112px;line-height:.8;letter-spacing:-.01em;color:var(--tinta);text-transform:uppercase}
-/* fondos granulados de los títulos */
-.t-discos{background:var(--grano-oscuro),var(--amarillo);background-size:160px 160px,auto}
-.t-canciones,.otros-lbl{background:var(--grano-claro),var(--tinta) !important;background-size:160px 160px,auto !important}
+/* fondos granulados de los títulos, con los bordes comidos (filtro #comido) */
+.t-discos,.t-canciones,.otros-lbl{background:none !important;box-shadow:none !important}
+.t-discos::before,.t-canciones::before,.otros-lbl::before{content:"";position:absolute;inset:-5px;z-index:-1;filter:url(#comido)}
+.t-discos::before{background:var(--grano-oscuro),var(--amarillo);background-size:160px 160px,auto;box-shadow:16px 16px 0 var(--tinta)}
+.t-canciones::before,.otros-lbl::before{background:var(--grano-claro),var(--tinta);background-size:160px 160px,auto}
+.t-discos span,.t-canciones span,.otros-lbl span{position:relative}
 .t-canciones{
   left:548px;top:194px;width:350px;height:90px;background:var(--tinta);transform:rotate(-1.2deg);
   display:grid;place-items:center;
@@ -105,14 +108,10 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 .tapa{left:178px;top:308px;width:389px;height:389px;background:var(--crema);
   border:2.5px solid var(--tinta);box-shadow:8px 8px 0 rgba(20,20,20,.5);overflow:hidden}
 .tapa img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.lomo{
-  position:absolute;left:0;top:0;bottom:0;width:62px;background:var(--azul);
-  border-right:2.5px solid var(--tinta);display:flex;align-items:center;justify-content:center;z-index:3;
-}
-.lomo span{writing-mode:vertical-rl;transform:rotate(180deg);
-  font-family:var(--display);font-size:11px;line-height:1.25;letter-spacing:.02em;color:var(--crema);height:86%;overflow:hidden}
-.lomo .pills{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px}
-.lomo .pills i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--tinta);display:block}
+.tapa img.chica{image-rendering:pixelated}
+/* transición al cambiar de disco */
+.tapa,.pie,.vinilo .giro,.ficha .cambia{transition:opacity .25s ease,transform .25s ease}
+.cambiando .tapa,.cambiando .pie,.cambiando .vinilo .giro,.cambiando .ficha .cambia{opacity:0;transform:translateY(10px)}
 .pie{left:152px;top:650px;width:206px;height:62px;background:var(--tinta);color:var(--crema);
   padding:7px 10px;font-family:var(--display);font-size:19px;line-height:1.02;letter-spacing:.02em;z-index:1}
 
@@ -124,14 +123,16 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;padding:12px}
 .vinilo .label b{font-family:var(--mono);font-weight:700;font-size:44px;line-height:.86;letter-spacing:-.02em}
 .vinilo .label span{font-family:var(--display);font-size:12px;line-height:.95;letter-spacing:.01em}
-/* el vinilo gira mientras suena un tema */
-.vinilo .label{transition:transform .4s}
-.vinilo.gira .label{animation:girar 2.4s linear infinite}
+/* el vinilo gira mientras suena un tema y se asoma un poco más de la tapa */
+.vinilo{transition:transform .6s cubic-bezier(.3,1.2,.5,1)}
+.vinilo.gira{transform:translateX(56px)}
+.vinilo .giro{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(from 0deg,transparent 0 9%,rgba(255,255,255,.10) 11%,transparent 14% 46%,rgba(255,255,255,.08) 49%,transparent 52% 71%,rgba(255,255,255,.12) 73%,transparent 76%)}
+.vinilo.gira .giro{animation:girar 1.8s linear infinite}
 .vinilo::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
-  background:conic-gradient(from 30deg,transparent 0 20%,rgba(255,255,255,.07) 25%,transparent 32% 70%,rgba(255,255,255,.05) 75%,transparent 82%)}
-.vinilo.gira::after{animation:girar 2.4s linear infinite}
+  background:linear-gradient(125deg,transparent 30%,rgba(255,255,255,.10) 45%,transparent 58%)}
 @keyframes girar{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.vinilo.gira .label,.vinilo.gira::after{animation:none}}
+@media (prefers-reduced-motion:reduce){.vinilo.gira .giro{animation:none}}
 .vinilo .hole{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;
   border-radius:50%;background:var(--papel);border:1.5px solid var(--tinta);z-index:2}
 
@@ -202,6 +203,10 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   border:2px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta);
   font-family:var(--display);font-size:17px;letter-spacing:.08em;color:var(--tinta);cursor:pointer;padding-top:2px}
 .lanz .esc:hover{background:var(--amarillo)}
+.lanz{cursor:pointer;transition:transform .12s,box-shadow .12s}
+.lanz h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lanz:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--tinta)}
+.lanz:focus-visible{outline:3px solid var(--rojo);outline-offset:3px}
 
 /* ===========================================================
    REPRODUCTOR — barra inferior a todo el ancho
@@ -283,6 +288,12 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
 <script src="puente.js?v=20261029a"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="comido" x="-5%" y="-12%" width="110%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="3" result="r"/>
+    <feDisplacementMap in="SourceGraphic" in2="r" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 <div class="shell">
 
   <div class="stage">
@@ -306,45 +317,32 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
 
       <!-- tapa -->
       <div class="tapa">
-        <img src="img/tapa-800.jpg" alt="Tapa de Todo salió bien en la Sencilla Villa Quién">
-        <div class="lomo">
-          <div class="pills"><i style="background:var(--crema)"></i><i style="background:var(--rojo)"></i><i style="background:var(--tinta)"></i></div>
-          <span>sueter7 · Todo salió bien en la Sencilla Villa Quién · (1) Escritorio · (2) Confluencias · (3) Enero Cuervo · (4) De Chungking a Mendoza · (5) Mapache · (6) Almohadas · (7) Miedos de Transporte · (8) Todo Salió Bien</span>
-        </div>
+        <img id="tapa-img" src="img/tapa-800.jpg" alt="Tapa de Todo salió bien en la Sencilla Villa Quién">
       </div>
-      <div class="pie">TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN</div>
+      <div class="pie" id="pie">TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN</div>
 
       <!-- vinilo -->
       <div class="vinilo">
-        <div class="label"><b>S7</b><span>TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN</span></div>
+        <div class="giro"><div class="label" id="label"><b id="label-b">S7</b><span id="label-s">TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN</span></div></div>
         <span class="hole"></span>
       </div>
 
       <!-- ficha -->
       <div class="ficha">
-        <div class="anio"><b>2026</b><span>8 TEMAS</span></div>
-        <h1>Todo salió bien en la Sencilla Villa Quién</h1>
-        <p class="meta">SUETER 7 · 2026 · 45 MIN</p>
-        <p class="desc">Canciones escritas entre caminatas, cuadernos<br>y el ruido del tren de las seis.</p>
+        <div class="anio cambia"><b id="f-anio">2026</b><span id="f-cant">8 TEMAS</span></div>
+        <h1 class="cambia" id="f-titulo">Todo salió bien en la Sencilla Villa Quién</h1>
+        <p class="meta cambia" id="f-meta">SUETER 7 · 2026 · 45 MIN</p>
+        <p class="desc cambia" id="f-desc">Canciones escritas entre caminatas, cuadernos<br>y el ruido del tren de las seis.</p>
         <a class="btn-letras" id="btn-letras" href="letras.html">Ver letras</a>
         <div class="rule"></div>
 
-        <div class="temas">
-          <button class="tema" data-t="1" style="left:0;top:0"><span class="n">01</span><span class="t">Escritorio</span><span class="d">6:38</span></button>
-          <button class="tema" data-t="2" style="left:0;top:36px"><span class="n">02</span><span class="t">Confluencias</span><span class="d">3:40</span></button>
-          <button class="tema" data-t="3" style="left:0;top:72px"><span class="n">03</span><span class="t">Enero Cuervo</span><span class="d">5:33</span></button>
-          <button class="tema" data-t="4" style="left:0;top:108px"><span class="n">04</span><span class="t">De Chungking a Mendoza</span><span class="d">5:22</span></button>
-          <button class="tema" data-t="5" style="left:0;top:144px"><span class="n">05</span><span class="t">Mapache</span><span class="d">4:12</span></button>
-          <button class="tema" data-t="6" style="left:435px;top:0"><span class="n">06</span><span class="t">Almohadas</span><span class="d">5:11</span></button>
-          <button class="tema" data-t="7" style="left:435px;top:36px"><span class="n">07</span><span class="t">Miedos de Transporte</span><span class="d">5:08</span></button>
-          <button class="tema" data-t="8" style="left:435px;top:72px"><span class="n">08</span><span class="t">Todo Salió Bien (Carta p…)</span><span class="d">9:14</span></button>
-        </div>
+        <div class="temas cambia" id="temas"></div>
 
         <button class="btn escuchar" id="btn-disco">
           <svg width="16" height="20" viewBox="0 0 16 20" aria-hidden="true"><path d="M1 1v18l14-9z" fill="currentColor"/></svg>
           <span id="btn-disco-txt">Escuchar disco</span>
         </button>
-        <a class="btn comprar" href="tienda.html?producto=vinilo">Comprar vinilo</a>
+        <a class="btn comprar" id="btn-comprar" href="tienda.html?agregar=vinilo">Comprar vinilo</a>
         <span class="plats">Spotify · YouTube · Bandcamp</span>
       </div>
 
@@ -358,21 +356,9 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
       <!-- otros lanzamientos -->
       <div class="otros-lbl"><span>Otros lanzamientos</span></div>
 
-      <div class="lanz" style="left:87px;top:809px">
-        <div class="mini"><img src="img/tapa-diario.png" alt="Tapa de Diario"></div>
-        <div><h3>Diario</h3><p>16 min · 2025 · 5 canciones</p></div>
-        <a class="esc" href="https://open.spotify.com/search/sueter7%20diario" target="_blank" rel="noopener">Escuchar</a>
-      </div>
-      <div class="lanz" style="left:687px;top:809px">
-        <div class="mini"><img src="bts.png" alt="Tapa de BTS (Sueter 7 — Remix)"></div>
-        <div><h3>BTS (Sueter 7 — Remix)</h3><p>Anabel G. · 2026 · 1 canción</p></div>
-        <a class="esc" href="https://open.spotify.com/search/BTS%20sueter%207%20remix" target="_blank" rel="noopener">Escuchar</a>
-      </div>
-      <div class="lanz" style="left:1290px;top:830px">
-        <div class="mini"><img src="flores.png" alt="Tapa de Las Flores"></div>
-        <div><h3>Las Flores</h3><p>Bautibit · 2026 · 1 canción</p></div>
-        <a class="esc" href="https://open.spotify.com/search/Las%20Flores%20Bautibit" target="_blank" rel="noopener">Escuchar</a>
-      </div>
+      <div class="lanz" style="left:87px;top:809px"></div>
+      <div class="lanz" style="left:687px;top:809px"></div>
+      <div class="lanz" style="left:1290px;top:830px"></div>
 
       <!-- cintas -->
       <div class="cinta" style="left:872px;top:295px;width:133px;height:40px;transform:rotate(-28deg)"></div>
@@ -443,7 +429,81 @@ const TRACKS = [
 
 /* adentro de la estación, el audio es el reproductor de la estación (ver puente.js) */
 const au=(window.S7&&S7.audio)||document.getElementById("au"), $=id=>document.getElementById(id);
-let cur=0, loaded=false, aleatorio=false;
+let cur=0, loaded=false, aleatorio=false, temaCargado=1;
+
+/* ==========================================================
+   LOS DISCOS — tocar uno de "Otros lanzamientos" lo pone arriba
+   (tapa, vinilo, ficha y temas). Editá acá los datos de cada uno.
+   Sólo el disco "propio" suena en el reproductor de la estación;
+   los demás abren su link de Spotify.
+   ========================================================== */
+const DISCOS = [
+  {id:"villa", propio:true, titulo:"Todo salió bien en la Sencilla Villa Quién", corto:"Todo salió bien", pie:"TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN",
+   anio:"2026", meta:"SUETER 7 · 2026 · 45 MIN", lanz:"45 min · 2026 · 8 canciones",
+   desc:"Canciones escritas entre caminatas, cuadernos<br>y el ruido del tren de las seis.",
+   tapa:"img/tapa-800.jpg", mini:"img/tapa-800.jpg", label:"S7", labelTxt:"TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN",
+   labelColor:"var(--amarillo)", labelTinta:"var(--tinta)", spotify:"https://open.spotify.com/search/sueter7"},
+  {id:"diario", titulo:"Diario", pie:"DIARIO<br>SUETER 7 · 2025",
+   anio:"2025", meta:"SUETER 7 · 2025 · 16 MIN", lanz:"16 min · 2025 · 5 canciones",
+   desc:"El primer EP: cinco canciones que salieron<br>del cuaderno de Mari.",
+   tapa:"img/tapa-diario-800.jpg", mini:"img/tapa-diario.png", label:"D", labelTxt:"DIARIO<br>2025",
+   labelColor:"var(--azul)", labelTinta:"var(--crema)", spotify:"https://open.spotify.com/search/sueter7%20diario",
+   temas:[{t:"Tema 1",d:"3:10"},{t:"Tema 2",d:"2:58"},{t:"Tema 3",d:"3:24"},{t:"Tema 4",d:"3:05"},{t:"Tema 5",d:"3:23"}]},
+  {id:"bts", titulo:"BTS (Sueter 7 — Remix)", pie:"BTS<br>SUETER 7 REMIX",
+   anio:"2026", meta:"ANABEL G. · 2026 · 1 CANCIÓN", lanz:"Anabel G. · 2026 · 1 canción",
+   desc:"Sueter 7 remixa a Anabel G.<br>Una sola canción, en loop.",
+   tapa:"bts.png", mini:"bts.png", chica:true, label:"BTS", labelTxt:"SUETER 7<br>REMIX",
+   labelColor:"#f0d77d", labelTinta:"var(--tinta)", spotify:"https://open.spotify.com/search/BTS%20sueter%207%20remix",
+   temas:[{t:"BTS (Sueter 7 — Remix)",d:"—"}]},
+  {id:"flores", titulo:"Las Flores", pie:"LAS FLORES<br>BAUTIBIT · 2026",
+   anio:"2026", meta:"BAUTIBIT · 2026 · 1 CANCIÓN", lanz:"Bautibit · 2026 · 1 canción",
+   desc:"Colaboración de Sueter 7 con Bautibit.",
+   tapa:"flores.png", mini:"flores.png", chica:true, label:"LF", labelTxt:"BAUTIBIT<br>× SUETER 7",
+   labelColor:"var(--rojo)", labelTinta:"var(--crema)", spotify:"https://open.spotify.com/search/Las%20Flores%20Bautibit",
+   temas:[{t:"Las Flores",d:"—"}]}
+];
+let actual=0;
+function filasTemas(d){
+  const lista = d.propio ? TRACKS.map(t=>({n:t.n, t:t.t, d:mmss(t.d)})) : d.temas.map((t,i)=>({n:i+1, t:t.t, d:t.d}));
+  return lista.map((t,i)=>{
+    const col = i<5 ? 0 : 435, fila = i<5 ? i : i-5;
+    const titulo = t.t.length>26 ? t.t.slice(0,24)+"…" : t.t;
+    const dato = d.propio ? `data-t="${t.n}"` : `data-link="${d.spotify}"`;
+    return `<button class="tema${d.propio && t.n===temaCargado && loaded ? " son":""}" ${dato} style="left:${col}px;top:${fila*36}px" title="${t.t}">
+      <span class="n">${String(t.n).padStart(2,"0")}</span><span class="t">${titulo}</span><span class="d">${t.d}</span></button>`;
+  }).join("");
+}
+function mostrarDisco(idx, animar){
+  const pintarlo=()=>{
+    actual=idx; const d=DISCOS[idx];
+    $("tapa-img").src=d.tapa; $("tapa-img").alt="Tapa de "+d.titulo; $("tapa-img").classList.toggle("chica", !!d.chica);
+    $("pie").innerHTML=d.pie;
+    $("label").style.background=d.labelColor; $("label").style.color=d.labelTinta;
+    $("label-b").textContent=d.label; $("label-s").innerHTML=d.labelTxt;
+    $("f-anio").textContent=d.anio;
+    const n = d.propio ? TRACKS.length : d.temas.length;
+    $("f-cant").textContent = n+(n===1?" TEMA":" TEMAS");
+    $("f-titulo").textContent=d.titulo; $("f-meta").textContent=d.meta; $("f-desc").innerHTML=d.desc;
+    $("temas").innerHTML=filasTemas(d);
+    $("btn-letras").hidden=!d.propio; $("btn-comprar").hidden=!d.propio;
+    const otros=DISCOS.map((x,i)=>i).filter(i=>i!==idx);
+    document.querySelectorAll(".lanz").forEach((el,k)=>{
+      const o=DISCOS[otros[k]];
+      el.dataset.disco=otros[k]; el.tabIndex=0; el.setAttribute("role","button"); el.setAttribute("aria-label","Ver "+o.titulo);
+      el.innerHTML=`<div class="mini"><img src="${o.mini}" alt="Tapa de ${o.titulo}"></div>
+        <div style="min-width:0"><h3>${o.corto||o.titulo}</h3><p>${o.lanz}</p></div><span class="esc">Ver disco</span>`;
+    });
+    pintar();
+  };
+  const scr=$("screen");
+  if(!animar || matchMedia("(prefers-reduced-motion: reduce)").matches){ pintarlo(); return; }
+  scr.classList.add("cambiando");
+  setTimeout(()=>{ pintarlo(); requestAnimationFrame(()=>scr.classList.remove("cambiando")); }, 260);
+}
+document.querySelectorAll(".lanz").forEach(el=>{
+  el.addEventListener("click", ()=>mostrarDisco(+el.dataset.disco, true));
+  el.addEventListener("keydown", ev=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); mostrarDisco(+el.dataset.disco, true); } });
+});
 const mmss=s=>isFinite(s)?Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0"):"0:00";
 
 function cargar(i, reproducir){
@@ -456,19 +516,24 @@ function cargar(i, reproducir){
   $("p-fill").style.width="0%"; $("p-knob").style.left="0%";
   document.querySelectorAll(".tema[data-t]").forEach(b=>b.classList.toggle("son", +b.dataset.t===tr.n));
   $("btn-letras").href="letras.html?tema="+tr.n;
+  temaCargado=tr.n;
   if(reproducir) au.play().catch(()=>{});
 }
 function pintar(){
   const son=!au.paused && loaded;
   $("ico-play").hidden=son; $("ico-pause").hidden=!son;
   $("p-play").setAttribute("aria-label", son?"Pausar":"Reproducir");
-  $("btn-disco-txt").textContent=son?"Pausar disco":"Escuchar disco";
-  document.querySelector(".vinilo").classList.toggle("gira", son);
+  const d=DISCOS[actual];
+  $("btn-disco-txt").textContent = d.propio ? (son?"Pausar disco":"Escuchar disco") : "Escuchar en Spotify";
+  document.querySelector(".vinilo").classList.toggle("gira", son && d.propio);
 }
 function alternar(){ if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }
 
 $("p-play").addEventListener("click", alternar);
-$("btn-disco").addEventListener("click", alternar);
+$("btn-disco").addEventListener("click", ()=>{
+  const d=DISCOS[actual];
+  if(d.propio) alternar(); else window.open(d.spotify, "_blank", "noopener");
+});
 $("p-prev").addEventListener("click", ()=>{ if(au.currentTime>3){au.currentTime=0;return;} cargar(cur-1,true); });
 $("p-next").addEventListener("click", ()=> siguiente(true));
 $("p-shuffle").addEventListener("click", ()=>{
@@ -484,10 +549,12 @@ function siguiente(forzar){
   else if(cur<TRACKS.length-1 || forzar) cargar(cur+1,true);
   else pintar();
 }
-document.querySelectorAll(".tema[data-t]").forEach(b=>b.addEventListener("click", ()=>{
+$("temas").addEventListener("click", ev=>{
+  const b=ev.target.closest(".tema"); if(!b) return;
+  if(b.dataset.link){ window.open(b.dataset.link, "_blank", "noopener"); return; }
   const i=TRACKS.findIndex(t=>t.n===+b.dataset.t);
   if(i===cur && loaded) alternar(); else cargar(i,true);
-}));
+});
 
 au.addEventListener("play", pintar);
 au.addEventListener("pause", pintar);
@@ -507,6 +574,8 @@ $("p-vol-bar").addEventListener("click", ev=>{ const v=pos($("p-vol-bar"),ev); a
 au.volume=0.75; $("p-volfill").style.width="75%";
 /* si el tema cambia desde el reproductor de la estación, la ficha lo acompaña */
 window.addEventListener("s7-tema", e=>{ const i=TRACKS.findIndex(t=>t.n===e.detail); if(i>=0) cargar(i,false); });
+
+mostrarDisco(0, false);
 
 document.addEventListener("keydown", ev=>{
   if(ev.code==="Space" && !/^(INPUT|TEXTAREA|BUTTON|A)$/.test(document.activeElement.tagName)){

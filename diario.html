@@ -645,8 +645,20 @@ function rotulo(i){
   const a=i%2 ? i+1 : i;            // en doble página se ven dos
   return "Páginas "+a+"–"+(a+1);
 }
+/* con la tapa (o la contratapa) sola, el libro se corre medio ancho para quedar centrado */
+capa.style.transition="transform .6s cubic-bezier(.4,0,.2,1)";
+function centrar(i){
+  if(i===undefined) i=libro.getCurrentPageIndex();
+  const r=libro.getBoundsRect && libro.getBoundsRect();
+  const doble=!(libro.getOrientation && libro.getOrientation()==="portrait");
+  let x=0;
+  if(r && doble){ if(i===0) x=-r.pageWidth/2; else if(i>=TOTAL-1) x=r.pageWidth/2; }
+  capa.style.transform="translateX("+x+"px)";
+}
+libro.on("changeState", e=>{ if(e.data==="user_fold" || e.data==="flipping") capa.style.transform="translateX(0)"; });
 function actualizar(){
   const i=libro.getCurrentPageIndex();
+  centrar(i);
   $("pag").textContent=rotulo(i);
   $("ant").disabled=i===0;
   $("sig").disabled=i>=TOTAL-1;
@@ -655,7 +667,7 @@ function actualizar(){
 libro.on("flip", actualizar);
 libro.on("changeOrientation", ()=>{ escalarHojas(); actualizar(); });
 libro.on("init", ()=>{ escalarHojas(); actualizar(); });
-addEventListener("resize", ()=>{ fit(); setTimeout(escalarHojas, 60); });
+addEventListener("resize", ()=>{ fit(); setTimeout(()=>{ escalarHojas(); centrar(); }, 60); });
 escalarHojas(); actualizar();
 
 $("ant").addEventListener("click", ()=>libro.flipPrev());

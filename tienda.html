@@ -304,9 +304,16 @@ pintarProductos(false);
 
 /* llegar con ?producto=vinilo (por ejemplo desde "Comprar vinilo" en Discos) lo muestra y lo marca */
 (function(){
-  const id = new URLSearchParams(location.search).get("producto");
+  const q = new URLSearchParams(location.search);
+  const sumar = q.get("agregar");                 /* "Comprar vinilo" de Discos: lo suma directo al carrito */
+  const id = sumar || q.get("producto");
   const i = PRODUCTOS.findIndex(p=>p.id===id);
   if(i<0) return;
+  if(sumar){
+    /* que no se vuelva a sumar si se recarga la página */
+    try{ history.replaceState(null, "", location.pathname); }catch(e){}
+    setTimeout(()=>agregar(id), 450);
+  }
   if(i >= VISIBLES) ini = Math.min(i, PRODUCTOS.length - VISIBLES);
   pintarProductos(false);
   const t = tarjetas.find(t=>t.dataset.id===id);

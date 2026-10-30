@@ -45,6 +45,11 @@ body{font-family:var(--mono);color:var(--tinta);-webkit-font-smoothing:antialias
 .puerta:hover .door,.puerta:focus-visible .door{filter:brightness(1.08) saturate(1.25) contrast(1.04)}
 .puerta:focus-visible .sign{outline:3px solid var(--crema);outline-offset:4px}
 .puerta:active .sign{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
+/* la puerta se abre (bisagra a la izquierda) y deja ver el hueco oscuro */
+.puerta .hueco{position:absolute;z-index:0;background:radial-gradient(ellipse at 50% 70%,#2a2a2a,#050505 70%);
+  box-shadow:inset 0 0 26px #000}
+.puerta .door{z-index:1;transform-origin:0 50%;transition:filter .25s ease,transform .5s cubic-bezier(.6,0,.3,1)}
+.puerta.abierta .door{transform:perspective(900px) rotateY(-74deg);filter:brightness(.62)}
 
 /* ---------- sección abierta (se carga adentro, la música sigue) ---------- */
 .seccion{position:absolute;left:0;top:0;width:var(--Wv);height:var(--escena);z-index:5;background:var(--papel);
@@ -112,17 +117,28 @@ button{font:inherit;color:inherit}
 .ctv-pie{animation:tv-pie 1.6s ease-in-out infinite}
 @keyframes tv-pie{0%,100%{background:#e8c229}50%{background:#fffdf9}}
 
-/* ---------- cartel colgado del techo con la frase ---------- */
-.frase{position:absolute;left:1086px;top:146px;z-index:2;transform:translateX(-50%);pointer-events:none}
-.frase-in{position:relative;transform-origin:50% -44px;animation:frase-hamaca 6s ease-in-out infinite}
-.frase-in::before,.frase-in::after{content:"";position:absolute;top:-44px;width:3px;height:46px;
-  background:repeating-linear-gradient(180deg,#1a1a1a 0 5px,#5a5a5a 5px 7px)}
-.frase-in::before{left:46px}
-.frase-in::after{right:46px}
-.frase-cartel{display:block;white-space:nowrap;background:#efe9de;color:#141414;border:3px solid #141414;
-  box-shadow:6px 7px 0 rgba(10,10,10,.55);padding:11px 28px 6px;font-family:var(--display);font-size:33px;
-  letter-spacing:.07em;line-height:1;text-transform:uppercase}
+/* ---------- cartel colgado del techo con la frase ----------
+   papel fotocopiado, bordes comidos, colgado con hilo y cinta, un poco torcido */
+.frase{position:absolute;left:1086px;top:150px;z-index:2;transform:translateX(-50%);pointer-events:none}
+.frase-in{position:relative;transform-origin:42% -48px;animation:frase-hamaca 7s ease-in-out infinite}
+.frase-hilos{position:absolute;left:0;top:-52px;width:100%;height:60px;overflow:visible}
+.frase-papel{position:relative;display:block;padding:14px 34px 9px 30px;transform:rotate(-1.6deg)}
+.frase-papel::before{content:"";position:absolute;inset:0;z-index:-1;filter:url(#comido-frase);
+  background:
+    radial-gradient(rgba(20,20,20,.22) .9px,transparent 1.2px) 0 0/5px 5px,
+    linear-gradient(97deg,#f1ebdf 0%,#e9e1d1 55%,#efe8da 100%);
+  box-shadow:5px 6px 0 rgba(10,10,10,.5)}
+.frase-papel::after{content:"";position:absolute;left:-14px;top:-10px;width:62px;height:20px;transform:rotate(-24deg);
+  background:rgba(226,215,192,.88);border-left:1px solid rgba(20,20,20,.18);border-right:1px solid rgba(20,20,20,.18)}
+.frase-cartel{display:block;white-space:nowrap;color:#141414;font-family:var(--display);font-size:34px;
+  letter-spacing:.06em;line-height:1;text-transform:uppercase;text-shadow:.6px .4px 0 rgba(20,20,20,.55)}
+.frase-cartel i{font-style:normal;display:inline-block}
+.frase-cartel .r1{transform:rotate(-1.5deg) translateY(1px)}
+.frase-cartel .r2{transform:rotate(1.2deg) translateY(-1px)}
+.frase-cartel .marca{background:#e8c229;padding:0 6px;margin:0 2px;transform:rotate(-2deg)}
 .frase-cartel b{color:var(--rojo);font-weight:400}
+.frase-sello{position:absolute;right:-22px;top:-16px;padding:3px 7px 2px;transform:rotate(9deg);background:#d24426;color:#fffdf9;
+  border:2px solid #141414;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em}
 @keyframes frase-hamaca{0%,100%{transform:rotate(-.9deg)}50%{transform:rotate(.9deg)}}
 .cartel-tv:focus-visible{outline:3px solid var(--crema);outline-offset:4px}
 .ctv-cinta{position:absolute;left:23px;top:-12px;width:66px;height:20px;transform:rotate(4deg);
@@ -141,7 +157,7 @@ button{font:inherit;color:inherit}
 .mari{position:absolute;left:0;top:0;width:112px;height:208px;z-index:3;pointer-events:none;
   background:url("img/mari.png") 0 0/1344px 208px no-repeat;image-rendering:pixelated;
   transform-origin:50% 100%;will-change:transform,opacity}
-.mari.entra{transition:transform .38s ease-in, opacity .38s ease-in}
+.mari.entra{transition:transform .5s ease-in, opacity .5s ease-in, filter .5s ease-in}
 .mobile-swipe{display:none}
 
 /* ---------- portada mobile ----------
@@ -234,6 +250,12 @@ button{font:inherit;color:inherit}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="comido-frase" x="-4%" y="-20%" width="108%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="3" seed="11" result="r"/>
+    <feDisplacementMap in="SourceGraphic" in2="r" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 <div class="lienzo" id="lienzo">
   <div class="fondo-ancho" aria-hidden="true"></div>
 
@@ -271,7 +293,13 @@ button{font:inherit;color:inherit}
       <img class="door" src="img/puerta-fechas.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
       <img class="sign" src="img/cartel-fechas.webp" alt="" style="left:0;top:0;width:284.5px;height:109px">
     </a>
-    <div class="frase" aria-hidden="true"><div class="frase-in"><span class="frase-cartel"><b>//</b> A veces avanzar es animarse a tomar otro tren <b>//</b></span></div></div>
+    <div class="frase" aria-hidden="true"><div class="frase-in">
+      <svg class="frase-hilos" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M70 0 C 74 22, 66 40, 72 58" stroke="#1a1a1a" stroke-width="1.6" fill="none"/>
+        <path d="M528 0 C 520 18, 532 34, 526 62" stroke="#1a1a1a" stroke-width="1.6" fill="none"/>
+      </svg>
+      <span class="frase-papel"><span class="frase-cartel"><b>//</b> <i class="r1">A veces</i> avanzar es <i class="marca">animarse</i> a <i class="r2">tomar otro tren</i> <b>//</b></span><span class="frase-sello">ANDÉN 7</span></span>
+    </div></div>
     <a class="cartel-tv" id="cartel-tv" href="tu-version/" aria-label="Creá tu versión: convertí tu foto en un personaje de Suéter 7">
       <span class="ctv-cinta" aria-hidden="true"></span>
       <span class="ctv-sello" aria-hidden="true">NUEVO</span>
@@ -338,6 +366,11 @@ const W=2172, H=1117;
 const WMAX=2950;                       // hasta dónde alcanza img/estacion-5.webp a lo ancho
 const portadaMobile=matchMedia("(max-width:700px) and (orientation:portrait)");
 const puertasMobile=[...document.querySelectorAll(".puerta")];
+/* a cada puerta le agrega su hueco oscuro, del mismo tamaño que la hoja */
+puertasMobile.forEach(p=>{
+  const d=p.querySelector(".door"), h=document.createElement("span");
+  h.className="hueco"; h.setAttribute("aria-hidden","true"); h.style.cssText=d.style.cssText; p.insertBefore(h,d);
+});
 puertasMobile.forEach(p=>{
   p.dataset.desktopLeft=p.style.left;
   p.dataset.desktopTop=p.style.top;
@@ -398,7 +431,7 @@ $("escena").addEventListener("scroll", ()=>{
 }, {passive:true});
 
 /* ---------- navegación entre secciones ---------- */
-const VERSION="20261030a";             // cambiarla al publicar fuerza a recargar las secciones
+const VERSION="20261030b";             // cambiarla al publicar fuerza a recargar las secciones
 const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
   fechas:"fechas.html", letras:"letras.html", compra:"compra.html"};
 const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",
@@ -576,20 +609,28 @@ async function entrarPorPuerta(nombre){
     await caminarA(px, cruzaBanco ? BANCO.y : Math.max(mp.y, 800));
   }
   await caminarA(px, ANDEN.y0);
+  /* se abre la puerta, Mari entra de espaldas y se pierde en lo oscuro */
+  const puerta=document.querySelector(`.puerta[data-ir="${nombre}"]`);
+  if(puerta){ puerta.classList.add("abierta"); mp.cuadro=8; mp.dir=1; pintarMari(); await new Promise(r=>setTimeout(r, 520)); }
   mari.classList.add("entra");
-  mari.style.opacity="0";
-  mari.style.transform+=" translateY(-10px) scale(.86)";
-  await new Promise(r=>setTimeout(r, 360));
+  mari.style.opacity="0"; mari.style.filter="brightness(.15)";
+  mari.style.transform+=" translateY(-26px) scale(.78)";
+  await new Promise(r=>setTimeout(r, 480));
   salir();
+  if(puerta) setTimeout(()=>puerta.classList.remove("abierta"), 700);
 }
 /* el cartel de "Tu versión": Mari camina hasta la pared y entra (es una página aparte) */
 $("cartel-tv").addEventListener("click", ev=>{ ev.preventDefault(); entrarPorPuerta("tu-version"); });
 /* al volver con "atrás" del navegador, la página puede venir de la caché con Mari invisible */
-addEventListener("pageshow", ev=>{ if(ev.persisted){ mari.classList.remove("entra"); mari.style.opacity="1"; mp.ocupada=false; pintarMari(); } });
+addEventListener("pageshow", ev=>{ if(ev.persisted){ mari.classList.remove("entra"); mari.style.opacity="1"; mari.style.filter=""; mp.ocupada=false; pintarMari(); } });
 /* al volver al andén, sale por la misma puerta y queda mirando */
 function salirPorPuerta(nombre){
   const px=PUERTA_X[nombre];
-  mari.classList.remove("entra");
+  mari.classList.remove("entra"); mari.style.filter="";
+  const puerta=document.querySelector(`.puerta[data-ir="${nombre}"]`);
+  if(puerta && !quieto.matches && !portadaMobile.matches){
+    puerta.classList.add("abierta"); setTimeout(()=>puerta.classList.remove("abierta"), 900);
+  }
   if(px!=null){ mp.x=px; mp.y=ANDEN.y0+18; }
   mp.cuadro=11; mp.dir=1; mp.ocupada=false; mp.viaje++;
   mari.style.opacity="1"; pintarMari();
