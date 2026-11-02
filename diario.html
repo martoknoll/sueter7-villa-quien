@@ -41,13 +41,26 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
 .volver{left:74px;top:52px;display:flex;align-items:center;gap:12px;text-decoration:none;
   font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta)}
 .volver:hover{color:var(--rojo)}
-.t-diario{left:96px;top:118px;padding:16px 26px 8px;background:var(--amarillo);transform:rotate(-2.4deg);
-  box-shadow:10px 10px 0 var(--tinta);font-family:var(--mono);font-weight:700;font-size:64px;line-height:.85;
-  letter-spacing:-.02em;text-transform:uppercase;margin:0}
-.t-sub{left:118px;top:206px;padding:9px 16px 6px;background:var(--tinta);color:var(--crema);transform:rotate(-1.2deg);
-  font-family:var(--mono);font-weight:700;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
+/* título de sección con el sistema del sitio: Bebas en amarillo + pixelada en negro, recuadros comidos */
+@font-face{font-family:"PP NeueBit";src:local("PP NeueBit Bold"),local("PPNeueBit-Bold"),url("tu-version/fonts/PPNeueBit-Bold.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap}
+.t-diario{left:96px;top:112px;padding:20px 30px 6px;transform:rotate(-2.4deg);z-index:3;
+  font-family:var(--display);font-weight:400;font-size:100px;line-height:.82;letter-spacing:.03em;text-transform:uppercase;margin:0}
+.t-sub{left:126px;top:214px;padding:8px 18px 6px;color:var(--crema);transform:rotate(-1.2deg);z-index:3;
+  font-family:"PP NeueBit","Tiny5",monospace;font-size:30px;line-height:1;text-transform:uppercase}
+.t-diario::before,.t-sub::before{content:"";position:absolute;inset:-4px;z-index:-1;filter:url(#comido)}
+.t-diario::before{background:var(--amarillo);box-shadow:12px 12px 0 var(--tinta)}
+.t-sub::before{background:var(--tinta)}
+/* flechas grandes a los costados del libro */
+.flecha-pag{position:absolute;top:500px;width:92px;height:92px;z-index:6;display:grid;place-items:center;cursor:pointer;
+  background:var(--crema);border:3px solid var(--tinta);border-radius:50%;box-shadow:6px 6px 0 var(--tinta);color:#c9452c;
+  transition:transform .12s,background .12s,opacity .2s}
+.flecha-pag:hover{background:var(--amarillo);transform:translate(-2px,-2px)}
+.flecha-pag:disabled{opacity:.3;cursor:default;transform:none;background:var(--crema)}
+.flecha-pag.izq{left:262px}
+.flecha-pag.der{left:1566px}
 /* instrucción en un papelito, para que se lea sobre el fondo tramado */
-.ayuda{left:92px;top:292px;width:262px;margin:0;padding:16px 18px 14px;background:var(--crema);border:2.5px solid var(--tinta);
+.ayuda{left:92px;top:310px;width:262px;margin:0;padding:16px 18px 14px;background:var(--crema);border:2.5px solid var(--tinta);
   box-shadow:6px 6px 0 var(--tinta);font-family:var(--mono);font-size:17px;font-weight:700;line-height:1.45;color:var(--tinta);transform:rotate(-2deg)}
 .ayuda::before{content:"";position:absolute;left:50%;top:-14px;width:84px;height:24px;transform:translateX(-50%) rotate(3deg);
   background:rgba(226,215,192,.86);border-left:1px solid rgba(20,20,20,.15);border-right:1px solid rgba(20,20,20,.15)}
@@ -215,6 +228,12 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="comido" x="-5%" y="-14%" width="110%" height="128%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="9" result="r"/>
+    <feDisplacementMap in="SourceGraphic" in2="r" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 <div class="stage" id="stage">
   <div class="screen" id="screen">
     <a class="volver" href="index.html">
@@ -230,6 +249,8 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
       <a href="fechas.html" style="left:592px;width:98px">Fechas</a>
       <a href="tu-version/" class="tv" style="left:-148px;width:134px">Tu versión</a>
     </nav>
+    <button class="flecha-pag izq" id="ant2" aria-label="Página anterior"><svg width="54" height="28" viewBox="0 0 86 44" fill="none" aria-hidden="true"><path d="M84 22H8M26 4L6 22l20 18" stroke="currentColor" stroke-width="7" stroke-linecap="square"/></svg></button>
+    <button class="flecha-pag der" id="sig2" aria-label="Página siguiente"><svg width="54" height="28" viewBox="0 0 86 44" fill="none" aria-hidden="true"><path d="M2 22h76M60 4l20 18-20 18" stroke="currentColor" stroke-width="7" stroke-linecap="square"/></svg></button>
     <h1 class="t-diario">Diario</h1>
     <div class="t-sub">de Mari</div>
     <p class="ayuda">Arrastrá la esquina de la hoja o usá las <b>flechas</b> para dar vuelta las páginas.</p>
@@ -660,8 +681,8 @@ function actualizar(){
   const i=libro.getCurrentPageIndex();
   centrar(i);
   $("pag").textContent=rotulo(i);
-  $("ant").disabled=i===0;
-  $("sig").disabled=i>=TOTAL-1;
+  $("ant").disabled=$("ant2").disabled=i===0;
+  $("sig").disabled=$("sig2").disabled=i>=TOTAL-1;
   try{ sessionStorage.setItem("s7-diario-pag", String(i)); }catch(e){}
 }
 libro.on("flip", actualizar);
@@ -672,6 +693,8 @@ escalarHojas(); actualizar();
 
 $("ant").addEventListener("click", ()=>libro.flipPrev());
 $("sig").addEventListener("click", ()=>libro.flipNext());
+$("ant2").addEventListener("click", ()=>libro.flipPrev());
+$("sig2").addEventListener("click", ()=>libro.flipNext());
 addEventListener("keydown", ev=>{
   if(ev.key==="ArrowRight"){ ev.preventDefault(); libro.flipNext(); }
   if(ev.key==="ArrowLeft"){ ev.preventDefault(); libro.flipPrev(); }

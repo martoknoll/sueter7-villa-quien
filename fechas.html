@@ -48,8 +48,14 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .nav a.on{background:var(--amarillo);color:var(--tinta)}
 .nav a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
 
+@font-face{font-family:"PP NeueBit";src:local("PP NeueBit Bold"),local("PPNeueBit-Bold"),url("tu-version/fonts/PPNeueBit-Bold.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap}
+/* ===== volver ===== */
+.volver{position:absolute;left:74px;top:52px;z-index:5;display:flex;align-items:center;gap:12px;text-decoration:none;
+  font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta);
+  background:var(--crema);padding:8px 14px 5px;border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta)}
+.volver:hover{color:var(--rojo)}
 /* ===== títulos ===== */
-.flecha{position:absolute;left:477px;top:60px;width:72px;height:32px;z-index:3}
 .t-proximas{position:absolute;left:468px;top:145px;width:540px;height:134px;
   transform:rotate(-2.4deg);display:grid;place-items:center;z-index:3}
 .t-proximas span{font-family:var(--display);font-size:104px;line-height:.8;letter-spacing:.01em;color:var(--tinta)}
@@ -60,7 +66,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .t-proximas::before{background:var(--amarillo);box-shadow:14px 14px 0 rgba(10,10,12,.45)}
 .t-fechas::before{background:var(--tinta)}
 .t-proximas span,.t-fechas span{position:relative}
-.t-fechas span{font-family:var(--display);font-size:86px;line-height:.8;letter-spacing:.02em;color:var(--crema)}
+.t-fechas span{font-family:"PP NeueBit","Tiny5",monospace;font-size:78px;line-height:.8;letter-spacing:0;color:var(--crema);text-transform:uppercase}
 
 /* ===== tarjetas ===== */
 .lista{position:absolute;left:440px;top:345px;width:984px;z-index:4}
@@ -76,19 +82,48 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .dia .num{font-family:var(--display);font-size:50px;line-height:.86;color:var(--claro);padding-top:4px}
 .dia .mes{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.11em;
   text-transform:uppercase;color:var(--crema)}
-.fecha h2{position:absolute;left:152px;top:30px;margin:0;width:640px;
+.fecha h2{position:absolute;left:152px;top:30px;margin:0;width:580px;
   font-family:var(--display);font-size:34px;line-height:1;letter-spacing:.02em;color:var(--tinta);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fecha .donde{position:absolute;left:154px;top:76px;margin:0;font-family:var(--mono);font-size:22px;
   letter-spacing:.03em;color:var(--gris)}
 .fecha .donde b{color:var(--tinta);font-weight:700}
-.entradas{position:absolute;left:812px;top:54px;width:132px;height:44px;display:grid;place-items:center;
-  background:var(--crema);color:var(--tinta);text-decoration:none;
-  font-family:var(--display);font-size:20px;letter-spacing:.08em;padding-top:3px;
-  border:2.5px solid var(--tinta);box-shadow:5px 5px 0 var(--tinta);transition:background .14s,transform .1s}
-.entradas:hover{background:var(--amarillo);transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--tinta)}
-.entradas.sin{background:transparent;color:var(--gris);border-style:dashed;box-shadow:none;cursor:default}
-.entradas.sin:hover{background:transparent;transform:none;box-shadow:none}
+/* botones de cada show: comprar entrada y agendar */
+.acciones{position:absolute;left:752px;top:22px;width:200px;display:flex;flex-direction:column;gap:12px}
+.acciones a,.acciones button{height:46px;display:grid;place-items:center;text-decoration:none;cursor:pointer;
+  font-family:var(--display);font-size:21px;letter-spacing:.08em;padding-top:3px;
+  border:2.5px solid var(--tinta);box-shadow:5px 5px 0 var(--tinta);transition:background .14s,transform .1s,box-shadow .1s}
+.acciones .comprar{background:var(--amarillo);color:var(--tinta)}
+.acciones .agendar{background:var(--crema);color:var(--tinta);height:40px;font-size:19px}
+.acciones a:hover,.acciones button:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--tinta)}
+.acciones .agendar:hover{background:#fffdf9}
+.acciones .pasada{background:transparent;color:var(--gris);border-style:dashed;box-shadow:none;cursor:default}
+.acciones .pasada:hover{transform:none;box-shadow:none}
+
+/* ===== ventana de entradas ===== */
+.velo{position:absolute;inset:0;z-index:20;background:rgba(10,10,12,.55);opacity:0;pointer-events:none;transition:opacity .2s}
+.velo.on{opacity:1;pointer-events:auto}
+.ticket{position:absolute;left:50%;top:205px;width:620px;z-index:21;background:var(--crema);border:3px solid var(--tinta);
+  box-shadow:12px 12px 0 var(--tinta);transform:translate(-50%,24px) rotate(-.8deg);opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .22s cubic-bezier(.3,1.4,.6,1)}
+.ticket.on{opacity:1;pointer-events:auto;transform:translate(-50%,0) rotate(-.8deg)}
+.ticket .cab{display:flex;justify-content:space-between;align-items:center;background:var(--amarillo);border-bottom:3px solid var(--tinta);
+  padding:14px 22px 9px;font-family:var(--display);font-size:34px;letter-spacing:.06em}
+.ticket .cab button{background:none;border:0;font-size:24px;cursor:pointer;padding:2px 6px}
+.ticket .cuerpo{padding:24px 28px 28px;font-family:var(--mono)}
+.ticket h3{margin:0 0 6px;font-family:var(--display);font-size:34px;letter-spacing:.02em}
+.ticket .det{font-size:17px;color:var(--gris);margin:0 0 20px}
+.ticket .fila{display:flex;align-items:center;justify-content:space-between;border-top:2px dashed rgba(20,20,20,.35);padding:16px 0}
+.ticket .fila b{font-size:18px}
+.ticket .cant{display:flex;align-items:center;gap:14px;font-size:22px;font-weight:700}
+.ticket .cant button{width:38px;height:38px;border:2.5px solid var(--tinta);background:var(--crema);font-size:22px;cursor:pointer;box-shadow:3px 3px 0 var(--tinta)}
+.ticket .total{font-family:var(--display);font-size:38px}
+.ticket .pagar{width:100%;height:56px;margin-top:6px;background:var(--amarillo);border:2.5px solid var(--tinta);box-shadow:6px 6px 0 var(--tinta);
+  font-family:var(--display);font-size:26px;letter-spacing:.08em;cursor:pointer;padding-top:4px}
+.ticket .pagar:disabled{opacity:.6;cursor:default}
+.ticket .nota{font-size:13px;color:var(--gris);line-height:1.5;margin:14px 0 0}
+.ticket .listo{text-align:center}
+.ticket .listo .codigo{display:inline-block;margin:14px 0;padding:12px 22px;border:3px dashed var(--tinta);font-family:var(--display);font-size:40px;letter-spacing:.12em}
 
 /* ===== barra de fechas anteriores ===== */
 .anteriores{position:absolute;left:440px;top:924px;width:984px;height:56px;z-index:4;
@@ -128,15 +163,22 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
       <a href="tu-version/" class="tv" style="left:-148px;width:134px">Tu versión</a>
     </nav>
 
-    <svg class="flecha" viewBox="0 0 72 32" fill="none" aria-hidden="true">
-      <path d="M2 16h63M52 5l14 11-14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/>
-    </svg>
+    <a class="volver" href="index.html">
+      <svg width="56" height="26" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="5" stroke-linecap="square"/></svg>
+      Volver al andén
+    </a>
 
     <div class="t-proximas"><span>Próximas</span></div>
     <div class="t-fechas"><span>Fechas</span></div>
 
     <div class="lista" id="lista"></div>
     <button class="anteriores" id="anteriores">Ver fechas anteriores</button>
+
+    <div class="velo" id="velo"></div>
+    <div class="ticket" id="ticket" role="dialog" aria-label="Comprar entradas" aria-hidden="true">
+      <div class="cab"><span>Entradas</span><button id="t-cerrar" aria-label="Cerrar">✕</button></div>
+      <div class="cuerpo" id="t-cuerpo"></div>
+    </div>
   </div>
 </div>
 
@@ -145,24 +187,33 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 
 /* ==========================================================
    LAS FECHAS — editá acá y la página se arma sola.
-   entradas: pegá el link de venta. Si lo dejás vacío,
-   el botón queda en gris punteado y dice PRONTO.
+   fecha: AAAA-MM-DD (el día de la semana y el mes salen solos)
+   precio: valor de la entrada anticipada.
+   entradas: si tienen un link de venta externo, pegalo acá y el botón
+   "Comprar entrada" lleva ahí; si lo dejás vacío, se compra en la página.
+   Las fechas que ya pasaron se mueven solas a "fechas anteriores".
    ========================================================== */
-const PROXIMAS = [
-  {sem:"Sábado", num:"12", mes:"Abril",
-   quien:"Sueter 7 + Clamor + La Real Academia",
-   sala:"Sala El Faro", ciudad:"C.A.B.A.", hora:"21:00", entradas:""},
-  {sem:"Jueves", num:"8", mes:"Mayo",
-   quien:"Sueter 7 + 99 Dos Mil + Nena Genix",
-   sala:"C.C.Qi.", ciudad:"C.A.B.A.", hora:"22:00", entradas:""},
-  {sem:"Sábado", num:"15", mes:"Junio",
-   quien:"Sueter 7 + todas las anteriores",
-   sala:"El Portal", ciudad:"C.A.B.A.", hora:"23:00", entradas:""}
+const FECHAS = [
+  {fecha:"2026-11-14", hora:"21:00", quien:"Sueter 7 + Clamor + La Real Academia",
+   sala:"Sala El Faro", ciudad:"C.A.B.A.", precio:9000, entradas:""},
+  {fecha:"2026-12-05", hora:"22:00", quien:"Sueter 7 + 99 Dos Mil + Nena Genix",
+   sala:"C.C.Qi.", ciudad:"C.A.B.A.", precio:8000, entradas:""},
+  {fecha:"2027-01-23", hora:"23:00", quien:"Sueter 7 · presentación de Todo Salió Bien",
+   sala:"El Portal", ciudad:"C.A.B.A.", precio:10000, entradas:""},
+  /* ya pasaron (quedan en "fechas anteriores") */
+  {fecha:"2026-06-15", hora:"23:00", quien:"Sueter 7 + todas las anteriores", sala:"El Portal", ciudad:"C.A.B.A."},
+  {fecha:"2026-05-08", hora:"22:00", quien:"Sueter 7 + 99 Dos Mil + Nena Genix", sala:"C.C.Qi.", ciudad:"C.A.B.A."},
+  {fecha:"2026-04-12", hora:"21:00", quien:"Sueter 7 + Clamor + La Real Academia", sala:"Sala El Faro", ciudad:"C.A.B.A."}
 ];
-
-const ANTERIORES = [
-  /* las fechas que ya pasaron, con el mismo formato que arriba */
-];
+const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const MESES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+FECHAS.forEach(f=>{
+  const [a,m,d]=f.fecha.split("-").map(Number), dt=new Date(a,m-1,d);
+  f.sem=DIAS[dt.getDay()]; f.num=String(d); f.mes=MESES[m-1]; f.anio=a;
+  const fin=new Date(a,m-1,d,23,59); f.pasada = fin < new Date();
+});
+const PROXIMAS = FECHAS.filter(f=>!f.pasada).sort((x,y)=>x.fecha.localeCompare(y.fecha)).slice(0,3);
+const ANTERIORES = FECHAS.filter(f=>f.pasada).sort((x,y)=>y.fecha.localeCompare(x.fecha)).slice(0,3);
 
 /* ==========================================================
    EL COLOR DEL FONDO — cambia solo en cada visita
@@ -187,10 +238,23 @@ pintar();
    ========================================================== */
 const esc = s => String(s).replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 
-function tarjeta(f){
-  const boton = f.entradas
-    ? `<a class="entradas" href="${esc(f.entradas)}" target="_blank" rel="noopener">Entradas</a>`
-    : `<span class="entradas sin" aria-disabled="true">Pronto</span>`;
+/* link para sumar el show a Google Calendar (hora de Argentina = UTC-3) */
+function linkAgenda(f){
+  const [a,m,d]=f.fecha.split("-").map(Number), [h,mi]=f.hora.split(":").map(Number);
+  const ini=new Date(Date.UTC(a,m-1,d,h+3,mi)), fin=new Date(ini.getTime()+3*3600e3);
+  const z=t=>t.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+  const q=new URLSearchParams({action:"TEMPLATE", text:f.quien, dates:z(ini)+"/"+z(fin),
+    details:"Sueter 7 en vivo — "+location.origin+location.pathname.replace(/[^/]*$/,"")+"#fechas", location:f.sala+", "+f.ciudad});
+  return "https://calendar.google.com/calendar/render?"+q.toString();
+}
+function tarjeta(f, i){
+  const boton = f.pasada
+    ? `<div class="acciones"><span class="pasada agendar" aria-disabled="true">Ya pasó</span></div>`
+    : `<div class="acciones">
+        ${f.entradas ? `<a class="comprar" href="${esc(f.entradas)}" target="_blank" rel="noopener">Comprar entrada</a>`
+                     : `<button class="comprar" data-i="${i}">Comprar entrada</button>`}
+        <a class="agendar" href="${linkAgenda(f)}" target="_blank" rel="noopener">+ Agendar</a>
+      </div>`;
   return `<article class="fecha">
       <div class="dia"><span class="sem">${esc(f.sem)}</span><span class="num">${esc(f.num)}</span><span class="mes">${esc(f.mes)}</span></div>
       <h2>${esc(f.quien)}</h2>
@@ -209,7 +273,7 @@ function dibujar(){
     lista.innerHTML = `<div class="vacio"><b>Todavía no hay fechas anteriores</b>
       Cuando toquemos, las que pasen van a quedar guardadas acá.</div>`;
   }else{
-    lista.innerHTML = datos.map(tarjeta).join("");
+    lista.innerHTML = datos.map((f,i)=>tarjeta(f,i)).join("");
   }
   boton.textContent = viendo === "proximas" ? "Ver fechas anteriores" : "Ver próximas fechas";
 }
@@ -218,6 +282,61 @@ boton.addEventListener("click", ()=>{
   dibujar();
 });
 dibujar();
+
+/* ==========================================================
+   COMPRAR ENTRADA — ventanita con cantidad y total.
+   Intenta abrir Mercado Pago con la misma función que la tienda;
+   si todavía no está conectada, confirma la reserva (modo demo).
+   ========================================================== */
+const API_ENTRADAS = "https://sueter7-villa-quien.vercel.app/api/checkout";
+const plata = n => "$" + n.toLocaleString("es-AR");
+const T = id => document.getElementById(id);
+let show=null, cant=1;
+function abrirTicket(f){
+  show=f; cant=1; pintarTicket();
+  T("ticket").classList.add("on"); T("velo").classList.add("on"); T("ticket").setAttribute("aria-hidden","false");
+}
+function cerrarTicket(){ T("ticket").classList.remove("on"); T("velo").classList.remove("on"); T("ticket").setAttribute("aria-hidden","true"); }
+function pintarTicket(){
+  const f=show;
+  T("t-cuerpo").innerHTML=`<h3>${esc(f.quien)}</h3>
+    <p class="det">${esc(f.sem)} ${esc(f.num)} de ${esc(f.mes)} · ${esc(f.hora)} hs · <b>${esc(f.sala)}</b>, ${esc(f.ciudad)}</p>
+    <div class="fila"><b>Entrada anticipada · ${plata(f.precio)}</b>
+      <div class="cant"><button id="t-menos" aria-label="Una menos">−</button><span>${cant}</span><button id="t-mas" aria-label="Una más">+</button></div></div>
+    <div class="fila"><b>Total</b><span class="total">${plata(f.precio*cant)}</span></div>
+    <button class="pagar" id="t-pagar">Pagar con Mercado Pago</button>
+    <p class="nota">Las entradas llegan por mail y se muestran desde el celular en la puerta.</p>`;
+  T("t-menos").onclick=()=>{ cant=Math.max(1,cant-1); pintarTicket(); };
+  T("t-mas").onclick=()=>{ cant=Math.min(6,cant+1); pintarTicket(); };
+  T("t-pagar").onclick=pagarTicket;
+}
+async function pagarTicket(){
+  const b=T("t-pagar"); b.disabled=true; b.textContent="Abriendo Mercado Pago…";
+  try{
+    const ctrl=new AbortController(), to=setTimeout(()=>ctrl.abort(),6000);
+    const r=await fetch(API_ENTRADAS,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctrl.signal,
+      body:JSON.stringify({items:[{id:"entrada-"+show.fecha,cantidad:cant}]})});
+    clearTimeout(to);
+    const data=await r.json();
+    if(!r.ok||!data.url) throw new Error("sin checkout");
+    (window.top||window).location.href=data.url;
+  }catch(e){
+    const cod="S7-"+show.fecha.slice(5).replace("-","")+"-"+Math.random().toString(36).slice(2,6).toUpperCase();
+    T("t-cuerpo").innerHTML=`<div class="listo"><h3>¡Entradas reservadas!</h3>
+      <p class="det">${cant} ${cant===1?"entrada":"entradas"} para ${esc(show.sala)} · ${esc(show.num)} de ${esc(show.mes)}</p>
+      <div class="codigo">${cod}</div>
+      <p class="nota">Mostrá este código en la puerta. <br>(Modo demostración: el cobro real se activa cuando esté conectado Mercado Pago.)</p>
+      <button class="pagar" id="t-ok">Listo</button></div>`;
+    T("t-ok").onclick=cerrarTicket;
+  }
+}
+lista.addEventListener("click", ev=>{
+  const b=ev.target.closest("button.comprar"); if(!b) return;
+  abrirTicket((viendo==="proximas"?PROXIMAS:ANTERIORES)[+b.dataset.i]);
+});
+T("t-cerrar").addEventListener("click", cerrarTicket);
+T("velo").addEventListener("click", cerrarTicket);
+document.addEventListener("keydown", ev=>{ if(ev.key==="Escape") cerrarTicket(); });
 
 function fit(){
   const s=document.getElementById("screen"), stage=s.parentElement;

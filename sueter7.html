@@ -33,6 +33,9 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   border:2.5px solid transparent;transition:border-color .14s}
 .zona:hover,.zona:focus-visible{border-color:var(--tinta);outline:none}
 
+.volver{position:absolute;left:74px;top:52px;z-index:5;display:flex;align-items:center;gap:12px;text-decoration:none;
+  font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta)}
+.volver:hover{color:var(--rojo)}
 .btn-discos{position:absolute;left:160px;top:872px;width:424px;height:66px;z-index:4;
   display:flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;text-decoration:none;
   background:#2c61b2;color:var(--crema);border:3px solid var(--tinta);box-shadow:8px 8px 0 var(--tinta);
@@ -74,6 +77,10 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
     <a class="zona" href="fechas.html"  style="left:1812px;top:22px;width:98px;height:44px"  aria-label="Fechas"></a>
     <a class="nav-tv" href="tu-version/" style="left:1072px;top:22px">Tu versión</a>
 
+    <a class="volver" href="index.html">
+      <svg width="56" height="26" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/></svg>
+      Volver al andén
+    </a>
     <a class="btn-discos" href="discos.html">Discos <span aria-hidden="true">→</span></a>
 
     <div class="pronto" id="pronto">PRONTO</div>

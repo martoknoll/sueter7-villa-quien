@@ -46,12 +46,30 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .prod.marcado{animation:marcar 1.1s ease 2}
 @keyframes marcar{0%,100%{box-shadow:10px 10px 0 var(--tinta)}50%{box-shadow:10px 10px 0 var(--tinta),0 0 0 8px var(--amarillo)}}
 
+/* ===== volver y título de sección (sistema: Bebas en amarillo + pixelada en negro, bordes comidos) ===== */
+@font-face{font-family:"PP NeueBit";src:local("PP NeueBit Bold"),local("PPNeueBit-Bold"),url("tu-version/fonts/PPNeueBit-Bold.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap}
+.volver{position:absolute;left:74px;top:52px;z-index:7;display:flex;align-items:center;gap:12px;text-decoration:none;
+  font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta);
+  background:var(--crema);padding:8px 14px 5px;border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta)}
+.volver:hover{color:var(--rojo)}
+.t-tienda,.t-merch{position:absolute;z-index:5;display:grid;place-items:center}
+.t-tienda{left:176px;top:118px;width:360px;height:112px;transform:rotate(-2.2deg)}
+.t-merch{left:552px;top:146px;width:250px;height:72px;transform:rotate(-1.2deg)}
+.t-tienda::before,.t-merch::before{content:"";position:absolute;inset:-5px;z-index:-1;filter:url(#comido)}
+.t-tienda::before{background:var(--amarillo);box-shadow:12px 12px 0 var(--tinta)}
+.t-merch::before{background:var(--tinta)}
+.t-tienda span{position:relative;font-family:var(--display);font-size:112px;line-height:.8;letter-spacing:.03em;color:var(--tinta);padding-top:10px}
+.t-merch span{position:relative;font-family:"PP NeueBit","Tiny5",monospace;font-size:40px;line-height:1;color:var(--crema);text-transform:uppercase}
+
 /* ===== flechas del carrusel ===== */
-.flecha{position:absolute;top:478px;width:96px;height:96px;z-index:6;display:grid;place-items:center;cursor:pointer;
-  background:transparent;border:0;padding:0;color:#d24426;transition:transform .12s}
-.flecha svg{display:block;filter:drop-shadow(3px 3px 0 #141414)}
-.flecha.izq{left:52px}
-.flecha.der{left:1756px}
+.flecha{position:absolute;top:494px;width:92px;height:92px;z-index:6;display:grid;place-items:center;cursor:pointer;
+  background:var(--crema);border:3px solid var(--tinta);border-radius:50%;box-shadow:6px 6px 0 var(--tinta);
+  padding:0;color:#d24426;transition:transform .12s,background .12s}
+.flecha svg{display:block;width:56px;height:30px}
+.flecha:hover{background:var(--amarillo)}
+.flecha.izq{left:58px}
+.flecha.der{left:1764px}
 .flecha:hover{transform:scale(1.12)}
 .flecha.izq:hover{transform:translateX(-6px) scale(1.12)}
 .flecha.der:hover{transform:translateX(6px) scale(1.12)}
@@ -60,6 +78,36 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .puntos{position:absolute;left:173px;width:1534px;top:858px;z-index:6;display:flex;justify-content:center;gap:12px}
 .puntos button{width:16px;height:16px;padding:0;border-radius:50%;border:2.5px solid var(--tinta);background:var(--crema);cursor:pointer}
 .puntos button.on{background:var(--rojo)}
+
+/* ===== finalizar compra: datos, resumen y confirmación ===== */
+.checkout{position:absolute;left:50%;top:120px;width:760px;z-index:14;background:var(--crema);border:3px solid var(--tinta);
+  box-shadow:14px 14px 0 var(--tinta);transform:translate(-50%,24px);opacity:0;pointer-events:none;
+  transition:opacity .22s,transform .24s cubic-bezier(.3,1.3,.6,1)}
+.checkout.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.checkout .cab{display:flex;justify-content:space-between;align-items:center;background:var(--amarillo);border-bottom:3px solid var(--tinta);
+  padding:14px 24px 9px;font-family:var(--display);font-size:36px;letter-spacing:.06em}
+.checkout .cab button{background:none;border:0;font-size:24px;cursor:pointer}
+.checkout .cuerpo{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;padding:26px 28px 30px}
+.checkout label{display:block;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 6px}
+.checkout input,.checkout select{width:100%;height:46px;border:2.5px solid var(--tinta);background:#fffdf9;padding:0 12px;
+  font-family:var(--mono);font-size:16px;margin-bottom:16px;box-sizing:border-box}
+.checkout .entrega{display:flex;gap:10px;margin-bottom:16px}
+.checkout .entrega label{flex:1;display:flex;align-items:center;gap:8px;border:2.5px solid var(--tinta);padding:10px 12px;cursor:pointer;
+  text-transform:none;letter-spacing:.02em;font-size:15px;margin:0;background:#fffdf9}
+.checkout .entrega input{width:auto;height:auto;margin:0}
+.checkout .resumen{border:2.5px dashed rgba(20,20,20,.5);padding:16px 18px;font-size:15px;align-self:start}
+.checkout .resumen h4{margin:0 0 10px;font-family:var(--display);font-size:26px;letter-spacing:.05em}
+.checkout .resumen .l{display:flex;justify-content:space-between;gap:10px;padding:5px 0}
+.checkout [hidden]{display:none !important}
+.checkout .resumen .tot{border-top:2px solid var(--tinta);margin-top:8px;padding-top:10px;font-weight:700;font-size:18px}
+.checkout .pagar{grid-column:1/-1;height:58px;background:var(--amarillo);border:2.5px solid var(--tinta);box-shadow:6px 6px 0 var(--tinta);
+  font-family:var(--display);font-size:28px;letter-spacing:.08em;cursor:pointer;padding-top:4px}
+.checkout .pagar:disabled{opacity:.6;cursor:default}
+.checkout .error{grid-column:1/-1;color:var(--rojo);font-size:14px;margin:-12px 0 0;min-height:18px}
+.checkout .listo{grid-column:1/-1;text-align:center;padding:10px 0}
+.checkout .listo h3{font-family:var(--display);font-size:46px;margin:0 0 6px;letter-spacing:.03em}
+.checkout .listo .codigo{display:inline-block;margin:16px 0;padding:12px 26px;border:3px dashed var(--tinta);font-family:var(--display);font-size:42px;letter-spacing:.12em}
+.checkout .listo p{font-size:15px;line-height:1.6;color:var(--gris);margin:6px 0}
 
 /* ===== aviso al sumar al carrito ===== */
 .sumado{position:absolute;left:50%;top:300px;width:520px;z-index:12;background:var(--crema);border:3px solid var(--tinta);
@@ -87,9 +135,10 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   font-family:var(--display);font-size:38px;line-height:1;letter-spacing:.02em;color:var(--tinta)}
 .prod .precio{position:absolute;left:0;right:0;top:410px;text-align:center;
   font-size:17px;letter-spacing:.04em;color:var(--tinta)}
-.prod .comprar{position:absolute;left:107px;top:456px;width:150px;height:31px;
+/* el botón ocupa el mismo ancho que la caja de textos de la tarjeta */
+.prod .comprar{position:absolute;left:28px;right:28px;top:452px;width:auto;height:50px;
   display:grid;place-items:center;text-decoration:none;cursor:pointer;
-  font-family:var(--display);font-size:18px;letter-spacing:.1em;color:var(--tinta);padding-top:2px;
+  font-family:var(--display);font-size:24px;letter-spacing:.1em;color:var(--tinta);padding-top:2px;
   border:2px solid var(--tinta);box-shadow:5px 5px 0 var(--tinta);
   background:var(--amarillo);transition:transform .1s,box-shadow .1s}
 .prod .comprar:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--tinta)}
@@ -105,7 +154,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 
 @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 /* ===== carrito ===== */
-.chip{position:absolute;left:60px;top:36px;height:44px;z-index:7;display:flex;align-items:center;gap:10px;
+.chip{position:absolute;left:846px;top:39px;height:44px;z-index:7;display:flex;align-items:center;gap:10px;
   padding:0 16px;background:var(--crema);color:var(--tinta);border:2px solid var(--tinta);
   box-shadow:3px 3px 0 var(--tinta);cursor:pointer;font-family:var(--display);font-size:20px;
   letter-spacing:.09em;padding-top:3px;transition:transform .1s,box-shadow .1s}
@@ -175,6 +224,12 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 <script src="puente.js?v=20261029a"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="comido" x="-5%" y="-12%" width="110%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="5" result="r"/>
+    <feDisplacementMap in="SourceGraphic" in2="r" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 <div class="stage">
   <div class="velo-costados" id="velo2"></div>
   <div class="screen" id="screen">
@@ -188,6 +243,12 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
     <a class="zona" href="fechas.html"  style="left:1802px;top:36px;width:98px;height:44px"  aria-label="Fechas"></a>
     <a class="nav-tv" href="tu-version/" style="left:1062px;top:36px">Tu versión</a>
 
+    <a class="volver" href="index.html">
+      <svg width="48" height="22" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="5" stroke-linecap="square"/></svg>
+      Volver al andén
+    </a>
+    <div class="t-tienda"><span>TIENDA</span></div>
+    <div class="t-merch"><span>Merch</span></div>
     <div id="productos"></div>
     <button class="flecha izq" id="ant" aria-label="Productos anteriores">
       <svg width="86" height="44" viewBox="0 0 86 44" fill="none" aria-hidden="true"><path d="M84 22H8M26 4L6 22l20 18" stroke="currentColor" stroke-width="7" stroke-linecap="square"/></svg>
@@ -218,10 +279,14 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
       <footer>
         <div class="total"><span>Total</span><b id="total">$0</b></div>
         <button class="finalizar" id="finalizar" disabled>Finalizar compra</button>
-        <p class="aclara" id="aclara">Te lleva a Mercado Pago. Podés pagar con tarjeta, dinero en cuenta o efectivo.</p>
+        <p class="aclara" id="aclara">Completás tus datos y pagás con Mercado Pago: tarjeta, dinero en cuenta o efectivo.</p>
       </footer>
     </aside>
 
+    <div class="checkout" id="checkout" role="dialog" aria-label="Finalizar compra" aria-hidden="true">
+      <div class="cab"><span>Finalizar compra</span><button id="co-cerrar" aria-label="Cerrar">✕</button></div>
+      <form class="cuerpo" id="co-form" novalidate></form>
+    </div>
     <div class="pronto" id="pronto">PRONTO</div>
     <div class="fundido" id="fundido"></div>
   </div>
@@ -297,7 +362,8 @@ $("ant").addEventListener("click", ()=>mover(-1));
 $("sig").addEventListener("click", ()=>mover(1));
 $("puntos").addEventListener("click", ev=>{ const b=ev.target.closest("button"); if(b){ ini=+b.dataset.ir; pintarProductos(true); } });
 document.addEventListener("keydown", ev=>{
-  if($("panel").classList.contains("on") || $("sumado").classList.contains("on")) return;
+  if($("panel").classList.contains("on") || $("sumado").classList.contains("on") || $("checkout").classList.contains("on")) return;
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) return;
   if(ev.key==="ArrowRight") mover(1);
   if(ev.key==="ArrowLeft") mover(-1);
 });
@@ -450,32 +516,73 @@ function avisar(texto, ms){
   sello._t = setTimeout(()=>{ sello.classList.remove("on"); sello.textContent = "PRONTO"; }, ms || 2200);
 }
 
-$("finalizar").addEventListener("click", async ()=>{
-  if(!unidades()) return;
-  if(!API){ avisar("FALTA CONFIGURAR EL COBRO"); return; }
+/* paso 1: el carrito abre la ventana de datos y resumen */
+$("finalizar").addEventListener("click", ()=>{ if(unidades()){ abrir(false); abrirCheckout(); } });
+function abrirCheckout(){
+  const lineas = Object.entries(carrito).map(([id,c])=>{ const p=PRODUCTOS.find(x=>x.id===id); return p?`<div class="l"><span>${c} × ${esc(p.nombre)}</span><span>${plata(p.precio*c)}</span></div>`:""; }).join("");
+  $("co-form").innerHTML = `
+    <div>
+      <label for="co-nombre">Nombre y apellido</label><input id="co-nombre" autocomplete="name" required>
+      <label for="co-mail">Mail</label><input id="co-mail" type="email" autocomplete="email" required>
+      <label>Entrega</label>
+      <div class="entrega">
+        <label><input type="radio" name="entrega" value="retiro" checked> Retiro en un show</label>
+        <label><input type="radio" name="entrega" value="envio"> Envío a domicilio</label>
+      </div>
+      <div id="co-dir" hidden><label for="co-direccion">Dirección y código postal</label><input id="co-direccion" autocomplete="street-address"></div>
+    </div>
+    <div class="resumen"><h4>Tu pedido</h4>${lineas}<div class="l" id="co-envio" hidden><span>Envío</span><span>${plata(ENVIO)}</span></div>
+      <div class="l tot"><span>Total</span><span id="co-total">${plata(totalPesos())}</span></div></div>
+    <p class="error" id="co-error"></p>
+    <button class="pagar" type="submit" id="co-pagar">Pagar con Mercado Pago</button>`;
+  $("co-form").querySelectorAll('input[name=entrega]').forEach(r=>r.addEventListener("change", ()=>{
+    const envio = $("co-form").entrega.value==="envio";
+    $("co-dir").hidden=!envio; $("co-envio").hidden=!envio;
+    $("co-total").textContent = plata(totalPesos() + (envio?ENVIO:0));
+  }));
+  $("checkout").classList.add("on"); $("checkout").setAttribute("aria-hidden","false");
+  $("velo").classList.add("on"); $("velo2").classList.add("on");
+  setTimeout(()=>$("co-nombre").focus(), 80);
+}
+function cerrarCheckout(){
+  $("checkout").classList.remove("on"); $("checkout").setAttribute("aria-hidden","true");
+  $("velo").classList.remove("on"); $("velo2").classList.remove("on");
+}
+const ENVIO = 4500;   /* costo de envío a domicilio */
+$("co-cerrar").addEventListener("click", cerrarCheckout);
+$("velo").addEventListener("click", cerrarCheckout);
+document.addEventListener("keydown", ev=>{ if(ev.key==="Escape") cerrarCheckout(); });
 
-  const boton = $("finalizar");
-  const antes = boton.textContent;
-  boton.disabled = true;
-  boton.textContent = "Abriendo Mercado Pago…";
-
+/* paso 2: valida, intenta abrir Mercado Pago; si la función de cobro todavía
+   no está conectada, confirma el pedido igual (modo demostración) */
+$("co-form").addEventListener("submit", async ev=>{
+  ev.preventDefault();
+  const f=$("co-form"), nombre=$("co-nombre").value.trim(), mail=$("co-mail").value.trim();
+  const envio=f.entrega.value==="envio", dir=envio?$("co-direccion").value.trim():"";
+  if(!nombre || !/^\S+@\S+\.\S+$/.test(mail) || (envio && !dir)){
+    $("co-error").textContent="Completá nombre, un mail válido"+(envio?" y la dirección":"")+"."; return;
+  }
+  const boton=$("co-pagar"); boton.disabled=true; boton.textContent="Abriendo Mercado Pago…";
+  const total=totalPesos()+(envio?ENVIO:0), u=unidades();
   try{
-    const r = await fetch(API, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        items: Object.entries(carrito).map(([id,cantidad]) => ({id, cantidad}))
-      })
-    });
+    if(!API) throw new Error("sin API");
+    const ctrl=new AbortController(), to=setTimeout(()=>ctrl.abort(), 6000);
+    const r = await fetch(API, {method:"POST", headers:{"Content-Type":"application/json"}, signal:ctrl.signal,
+      body: JSON.stringify({items:Object.entries(carrito).map(([id,cantidad])=>({id,cantidad})), comprador:{nombre,mail,envio,dir}})});
+    clearTimeout(to);
     const data = await r.json();
     if(!r.ok || !data.url) throw new Error(data.error || "sin respuesta");
-    /* el pago se abre en la ventana entera, no adentro de la estación */
-    (window.top || window).location.href = data.url;
+    (window.top || window).location.href = data.url;     /* el pago se abre en la ventana entera */
   }catch(e){
-    console.error(e);
-    boton.disabled = false;
-    boton.textContent = antes;
-    avisar("NO SE PUDO ABRIR EL PAGO");
+    const cod = "S7-" + Date.now().toString(36).slice(-5).toUpperCase();
+    f.innerHTML = `<div class="listo"><h3>¡Gracias, ${esc(nombre.split(" ")[0])}!</h3>
+      <p>Tu pedido de ${u} ${u===1?"producto":"productos"} por <b>${plata(total)}</b> quedó registrado.</p>
+      <div class="codigo">${cod}</div>
+      <p>Te vamos a escribir a <b>${esc(mail)}</b> ${envio?"para coordinar el envío.":"para retirarlo en el próximo show."}</p>
+      <p style="font-size:13px">(Modo demostración: el cobro real se activa cuando esté conectada la función de Mercado Pago.)</p>
+      <button class="pagar" type="button" id="co-listo" style="width:320px;margin-top:14px">Seguir mirando</button></div>`;
+    carrito = {}; guardar(); pintarCarrito();
+    $("co-listo").onclick = cerrarCheckout;
   }
 });
 

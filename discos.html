@@ -85,13 +85,16 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 .nav a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
 
 /* ---------- flecha y títulos ---------- */
-.flecha{left:74px;top:67px;width:72px;height:32px}
+.volver{left:74px;top:52px;display:flex;align-items:center;gap:12px;text-decoration:none;
+  font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta);z-index:5}
+.volver:hover{color:var(--rojo)}
+
 .t-discos{
   left:87px;top:151px;width:443px;height:139px;background:var(--amarillo);
   box-shadow:16px 16px 0 var(--tinta);transform:rotate(-2.2deg);
   display:grid;place-items:center;
 }
-.t-discos span{font-family:var(--pixel);font-weight:400;font-size:112px;line-height:.8;letter-spacing:-.01em;color:var(--tinta);text-transform:uppercase}
+.t-discos span{font-family:var(--display);font-weight:400;font-size:124px;line-height:.8;letter-spacing:.03em;color:var(--tinta);text-transform:uppercase;padding-top:10px}
 /* fondos granulados de los títulos, con los bordes comidos (filtro #comido) */
 .t-discos,.t-canciones,.otros-lbl{background:none !important;box-shadow:none !important}
 .t-discos::before,.t-canciones::before,.otros-lbl::before{content:"";position:absolute;inset:-5px;z-index:-1;filter:url(#comido)}
@@ -105,7 +108,7 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 .t-canciones span{font-family:var(--pixel);font-weight:400;font-size:50px;line-height:1;letter-spacing:-.02em;color:var(--crema);text-transform:uppercase}
 
 /* ---------- tapa del LP ---------- */
-.tapa{left:178px;top:308px;width:389px;height:389px;background:var(--crema);
+.tapa{left:178px;top:356px;width:389px;height:389px;background:var(--crema);
   border:2.5px solid var(--tinta);box-shadow:8px 8px 0 rgba(20,20,20,.5);overflow:hidden}
 .tapa img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .tapa img.chica{image-rendering:pixelated}
@@ -114,11 +117,11 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 .vinilo .label{transition:opacity .25s ease}
 .cambiando .tapa,.cambiando .pie,.cambiando .ficha .cambia{opacity:0;transform:translateY(10px)}
 .cambiando .vinilo .label{opacity:0}
-.pie{left:152px;top:650px;width:206px;height:62px;background:var(--tinta);color:var(--crema);
+.pie{left:152px;top:698px;width:206px;height:62px;background:var(--tinta);color:var(--crema);
   padding:7px 10px;font-family:var(--display);font-size:19px;line-height:1.02;letter-spacing:.02em;z-index:1}
 
 /* ---------- vinilo ---------- */
-.vinilo{left:439px;top:323px;width:351px;height:351px;border-radius:50%;z-index:1;
+.vinilo{left:439px;top:371px;width:351px;height:351px;border-radius:50%;z-index:1;
   background:repeating-radial-gradient(circle at 50% 50%, #1d1d1d 0 1.5px, #0c0c0c 1.5px 4.6px), #111;
   border:2.5px solid var(--tinta);box-shadow:7px 7px 0 rgba(20,20,20,.45);display:grid;place-items:center}
 .vinilo .label{width:142px;height:142px;border-radius:50%;background:var(--amarillo);border:2px solid var(--tinta);
@@ -137,7 +140,7 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   border-radius:50%;background:var(--papel);border:1.5px solid var(--tinta);z-index:2}
 
 /* ---------- ficha del disco ---------- */
-.ficha{left:930px;top:270px;width:900px;height:470px;background:var(--crema);
+.ficha{left:930px;top:300px;width:900px;height:510px;background:var(--crema);
   border:3px solid var(--tinta);box-shadow:8px 8px 0 var(--tinta)}
 .anio{position:absolute;left:35px;top:30px;width:120px;height:130px;background:var(--tinta);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
@@ -166,7 +169,8 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 .tema.son .t{font-weight:700}
 .tema:focus-visible{outline:2px solid var(--rojo);outline-offset:-2px}
 .tema .n{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--rojo)}
-.tema .t{font-family:var(--mono);font-size:18px;color:var(--tinta);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tema .t{font-family:var(--mono);font-size:17px;line-height:1.02;color:var(--tinta);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tema .t.largo{font-size:14.5px}
 .tema .d{font-family:var(--mono);font-size:18px;text-align:right;font-variant-numeric:tabular-nums}
 
 .btn{position:absolute;display:inline-flex;align-items:center;justify-content:center;gap:11px;
@@ -176,19 +180,22 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
 .btn.escuchar:hover{filter:brightness(1.1)}
 .btn.comprar{left:340px;top:404px;width:250px;height:50px;background:var(--crema);color:var(--tinta);text-decoration:none}
 .btn.comprar:hover{background:var(--amarillo)}
-.plats{position:absolute;left:638px;top:415px;font-family:var(--mono);font-size:14px;color:var(--gris);letter-spacing:.03em}
+.plats{position:absolute;left:618px;top:418px;font-family:var(--mono);font-size:13px;white-space:nowrap;color:var(--gris);letter-spacing:.03em}
+.plats a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.plats a:hover{color:var(--rojo)}
 
 /* ---------- sticker y garabato ---------- */
-.sticker{left:1724px;top:205px;width:176px;height:176px;border-radius:50%;background:var(--rojo-var);
+.sticker{left:1770px;top:146px;width:122px;height:122px;border-radius:50%;background:var(--rojo-var);
   border:2.5px solid var(--tinta);display:grid;place-items:center;transform:rotate(-9deg);
   box-shadow:5px 5px 0 rgba(20,20,20,.35)}
 .sticker::before{content:"";position:absolute;inset:9px;border:1.5px dashed rgba(255,253,249,.6);border-radius:50%}
-.sticker span{font-family:var(--mono);font-size:12.5px;font-weight:700;line-height:1.6;letter-spacing:.01em;
+.sticker::before{inset:6px}
+.sticker span{font-family:var(--mono);font-size:9.5px;font-weight:700;line-height:1.5;letter-spacing:.01em;
   color:var(--crema);text-align:center;padding:0 8px}
-.garabato{left:1700px;top:722px;width:62px;height:46px}
+.garabato{left:1740px;top:828px;width:62px;height:46px}
 
 /* ---------- otros lanzamientos ---------- */
-.otros-lbl{left:86px;top:750px;width:381px;height:56px;background:var(--tinta);display:grid;place-items:center;
+.otros-lbl{left:86px;top:800px;width:381px;height:56px;background:var(--tinta);display:grid;place-items:center;
   transform:rotate(-.8deg)}
 .otros-lbl span{font-family:var(--pixel);font-weight:400;font-size:28px;letter-spacing:.01em;color:var(--crema);text-transform:uppercase}
 .lanz{width:540px;height:100px;background:var(--crema);border:2.5px solid var(--tinta);
@@ -312,6 +319,10 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
       </nav>
 
 
+<a class="volver" href="index.html">
+        <svg width="56" height="26" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/></svg>
+        Volver al andén
+      </a>
       <div class="t-discos"><span>Discos</span></div>
       <div class="t-canciones"><span>&amp; Canciones</span></div>
 
@@ -343,7 +354,7 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
           <span id="btn-disco-txt">Escuchar disco</span>
         </button>
         <a class="btn comprar" id="btn-comprar" href="tienda.html?agregar=vinilo">Comprar vinilo</a>
-        <span class="plats">Spotify · YouTube · Bandcamp</span>
+        <span class="plats"><a href="https://open.spotify.com/album/3LNd7eBAZuYUWnspCQGVkv" target="_blank" rel="noopener">Spotify</a> · <a href="https://soundcloud.com/sueter7" target="_blank" rel="noopener">SoundCloud</a> · <a href="https://sueter7.bandcamp.com/album/todo-sali-bien-en-la-sencilla-villa-qui-n" target="_blank" rel="noopener">Bandcamp</a></span>
       </div>
 
       <!-- sticker -->
@@ -356,14 +367,14 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
       <!-- otros lanzamientos -->
       <div class="otros-lbl"><span>Otros lanzamientos</span></div>
 
-      <div class="lanz" style="left:87px;top:809px"></div>
-      <div class="lanz" style="left:687px;top:809px"></div>
-      <div class="lanz" style="left:1290px;top:830px"></div>
+      <div class="lanz" style="left:87px;top:900px"></div>
+      <div class="lanz" style="left:687px;top:900px"></div>
+      <div class="lanz" style="left:1290px;top:900px"></div>
 
       <!-- cintas -->
-      <div class="cinta" style="left:872px;top:295px;width:133px;height:40px;transform:rotate(-28deg)"></div>
-      <div class="cinta" style="left:1775px;top:786px;width:134px;height:38px;transform:rotate(12deg)"></div>
-      <div class="cinta" style="left:1293px;top:822px;width:83px;height:34px;transform:rotate(-16deg)"></div>
+      <div class="cinta" style="left:872px;top:325px;width:133px;height:40px;transform:rotate(-28deg)"></div>
+      <div class="cinta" style="left:1775px;top:790px;width:134px;height:38px;transform:rotate(12deg)"></div>
+      <div class="cinta" style="left:1293px;top:892px;width:83px;height:34px;transform:rotate(-16deg)"></div>
       <div class="cinta" style="left:150px;top:292px;width:96px;height:32px;transform:rotate(-22deg)"></div>
       <div class="cinta" style="left:520px;top:676px;width:96px;height:30px;transform:rotate(8deg)"></div>
 
@@ -442,17 +453,19 @@ const DISCOS = [
    anio:"2026", meta:"SUETER 7 · 2026 · 45 MIN", lanz:"45 min · 2026 · 8 canciones",
    desc:"Canciones escritas entre caminatas, cuadernos<br>y el ruido del tren de las seis.",
    tapa:"img/tapa-800.jpg", mini:"img/tapa-800.jpg", label:"S7", labelTxt:"TODO SALIÓ BIEN EN LA<br>SENCILLA VILLA QUIÉN",
-   labelColor:"var(--amarillo)", labelTinta:"var(--tinta)", spotify:"https://open.spotify.com/search/sueter7"},
+   labelColor:"var(--amarillo)", labelTinta:"var(--tinta)", spotify:"https://open.spotify.com/album/3LNd7eBAZuYUWnspCQGVkv"},
   {id:"diario", titulo:"Diario", pie:"DIARIO<br>SUETER 7 · 2025",
    anio:"2025", meta:"SUETER 7 · 2025 · 16 MIN", lanz:"16 min · 2025 · 5 canciones",
-   desc:"El primer EP: cinco canciones que salieron<br>del cuaderno de Mari.",
-   tapa:"img/tapa-diario-800.jpg", mini:"img/tapa-diario.png", label:"D", labelTxt:"DIARIO<br>2025",
-   labelColor:"var(--azul)", labelTinta:"var(--crema)", spotify:"https://open.spotify.com/search/sueter7%20diario",
-   temas:[{t:"Tema 1",d:"3:10"},{t:"Tema 2",d:"2:58"},{t:"Tema 3",d:"3:24"},{t:"Tema 4",d:"3:05"},{t:"Tema 5",d:"3:23"}]},
+   desc:"El primer lanzamiento como sueter7: canciones<br>que capturan cosas sentidas durante 2024.",
+   /* tapa original: subila como img/tapa-diario-original.jpg; mientras no esté, se usa la de repuesto */
+   tapa:"img/tapa-diario-original.jpg", mini:"img/tapa-diario-original.jpg", tapaAlt:"img/tapa-diario-800.jpg",
+   label:"D", labelTxt:"DIARIO<br>2025",
+   labelColor:"var(--azul)", labelTinta:"var(--crema)", spotify:"https://sueter7.bandcamp.com/album/diario", donde:"Bandcamp",
+   temas:[{t:"paleta de colores",d:""},{t:"nada cambia tanto",d:""},{t:"perfume",d:""},{t:"tenue // diciembre",d:""},{t:"reconciliar",d:""}]},
   {id:"bts", titulo:"BTS (Sueter 7 — Remix)", pie:"BTS<br>SUETER 7 REMIX",
    anio:"2026", meta:"ANABEL G. · 2026 · 1 CANCIÓN", lanz:"Anabel G. · 2026 · 1 canción",
-   desc:"Sueter 7 remixa a Anabel G.<br>Una sola canción, en loop.",
-   tapa:"bts.png", mini:"bts.png", chica:true, label:"BTS", labelTxt:"SUETER 7<br>REMIX",
+   desc:"Sueter 7 remixa a Anabel G., del disco<br>Canciones para un final feliz.",
+   tapa:"img/tapa-bts.jpg", mini:"img/tapa-bts.jpg", label:"BTS", labelTxt:"SUETER 7<br>REMIX",
    labelColor:"#f0d77d", labelTinta:"var(--tinta)", spotify:"https://open.spotify.com/search/BTS%20sueter%207%20remix",
    temas:[{t:"BTS (Sueter 7 — Remix)",d:"—"}]},
   {id:"flores", titulo:"Las Flores", pie:"LAS FLORES<br>BAUTIBIT · 2026",
@@ -489,15 +502,16 @@ function filasTemas(d){
   const lista = d.propio ? TRACKS.map(t=>({n:t.n, t:t.t, d:mmss(t.d)})) : d.temas.map((t,i)=>({n:i+1, t:t.t, d:t.d}));
   return lista.map((t,i)=>{
     const col = i<5 ? 0 : 435, fila = i<5 ? i : i-5;
-    const titulo = t.t.length>26 ? t.t.slice(0,24)+"…" : t.t;
+    const titulo = t.t, largo = t.t.length>24 ? " largo" : "";
     const dato = d.propio ? `data-t="${t.n}"` : `data-link="${d.spotify}"`;
     return `<button class="tema${d.propio && t.n===temaCargado && loaded ? " son":""}" ${dato} style="left:${col}px;top:${fila*36}px" title="${t.t}">
-      <span class="n">${String(t.n).padStart(2,"0")}</span><span class="t">${titulo}</span><span class="d">${t.d}</span></button>`;
+      <span class="n">${String(t.n).padStart(2,"0")}</span><span class="t${largo}">${titulo}</span><span class="d">${t.d}</span></button>`;
   }).join("");
 }
 function mostrarDisco(idx, animar){
   const pintarlo=()=>{
     actual=idx; const d=DISCOS[idx];
+    $("tapa-img").onerror = d.tapaAlt ? function(){ this.onerror=null; this.src=d.tapaAlt; } : null;
     $("tapa-img").src=d.tapa; $("tapa-img").alt="Tapa de "+d.titulo; $("tapa-img").classList.toggle("chica", !!d.chica);
     $("pie").innerHTML=d.pie;
     $("label").style.background=d.labelColor; $("label").style.color=d.labelTinta;
@@ -512,7 +526,8 @@ function mostrarDisco(idx, animar){
     document.querySelectorAll(".lanz").forEach((el,k)=>{
       const o=DISCOS[otros[k]];
       el.dataset.disco=otros[k]; el.tabIndex=0; el.setAttribute("role","button"); el.setAttribute("aria-label","Ver "+o.titulo);
-      el.innerHTML=`<div class="mini"><img src="${o.mini}" alt="Tapa de ${o.titulo}"></div>
+      const alt = o.tapaAlt ? ` onerror="this.onerror=null;this.src='${o.tapaAlt}'"` : "";
+      el.innerHTML=`<div class="mini"><img src="${o.mini}"${alt} alt="Tapa de ${o.titulo}"></div>
         <div style="min-width:0"><h3>${o.corto||o.titulo}</h3><p>${o.lanz}</p></div><span class="esc">Ver disco</span>`;
     });
     pintar();
@@ -546,7 +561,7 @@ function pintar(){
   $("ico-play").hidden=son; $("ico-pause").hidden=!son;
   $("p-play").setAttribute("aria-label", son?"Pausar":"Reproducir");
   const d=DISCOS[actual];
-  $("btn-disco-txt").textContent = d.propio ? (son?"Pausar disco":"Escuchar disco") : "Escuchar en Spotify";
+  $("btn-disco-txt").textContent = d.propio ? (son?"Pausar disco":"Escuchar disco") : "Escuchar en "+(d.donde||"Spotify");
   tocadiscos(son && d.propio);
 }
 function alternar(){ if(!loaded){cargar(0,true);return;} au.paused?au.play().catch(()=>{}):au.pause(); }

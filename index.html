@@ -65,7 +65,12 @@ body{font-family:var(--mono);color:var(--tinta);-webkit-font-smoothing:antialias
 .pthumb{left:13px;top:26px;width:60px;height:60px;overflow:hidden;background:var(--azul);padding:0;border:0;cursor:pointer}
 .pthumb img{width:100%;height:100%;object-fit:cover;display:block}
 .ptitle{left:90px;top:35px;font-size:16px;font-weight:700;line-height:1.2;max-width:350px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  white-space:nowrap;overflow:hidden}
+/* si el nombre del tema no entra, se desplaza de a poco en vez de cortarse con "…" */
+.ptitle .corre{display:inline-block;padding-right:48px;animation:marquesina var(--dur,12s) linear infinite}
+.ptitle.largo{-webkit-mask-image:linear-gradient(90deg,transparent,#000 10px,#000 calc(100% - 18px),transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 10px,#000 calc(100% - 18px),transparent)}
+@keyframes marquesina{0%,12%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .palbum{left:90px;top:60px;font-size:13px;line-height:1.2;color:var(--gris);max-width:360px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 button{font:inherit;color:inherit}
@@ -346,10 +351,10 @@ button{font:inherit;color:inherit}
     </button>
     <div class="pvolbar" id="p-vol-bar" role="slider" tabindex="0" aria-label="Volumen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="p-volfill"></i></div>
 
-    <a class="circ pspot a" href="https://open.spotify.com/search/sueter7" target="_blank" rel="noopener" aria-label="Escuchar en Spotify">
+    <a class="circ pspot a" href="https://open.spotify.com/album/3LNd7eBAZuYUWnspCQGVkv" target="_blank" rel="noopener" aria-label="Escuchar en Spotify">
       <svg width="13" height="15" viewBox="0 0 13 15" aria-hidden="true"><path d="M1 1.1v12.8c0 .7.8 1.1 1.4.7l9.8-6.4c.5-.3.5-1.1 0-1.4L2.4.4C1.8 0 1 .4 1 1.1z" fill="currentColor"/></svg>
     </a>
-    <a class="circ pspot b" href="https://open.spotify.com/search/sueter7" target="_blank" rel="noopener" aria-label="Abrir sueter7 en Spotify">
+    <a class="circ pspot b" href="https://open.spotify.com/album/3LNd7eBAZuYUWnspCQGVkv" target="_blank" rel="noopener" aria-label="Abrir sueter7 en Spotify">
       <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true"><path d="M2 4.2C7.6 1.6 14.4 1.6 20 4.2M3.6 8.4c4.6-2 10.2-2 14.8 0M5.4 12.4c3.6-1.4 7.6-1.4 11.2 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>
     </a>
     <span class="perr" id="p-err" hidden>no se encuentra el audio</span>
@@ -431,7 +436,7 @@ $("escena").addEventListener("scroll", ()=>{
 }, {passive:true});
 
 /* ---------- navegación entre secciones ---------- */
-const VERSION="20261030c";             // cambiarla al publicar fuerza a recargar las secciones
+const VERSION="20261102a";             // cambiarla al publicar fuerza a recargar las secciones
 const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
   fechas:"fechas.html", letras:"letras.html", compra:"compra.html"};
 const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",
@@ -449,6 +454,17 @@ function recorte(nombre){
   const l=parseFloat(p.style.left), t=parseFloat(p.style.top), w=parseFloat(p.style.width), h=parseFloat(p.style.height);
   return `inset(${t}px ${Wv-OFF-l-w}px ${1016-t-h}px ${OFF+l}px)`;
 }
+/* ---------- título del reproductor con marquesina cuando es largo ---------- */
+function ponerTitulo(t){
+  const el=$("p-title"); el.classList.remove("largo"); el.textContent=t; el.title=t;
+  requestAnimationFrame(()=>{
+    if(el.scrollWidth<=el.clientWidth+1) return;
+    el.classList.add("largo");
+    el.innerHTML=`<span class="corre">${t.replace(/</g,"&lt;")}&nbsp;&nbsp;·&nbsp;&nbsp;${t.replace(/</g,"&lt;")}&nbsp;&nbsp;·&nbsp;&nbsp;</span>`;
+    el.firstChild.style.setProperty("--dur", Math.max(8, t.length*.42)+"s");
+  });
+}
+
 /* ---------- sonido de tren: suena sólo al entrar o cambiar de sección (nunca solo) ---------- */
 let trenOn=true; try{ trenOn=localStorage.getItem("s7-tren")!=="0"; }catch(e){}
 let ctxTren=null;
@@ -661,7 +677,7 @@ function cargar(i, reproducir, desde){
   const tr=TRACKS[cur];
   au.src=tr.f; loaded=true; $("p-err").hidden=true;
   if(desde) au.addEventListener("loadedmetadata", ()=>{ try{ au.currentTime=desde; }catch(e){} }, {once:true});
-  $("p-title").textContent=tr.t;
+  ponerTitulo(tr.t);
   $("p-dur").textContent=mmss(tr.d);
   pintarTiempo(desde||0, tr.d);
   if(reproducir) au.play().catch(()=>{});
@@ -754,7 +770,7 @@ document.addEventListener("keydown", ev=>{
     volumen = typeof s.vol==="number" ? s.vol : 1; au.volume=volumen; au.muted=!!s.muted;
     aleatorio=!!s.aleatorio; $("p-shuffle").setAttribute("aria-pressed",String(aleatorio));
     if(s.t>1) cargar(s.cur,false,s.t);
-    else { cur=s.cur; $("p-title").textContent=TRACKS[cur].t; $("p-dur").textContent=mmss(TRACKS[cur].d); }
+    else { cur=s.cur; ponerTitulo(TRACKS[cur].t); $("p-dur").textContent=mmss(TRACKS[cur].d); }
   }
   pintarVol(); pintar();
 })();
