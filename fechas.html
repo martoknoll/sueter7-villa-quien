@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<link rel="icon" type="image/png" href="favicon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Próximas fechas — sueter7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -140,7 +141,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 
 @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
-<script src="puente.js?v=20261029a"></script>
+<script src="puente.js?v=20261102b"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -249,7 +250,7 @@ function linkAgenda(f){
 }
 function tarjeta(f, i){
   const boton = f.pasada
-    ? `<div class="acciones"><span class="pasada agendar" aria-disabled="true">Ya pasó</span></div>`
+    ? `<div class="acciones"><span class="pasada agendar" aria-disabled="true">Ya tocamos acá ✓</span></div>`
     : `<div class="acciones">
         ${f.entradas ? `<a class="comprar" href="${esc(f.entradas)}" target="_blank" rel="noopener">Comprar entrada</a>`
                      : `<button class="comprar" data-i="${i}">Comprar entrada</button>`}

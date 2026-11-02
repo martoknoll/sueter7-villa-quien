@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>sueter7 — La Sencilla Villa Quién</title>
 <meta name="description" content="Sitio oficial de sueter7. Todo salió bien en la Sencilla Villa Quién.">
@@ -103,7 +105,7 @@ button{font:inherit;color:inherit}
 .pvolbar i{position:absolute;left:0;top:9px;height:2.5px;width:100%;background:var(--tinta)}
 .pspot{top:36px;width:40px;height:40px}
 .pspot.a{left:1602px}
-.pspot.b{left:1656px;width:38px;height:38px;top:37px}
+.pspot.b{left:1620px;width:40px;height:40px;top:36px}
 .perr{right:18px;top:-24px;background:var(--rojo);color:var(--crema);font-size:10px;letter-spacing:.07em;
   padding:3px 9px;border:2px solid var(--tinta)}
 
@@ -295,7 +297,7 @@ button{font:inherit;color:inherit}
     </a>
     <a class="puerta" href="#fechas" data-ir="fechas" aria-label="Próximas fechas"
        style="left:1787.5px;top:306px;width:284.5px;height:435px">
-      <img class="door" src="img/puerta-fechas.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
+      <img class="door" src="img/puerta-fechas-2.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
       <img class="sign" src="img/cartel-fechas.webp" alt="" style="left:0;top:0;width:284.5px;height:109px">
     </a>
     <div class="frase" aria-hidden="true"><div class="frase-in">
@@ -305,7 +307,7 @@ button{font:inherit;color:inherit}
       </svg>
       <span class="frase-papel"><span class="frase-cartel"><b>//</b> <i class="r1">A veces</i> avanzar es <i class="marca">animarse</i> a <i class="r2">tomar otro tren</i> <b>//</b></span><span class="frase-sello">ANDÉN 7</span></span>
     </div></div>
-    <a class="cartel-tv" id="cartel-tv" href="tu-version/" aria-label="Creá tu versión: convertí tu foto en un personaje de Suéter 7">
+    <a class="cartel-tv" id="cartel-tv" href="#tu-version" aria-label="Creá tu versión: convertí tu foto en un personaje de Suéter 7">
       <span class="ctv-cinta" aria-hidden="true"></span>
       <span class="ctv-sello" aria-hidden="true">NUEVO</span>
       <span class="ctv-kicker">Exp. 01</span>
@@ -351,9 +353,6 @@ button{font:inherit;color:inherit}
     </button>
     <div class="pvolbar" id="p-vol-bar" role="slider" tabindex="0" aria-label="Volumen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="p-volfill"></i></div>
 
-    <a class="circ pspot a" href="https://open.spotify.com/album/3LNd7eBAZuYUWnspCQGVkv" target="_blank" rel="noopener" aria-label="Escuchar en Spotify">
-      <svg width="13" height="15" viewBox="0 0 13 15" aria-hidden="true"><path d="M1 1.1v12.8c0 .7.8 1.1 1.4.7l9.8-6.4c.5-.3.5-1.1 0-1.4L2.4.4C1.8 0 1 .4 1 1.1z" fill="currentColor"/></svg>
-    </a>
     <a class="circ pspot b" href="https://open.spotify.com/album/3LNd7eBAZuYUWnspCQGVkv" target="_blank" rel="noopener" aria-label="Abrir sueter7 en Spotify">
       <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true"><path d="M2 4.2C7.6 1.6 14.4 1.6 20 4.2M3.6 8.4c4.6-2 10.2-2 14.8 0M5.4 12.4c3.6-1.4 7.6-1.4 11.2 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/></svg>
     </a>
@@ -436,11 +435,11 @@ $("escena").addEventListener("scroll", ()=>{
 }, {passive:true});
 
 /* ---------- navegación entre secciones ---------- */
-const VERSION="20261102a";             // cambiarla al publicar fuerza a recargar las secciones
+const VERSION="20261102b";             // cambiarla al publicar fuerza a recargar las secciones
 const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
-  fechas:"fechas.html", letras:"letras.html", compra:"compra.html"};
+  fechas:"fechas.html", letras:"letras.html", compra:"compra.html", "tu-version":"tu-version/index.html"};
 const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",
-  fechas:"Fechas", letras:"Letras", compra:"Tu compra"};
+  fechas:"Fechas", letras:"Letras", compra:"Tu compra", "tu-version":"Tu versión"};
 const sec=$("seccion"), marco=$("marco");
 const quieto=matchMedia("(prefers-reduced-motion: reduce)");
 let abierta="";          /* la ruta abierta: nombre + consulta, p. ej. "letras?tema=3" */
@@ -563,7 +562,7 @@ const escalaMari=y=>0.88+0.12*Math.max(0,Math.min(1,(y-ANDEN.y0)/(ANDEN.y1-ANDEN
 function pintarMari(){
   mari.style.backgroundPosition=(-mp.cuadro*112)+"px 0";
   const s=escalaMari(mp.y);
-  mari.style.transform=`translate(${mp.x-56}px,${mp.y-208}px) scale(${mp.dir<0?-s:s},${s})`;
+  mari.style.transform=`translate(${mp.x-56}px,${mp.y-208+(mp.salto||0)}px) scale(${mp.dir<0?-s:s},${s})`;
 }
 let quietoDesde=null;
 const BANCO={x0:251, x1:621, y:824};                     // por delante del banco, nunca a través
@@ -579,14 +578,17 @@ function caminarA(x,y){
       const dt=Math.min(.05,(t-previo)/1000); previo=t;
       const dx=x-mp.x, dy=y-mp.y, d=Math.hypot(dx,dy);
       if(d<1.5){
-        mp.x=x; mp.y=y;
+        mp.x=x; mp.y=y; mp.salto=0;
         mp.cuadro = mp.cuadro>=8 && mp.cuadro<=10 ? 8 : 2;   // queda quieta en la última pose
         pintarMari(); quietoDesde=performance.now(); return listo();
       }
-      const v=Math.min(d, 330*dt);                           // 330 px por segundo
+      /* Mari corre: arranca rápido y llega volando (hasta 760 px por segundo) */
+      const vel=Math.min(760, 260+recorrido*2.2);
+      const v=Math.min(d, vel*dt);
       mp.x+=dx/d*v; mp.y+=dy/d*v; recorrido+=v;
-      if(Math.abs(dx)>=Math.abs(dy)*0.8){ mp.dir=dx<0?-1:1; mp.cuadro=Math.floor(recorrido/11)%8; }
-      else if(dy<0){ mp.dir=1; mp.cuadro=8+[1,0,2,0][Math.floor(recorrido/9)%4]; }  // se aleja: de espaldas
+      mp.salto=-Math.abs(Math.sin(recorrido/16))*7;          // rebote de la corrida
+      if(Math.abs(dx)>=Math.abs(dy)*0.8){ mp.dir=dx<0?-1:1; mp.cuadro=Math.floor(recorrido/17)%8; }
+      else if(dy<0){ mp.dir=1; mp.cuadro=8+[1,0,2,0][Math.floor(recorrido/12)%4]; }  // se aleja: de espaldas
       else { mp.dir=1; mp.cuadro=11; }
       pintarMari(); requestAnimationFrame(paso);
     }
@@ -607,7 +609,7 @@ $("piso").addEventListener("click", ev=>{
 async function entrarPorPuerta(nombre){
   if(mp.ocupada) return;
   const px=PUERTA_X[nombre];
-  const salir=()=>{ if(nombre==="tu-version") location.href="tu-version/"; else ir(nombre); };
+  const salir=()=>ir(nombre);     /* Tu versión también se abre adentro de la estación: la música sigue */
   if(portadaMobile.matches){
     const puerta=document.querySelector(`.puerta[data-ir="${nombre}"]`);
     if(puerta){

@@ -55,10 +55,10 @@
     var url;
     try{ url = new URL(href, location.href); }catch(e){ return; }
     if(url.origin !== location.origin) return;
-    /* "Tu versión" es una página completa, fuera de la estación */
+    /* "Tu versión" también se abre adentro de la estación, así no se corta la música */
     if(/\/tu-version(\/|$)/.test(url.pathname)){
-      ev.preventDefault(); ev.stopPropagation();
-      try{ window.top.location.href = url.href; }catch(e){ location.href = url.href; }
+      ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+      alPadre({s7:"ir", a:"tu-version", q:""});
       return;
     }
     var destino = url.pathname.split("/").pop();

@@ -2,13 +2,31 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<link rel="icon" type="image/png" href="../favicon.png">
+<script>
+/* Tu versión vive adentro de la estación (index.html), así el reproductor sigue sonando.
+   Si se abre suelta, va a la estación; si está adentro, sus enlaces navegan por la estación. */
+(function(){
+  if(window.parent===window){ location.replace("../index.html#tu-version"); return; }
+  document.documentElement.classList.add("embebida");
+  function ir(a){ try{ parent.postMessage({s7:"ir", a:a, q:""}, "*"); }catch(e){} }
+  document.addEventListener("click", function(ev){
+    var a=ev.target.closest&&ev.target.closest("a[href]"); if(!a||a.target==="_blank") return;
+    var u; try{ u=new URL(a.getAttribute("href"), location.href); }catch(e){ return; }
+    if(u.origin!==location.origin) return;
+    if(/\/tu-version\/?(index\.html)?$/.test(u.pathname)){ ev.preventDefault(); return; }
+    if(/\/index\.html$|\/$/.test(u.pathname)){ ev.preventDefault(); ir(u.hash.slice(1)); }
+  }, true);
+  document.addEventListener("keydown", function(ev){ if(ev.key==="Escape") ir(""); });
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tu versión — Suéter 7</title>
 <meta name="description" content="Transformá tu foto en un personaje del universo visual de Suéter 7.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
-<link rel="stylesheet" href="estudio.css?v=20261102a">
+<link rel="stylesheet" href="estudio.css?v=20261102c">
 </head>
 <body class="avatar-studio-page">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -46,6 +64,14 @@
     var nav=document.currentScript.previousElementSibling;
     function ubicar(){
       var head=document.querySelector(".collage-header");
+      if(document.documentElement.classList.contains("embebida") && innerWidth>600){
+        /* adentro de la estación: misma cuenta que las demás secciones (pantalla de 1920 centrada) */
+        var Ke=Math.min(innerWidth/1920, innerHeight/1080);
+        nav.classList.add("nav-escala");
+        nav.style.left=((innerWidth-1920*Ke)/2+1015*Ke)+"px"; nav.style.top=(39*Ke)+"px"; nav.style.transform="scale("+Ke+")";
+        if(head) head.style.marginTop=Math.max(0,39*Ke+48*Ke-10)+"px";
+        return;
+      }
       if(innerWidth<=900){ nav.classList.remove("nav-escala"); nav.style.cssText=""; if(head) head.style.marginTop=""; return; }
       var k=innerHeight/1117, Wv=Math.min(2950,Math.max(2172,innerWidth/k));
       if(Wv*k>innerWidth) k=innerWidth/Wv;
