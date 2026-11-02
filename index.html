@@ -297,7 +297,7 @@ button{font:inherit;color:inherit}
     </a>
     <a class="puerta" href="#fechas" data-ir="fechas" aria-label="Próximas fechas"
        style="left:1787.5px;top:306px;width:284.5px;height:435px">
-      <img class="door" src="img/puerta-fechas-2.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
+      <img class="door" src="img/puerta-fechas-3.webp" alt="" style="left:35.5px;top:121.5px;width:229px;height:313.5px">
       <img class="sign" src="img/cartel-fechas.webp" alt="" style="left:0;top:0;width:284.5px;height:109px">
     </a>
     <div class="frase" aria-hidden="true"><div class="frase-in">
@@ -435,11 +435,11 @@ $("escena").addEventListener("scroll", ()=>{
 }, {passive:true});
 
 /* ---------- navegación entre secciones ---------- */
-const VERSION="20261102b";             // cambiarla al publicar fuerza a recargar las secciones
+const VERSION="20261102f";             // cambiarla al publicar fuerza a recargar las secciones
 const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
-  fechas:"fechas.html", letras:"letras.html", compra:"compra.html", "tu-version":"tu-version/index.html"};
+  fechas:"fechas.html", letras:"letras.html", compra:"compra.html", checkout:"checkout.html", "tu-version":"tu-version/index.html"};
 const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",
-  fechas:"Fechas", letras:"Letras", compra:"Tu compra", "tu-version":"Tu versión"};
+  fechas:"Fechas", letras:"Letras", compra:"Tu compra", checkout:"Finalizar compra", "tu-version":"Tu versión"};
 const sec=$("seccion"), marco=$("marco");
 const quieto=matchMedia("(prefers-reduced-motion: reduce)");
 let abierta="";          /* la ruta abierta: nombre + consulta, p. ej. "letras?tema=3" */

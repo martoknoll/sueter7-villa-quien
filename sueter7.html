@@ -37,6 +37,11 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .volver{position:absolute;left:74px;top:52px;z-index:5;display:flex;align-items:center;gap:12px;text-decoration:none;
   font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta)}
 .volver:hover{color:var(--rojo)}
+@font-face{font-family:"PP NeueBit";src:local("PP NeueBit Bold"),local("PPNeueBit-Bold"),url("tu-version/fonts/PPNeueBit-Bold.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap}
+.t-sub7{position:absolute;left:150px;top:286px;width:560px;height:132px;z-index:3;display:grid;place-items:center;transform:rotate(-1.4deg)}
+.t-sub7::before{content:"";position:absolute;inset:-5px;z-index:-1;background:#0b0b0b;filter:url(#comido)}
+.t-sub7 span{position:relative;font-family:"PP NeueBit","Tiny5",monospace;font-size:96px;line-height:1;color:var(--crema);text-transform:uppercase;letter-spacing:.02em}
 .btn-discos{position:absolute;left:160px;top:872px;width:424px;height:66px;z-index:4;
   display:flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;text-decoration:none;
   background:#2c61b2;color:var(--crema);border:3px solid var(--tinta);box-shadow:8px 8px 0 var(--tinta);
@@ -61,9 +66,15 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   background:#c9452c;color:#fffdf9;text-decoration:none;border:2px solid #141414;box-shadow:3px 3px 0 #141414}
 .nav-tv:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #141414}
 </style>
-<script src="puente.js?v=20261102b"></script>
+<script src="puente.js?v=20261102e"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="comido" x="-5%" y="-12%" width="110%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="6" result="r"/>
+    <feDisplacementMap in="SourceGraphic" in2="r" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 <div class="stage">
   <div class="screen" id="screen">
     <img class="fondo" src="sobre-fondo.jpg"
@@ -82,6 +93,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
       <svg width="56" height="26" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/></svg>
       Volver al andén
     </a>
+    <div class="t-sub7" aria-hidden="true"><span>Sueter 7</span></div>
     <a class="btn-discos" href="discos.html">Discos <span aria-hidden="true">→</span></a>
 
     <div class="pronto" id="pronto">PRONTO</div>

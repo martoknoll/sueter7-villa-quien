@@ -59,7 +59,7 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .t-merch{left:552px;top:146px;width:250px;height:72px;transform:rotate(-1.2deg)}
 .t-tienda::before,.t-merch::before{content:"";position:absolute;inset:-5px;z-index:-1;filter:url(#comido)}
 .t-tienda::before{background:var(--amarillo);box-shadow:12px 12px 0 var(--tinta)}
-.t-merch::before{background:var(--tinta)}
+.t-merch::before{background:#0b0b0b}
 .t-tienda span{position:relative;font-family:var(--display);font-size:112px;line-height:.8;letter-spacing:.03em;color:var(--tinta);padding-top:10px}
 .t-merch span{position:relative;font-family:"PP NeueBit","Tiny5",monospace;font-size:40px;line-height:1;color:var(--crema);text-transform:uppercase}
 
@@ -79,6 +79,29 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .puntos{position:absolute;left:173px;width:1534px;top:858px;z-index:6;display:flex;justify-content:center;gap:12px}
 .puntos button{width:16px;height:16px;padding:0;border-radius:50%;border:2.5px solid var(--tinta);background:var(--crema);cursor:pointer}
 .puntos button.on{background:var(--rojo)}
+
+/* ===== botón "Leer descripción" y ficha del producto ===== */
+.prod .leer{position:absolute;left:28px;right:28px;top:510px;height:28px;background:none;border:0;cursor:pointer;
+  font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--tinta);
+  text-decoration:underline;text-underline-offset:4px}
+.prod .leer:hover{color:var(--rojo)}
+.ficha{position:absolute;left:50%;top:150px;width:1120px;height:700px;z-index:14;background:var(--crema);border:3px solid var(--tinta);
+  box-shadow:14px 14px 0 var(--tinta);display:grid;grid-template-columns:520px 1fr;transform:translate(-50%,24px);opacity:0;pointer-events:none;
+  transition:opacity .22s,transform .24s cubic-bezier(.3,1.3,.6,1)}
+.ficha.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.ficha .foto-g{border-right:3px solid var(--tinta);display:grid;place-items:center;padding:40px;background:var(--crema)}
+.ficha .foto-g img{max-width:100%;max-height:600px;object-fit:contain}
+.ficha .info{position:relative;padding:56px 56px 40px;display:flex;flex-direction:column}
+.ficha .cerrar-f{position:absolute;right:18px;top:14px;background:none;border:0;font-size:30px;cursor:pointer}
+.ficha .tipo-f{font-size:15px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gris)}
+.ficha h3{font-family:var(--display);font-size:66px;line-height:.95;letter-spacing:.02em;margin:10px 0 14px}
+.ficha .precio-f{font-family:var(--display);font-size:44px;color:var(--rojo);margin-bottom:22px}
+.ficha .desc-f{font-size:20px;line-height:1.6;color:var(--tinta);margin:0 0 18px}
+.ficha .talles-f{font-size:17px;color:var(--gris);margin-bottom:auto}
+.ficha .talles-f span{font-size:14px}
+.ficha .comprar-f{height:64px;margin-top:24px;background:var(--amarillo);border:3px solid var(--tinta);box-shadow:7px 7px 0 var(--tinta);
+  font-family:var(--display);font-size:32px;letter-spacing:.1em;cursor:pointer;padding-top:5px;transition:transform .1s,box-shadow .1s}
+.ficha .comprar-f:hover{transform:translate(-2px,-2px);box-shadow:9px 9px 0 var(--tinta)}
 
 /* ===== finalizar compra: datos, resumen y confirmación ===== */
 .checkout{position:absolute;left:50%;top:120px;width:760px;z-index:14;background:var(--crema);border:3px solid var(--tinta);
@@ -222,7 +245,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   background:#c9452c;color:#fffdf9;text-decoration:none;border:2px solid #141414;box-shadow:3px 3px 0 #141414}
 .nav-tv:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #141414}
 </style>
-<script src="puente.js?v=20261102b"></script>
+<script src="puente.js?v=20261102e"></script>
+<script src="productos.js?v=20261102e"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -280,10 +304,22 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
       <footer>
         <div class="total"><span>Total</span><b id="total">$0</b></div>
         <button class="finalizar" id="finalizar" disabled>Finalizar compra</button>
-        <p class="aclara" id="aclara">Completás tus datos y pagás con Mercado Pago: tarjeta, dinero en cuenta o efectivo.</p>
+        <p class="aclara" id="aclara">Seguís a la pantalla de compra: tus datos, la entrega y el pago con Mercado Pago.</p>
       </footer>
     </aside>
 
+    <div class="ficha" id="ficha" role="dialog" aria-label="Descripción del producto" aria-hidden="true">
+      <div class="foto-g"><img id="fi-img" src="" alt=""></div>
+      <div class="info">
+        <button class="cerrar-f" id="fi-cerrar" aria-label="Cerrar">✕</button>
+        <span class="tipo-f" id="fi-tipo"></span>
+        <h3 id="fi-nombre"></h3>
+        <div class="precio-f" id="fi-precio"></div>
+        <p class="desc-f" id="fi-desc"></p>
+        <div class="talles-f" id="fi-talles"></div>
+        <button class="comprar-f" id="fi-comprar">Agregar al carrito</button>
+      </div>
+    </div>
     <div class="checkout" id="checkout" role="dialog" aria-label="Finalizar compra" aria-hidden="true">
       <div class="cab"><span>Finalizar compra</span><button id="co-cerrar" aria-label="Cerrar">✕</button></div>
       <form class="cuerpo" id="co-form" novalidate></form>
@@ -303,27 +339,9 @@ const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
    LOS PRODUCTOS — editá acá.
    link: pegá la URL de venta. Vacío = el botón avisa PRONTO.
    ========================================================== */
-const PRODUCTOS = [
-  {id:"gorra",   tipo:"Gorra",   nombre:"Visera Villa Quién",  precio:18000, img:"p-gorra.png"},
-  {id:"remera",  tipo:"Remera",  nombre:"Remera Enero Cuervo", precio:24000, img:"p-remera.png"},
-  {id:"buzo",    tipo:"Buzo",    nombre:"Buzo Almohadas",      precio:42000, img:"p-buzo.png"},
-  {id:"llavero", tipo:"Llavero", nombre:"Llavero del Andén",   precio:7500,  img:"p-llavero.png"},
-  {id:"vinilo",  tipo:"Vinilo",  nombre:"Todo Salió Bien LP",  precio:48000, img:"p-vinilo.png"},
-  {id:"poster",  tipo:"Póster",  nombre:"Póster Escritorio",   precio:12000, img:"p-poster.png"},
-  {id:"fanzine", tipo:"Fanzine", nombre:"Diario de Mari",      precio:9500,  img:"p-fanzine.png"},
-  {id:"medias",  tipo:"Medias",  nombre:"Medias sue7er",       precio:8500,  img:"p-medias.jpg"},
-  {id:"botella", tipo:"Botella", nombre:"Botella térmica",     precio:21000, img:"p-botella.jpg"},
-  {id:"cuaderno",tipo:"Librería",nombre:"Cuaderno + lapicera", precio:11000, img:"p-cuaderno.jpg"},
-  {id:"pua",     tipo:"Púa",     nombre:"Púa sue7er",          precio:2500,  img:"p-pua.jpg"},
-  {id:"tote",    tipo:"Tote bag",nombre:"See the good",        precio:14000, img:"p-tote.jpg"}
-];
-
-/* La dirección de la función que crea el checkout de Mercado Pago.
-   Es el proyecto de Vercel: si alguna vez cambia el nombre del
-   proyecto, hay que cambiar esta línea y nada más.
-   OJO: los precios que cobra los define esa función, no esta página.
-   Si cambiás precios o sumás productos acá, hay que cargarlos allá también. */
-const API = "https://sueter7-villa-quien.vercel.app/api/checkout";
+/* los productos (con sus descripciones) están en productos.js */
+const PRODUCTOS = window.S7_PRODUCTOS;
+const API = window.S7_API_CHECKOUT;
 
 const plata = n => "$" + n.toLocaleString("es-AR");
 
@@ -343,7 +361,8 @@ function contenido(p, i){
     <div class="tipo">${esc(p.tipo)}</div>
     <h2>${esc(p.nombre)}</h2>
     <div class="precio">${plata(p.precio)}</div>
-    <button class="comprar" data-i="${i}">Comprar</button>`;
+    <button class="comprar" data-i="${i}">Comprar</button>
+    <button class="leer" data-i="${i}">Leer descripción</button>`;
 }
 function pintarProductos(animar){
   tarjetas.forEach((t,k)=>{
@@ -363,7 +382,7 @@ $("ant").addEventListener("click", ()=>mover(-1));
 $("sig").addEventListener("click", ()=>mover(1));
 $("puntos").addEventListener("click", ev=>{ const b=ev.target.closest("button"); if(b){ ini=+b.dataset.ir; pintarProductos(true); } });
 document.addEventListener("keydown", ev=>{
-  if($("panel").classList.contains("on") || $("sumado").classList.contains("on") || $("checkout").classList.contains("on")) return;
+  if($("panel").classList.contains("on") || $("sumado").classList.contains("on") || $("checkout").classList.contains("on") || $("ficha").classList.contains("on")) return;
   if(/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) return;
   if(ev.key==="ArrowRight") mover(1);
   if(ev.key==="ArrowLeft") mover(-1);
@@ -517,75 +536,39 @@ function avisar(texto, ms){
   sello._t = setTimeout(()=>{ sello.classList.remove("on"); sello.textContent = "PRONTO"; }, ms || 2200);
 }
 
-/* paso 1: el carrito abre la ventana de datos y resumen */
-$("finalizar").addEventListener("click", ()=>{ if(unidades()){ abrir(false); abrirCheckout(); } });
-function abrirCheckout(){
-  const lineas = Object.entries(carrito).map(([id,c])=>{ const p=PRODUCTOS.find(x=>x.id===id); return p?`<div class="l"><span>${c} × ${esc(p.nombre)}</span><span>${plata(p.precio*c)}</span></div>`:""; }).join("");
-  $("co-form").innerHTML = `
-    <div>
-      <label for="co-nombre">Nombre y apellido</label><input id="co-nombre" autocomplete="name" required>
-      <label for="co-mail">Mail</label><input id="co-mail" type="email" autocomplete="email" required>
-      <label>Entrega</label>
-      <div class="entrega">
-        <label><input type="radio" name="entrega" value="retiro" checked> Retiro en un show</label>
-        <label><input type="radio" name="entrega" value="envio"> Envío a domicilio</label>
-      </div>
-      <div id="co-dir" hidden><label for="co-direccion">Dirección y código postal</label><input id="co-direccion" autocomplete="street-address"></div>
-    </div>
-    <div class="resumen"><h4>Tu pedido</h4>${lineas}<div class="l" id="co-envio" hidden><span>Envío</span><span>${plata(ENVIO)}</span></div>
-      <div class="l tot"><span>Total</span><span id="co-total">${plata(totalPesos())}</span></div></div>
-    <p class="error" id="co-error"></p>
-    <button class="pagar" type="submit" id="co-pagar">Pagar con Mercado Pago</button>`;
-  $("co-form").querySelectorAll('input[name=entrega]').forEach(r=>r.addEventListener("change", ()=>{
-    const envio = $("co-form").entrega.value==="envio";
-    $("co-dir").hidden=!envio; $("co-envio").hidden=!envio;
-    $("co-total").textContent = plata(totalPesos() + (envio?ENVIO:0));
-  }));
-  $("checkout").classList.add("on"); $("checkout").setAttribute("aria-hidden","false");
-  $("velo").classList.add("on"); $("velo2").classList.add("on");
-  setTimeout(()=>$("co-nombre").focus(), 80);
-}
-function cerrarCheckout(){
-  $("checkout").classList.remove("on"); $("checkout").setAttribute("aria-hidden","true");
-  $("velo").classList.remove("on"); $("velo2").classList.remove("on");
-}
-const ENVIO = 4500;   /* costo de envío a domicilio */
-$("co-cerrar").addEventListener("click", cerrarCheckout);
-$("velo").addEventListener("click", cerrarCheckout);
-document.addEventListener("keydown", ev=>{ if(ev.key==="Escape") cerrarCheckout(); });
-
-/* paso 2: valida, intenta abrir Mercado Pago; si la función de cobro todavía
-   no está conectada, confirma el pedido igual (modo demostración) */
-$("co-form").addEventListener("submit", async ev=>{
-  ev.preventDefault();
-  const f=$("co-form"), nombre=$("co-nombre").value.trim(), mail=$("co-mail").value.trim();
-  const envio=f.entrega.value==="envio", dir=envio?$("co-direccion").value.trim():"";
-  if(!nombre || !/^\S+@\S+\.\S+$/.test(mail) || (envio && !dir)){
-    $("co-error").textContent="Completá nombre, un mail válido"+(envio?" y la dirección":"")+"."; return;
-  }
-  const boton=$("co-pagar"); boton.disabled=true; boton.textContent="Abriendo Mercado Pago…";
-  const total=totalPesos()+(envio?ENVIO:0), u=unidades();
-  try{
-    if(!API) throw new Error("sin API");
-    const ctrl=new AbortController(), to=setTimeout(()=>ctrl.abort(), 6000);
-    const r = await fetch(API, {method:"POST", headers:{"Content-Type":"application/json"}, signal:ctrl.signal,
-      body: JSON.stringify({items:Object.entries(carrito).map(([id,cantidad])=>({id,cantidad})), comprador:{nombre,mail,envio,dir}})});
-    clearTimeout(to);
-    const data = await r.json();
-    if(!r.ok || !data.url) throw new Error(data.error || "sin respuesta");
-    (window.top || window).location.href = data.url;     /* el pago se abre en la ventana entera */
-  }catch(e){
-    const cod = "S7-" + Date.now().toString(36).slice(-5).toUpperCase();
-    f.innerHTML = `<div class="listo"><h3>¡Gracias, ${esc(nombre.split(" ")[0])}!</h3>
-      <p>Tu pedido de ${u} ${u===1?"producto":"productos"} por <b>${plata(total)}</b> quedó registrado.</p>
-      <div class="codigo">${cod}</div>
-      <p>Te vamos a escribir a <b>${esc(mail)}</b> ${envio?"para coordinar el envío.":"para retirarlo en el próximo show."}</p>
-      <p style="font-size:13px">(Modo demostración: el cobro real se activa cuando esté conectada la función de Mercado Pago.)</p>
-      <button class="pagar" type="button" id="co-listo" style="width:320px;margin-top:14px">Seguir mirando</button></div>`;
-    carrito = {}; guardar(); pintarCarrito();
-    $("co-listo").onclick = cerrarCheckout;
-  }
+/* Finalizar compra lleva a su propia sección, a pantalla completa (checkout.html) */
+$("finalizar").addEventListener("click", ()=>{
+  if(!unidades()) return;
+  guardar();
+  if(window.S7 && S7.alPadre) S7.alPadre({s7:"ir", a:"checkout", q:""});
+  else location.href = "checkout.html";
 });
+
+/* ==========================================================
+   DESCRIPCIÓN DE CADA PRODUCTO — "Leer descripción" abre la ficha
+   ========================================================== */
+function abrirFicha(i){
+  const p = PRODUCTOS[i];
+  $("fi-img").src = p.img; $("fi-img").alt = p.tipo+" "+p.nombre;
+  $("fi-tipo").textContent = p.tipo; $("fi-nombre").textContent = p.nombre;
+  $("fi-precio").textContent = plata(p.precio); $("fi-desc").textContent = p.desc || "";
+  $("fi-talles").innerHTML = p.talles ? `<b>Talles:</b> ${p.talles.join(" · ")} <span>(lo elegís al finalizar la compra)</span>` : "";
+  $("fi-comprar").dataset.i = i;
+  $("ficha").classList.add("on"); $("ficha").setAttribute("aria-hidden","false");
+  $("velo").classList.add("on"); $("velo2").classList.add("on");
+  setTimeout(()=>$("fi-comprar").focus(), 60);
+}
+function cerrarFicha(){
+  $("ficha").classList.remove("on"); $("ficha").setAttribute("aria-hidden","true");
+  if(!$("panel").classList.contains("on") && !$("sumado").classList.contains("on")){ $("velo").classList.remove("on"); $("velo2").classList.remove("on"); }
+}
+$("productos").addEventListener("click", ev=>{
+  const b = ev.target.closest(".leer"); if(b) abrirFicha(+b.dataset.i);
+});
+$("fi-cerrar").addEventListener("click", cerrarFicha);
+$("fi-comprar").addEventListener("click", ()=>{ const i=+$("fi-comprar").dataset.i; cerrarFicha(); agregar(PRODUCTOS[i].id); });
+$("velo").addEventListener("click", cerrarFicha);
+document.addEventListener("keydown", ev=>{ if(ev.key==="Escape") cerrarFicha(); });
 
 pintarCarrito();
 

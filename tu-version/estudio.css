@@ -385,3 +385,35 @@ html,body.avatar-studio-page{margin:0;background:#e7dfd3;overflow-x:hidden}
   .avatar-studio .de-a-uno .paper-panel h1,.avatar-studio .de-a-uno .paper-panel h2{font-size:1.8rem}
   .avatar-studio .paso-barra button{padding:4px 16px 0;font-size:1.2rem}
 }
+
+/* =====================================================================
+   Título con el sistema del sitio: "TU VERSIÓN" en Bebas sobre amarillo;
+   "DEL OTRO LADO" en PP NeueBit sobre negro granulado con bordes comidos.
+   ===================================================================== */
+.avatar-studio .brand-title-yellow{font-family:"Bebas Neue",Impact,"Arial Narrow",sans-serif !important;font-weight:400;letter-spacing:.03em;
+  line-height:.86;padding-top:.12em;border:0;box-shadow:none;background:none;position:relative;isolation:isolate}
+.avatar-studio .brand-title-yellow::before{content:"";position:absolute;inset:-4px;z-index:-1;background:var(--amarillo);
+  box-shadow:10px 10px 0 var(--negro);filter:url(#comido)}
+.avatar-studio .brand-title-black{border:0;box-shadow:none;background:none;position:relative;isolation:isolate}
+.avatar-studio .brand-title-black::before{content:"";position:absolute;inset:-4px;z-index:-1;filter:url(#comido);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 -.62'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E") 0 0/160px 160px,#0b0b0b}
+@media (min-width:901px){
+  .avatar-studio .brand-title-yellow{font-size:clamp(3rem,5.6vw,5.4rem) !important}
+}
+
+/* =====================================================================
+   Guía de pasos: grande y arriba del paso, a todo el ancho del recuadro
+   ===================================================================== */
+.avatar-studio .process-nav.guia-grande{display:flex;justify-content:space-between;width:100%;max-width:880px;margin:0 auto 22px;
+  padding:10px 12px;transform:none;background:#0b0b0b;box-shadow:6px 6px 0 rgba(10,10,10,.35)}
+.avatar-studio .process-nav.guia-grande span{flex:1;justify-content:center;font-size:1.05rem;padding:10px 8px;letter-spacing:.14em}
+.avatar-studio .process-nav.guia-grande span + span::before{content:"→";margin:0 10px 0 -6px;font-size:1.2rem}
+.avatar-studio .process-nav.guia-grande span b{width:32px;height:32px;font-size:.85rem}
+.avatar-studio .process-nav.guia-grande span:hover{background:rgba(255,255,255,.08)}
+.avatar-studio .process-nav.guia-grande .process-nav-active,.avatar-studio .process-nav.guia-grande .process-nav-active:hover{background:var(--amarillo)}
+@media (max-width:900px){
+  .avatar-studio .process-nav.guia-grande span{font-size:.72rem;padding:8px 4px;letter-spacing:.06em}
+  .avatar-studio .process-nav.guia-grande span + span::before{display:none}
+}
+.avatar-studio .brand-title-yellow,.avatar-studio .brand-title-black{white-space:nowrap}
+.avatar-studio .brand-title-black{margin-top:.5rem;padding:.25em .45em .15em}

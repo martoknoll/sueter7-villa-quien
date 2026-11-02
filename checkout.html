@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finalizar compra — sueter7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --papel:#e9e4da; --crema:#efe9de; --tinta:#141414; --gris:#3a3a3a;
+  --rojo:#c9452c; --amarillo:#e8c340; --azul:#2c61b2;
+  --display:"Bebas Neue","Haettenschweiler","Arial Narrow",sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@font-face{font-family:"PP NeueBit";src:local("PP NeueBit Bold"),local("PPNeueBit-Bold"),url("tu-version/fonts/PPNeueBit-Bold.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--papel) url("fondo.png") center/cover no-repeat;color:var(--tinta);overflow-x:hidden;font-family:var(--mono)}
+.stage{position:relative;display:flex;justify-content:center;align-items:flex-start}
+.screen{position:relative;width:1920px;height:1080px;flex:none;overflow:hidden;transform-origin:top center}
+
+/* navegación (la misma que en el resto del sitio) */
+.nav{position:absolute;left:1163px;top:39px;width:690px;height:44px;z-index:6}
+.nav a{position:absolute;top:0;height:44px;display:grid;place-items:center;
+  font-family:var(--display);font-size:20px;letter-spacing:.09em;text-transform:uppercase;
+  background:var(--rojo);color:var(--crema);text-decoration:none;white-space:nowrap;
+  border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta);line-height:1;padding-top:3px}
+.nav a.on{background:var(--amarillo);color:var(--tinta)}
+.nav a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--tinta)}
+.volver{position:absolute;left:74px;top:52px;z-index:5;display:flex;align-items:center;gap:12px;text-decoration:none;
+  font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta);
+  background:var(--crema);padding:8px 14px 5px;border:2px solid var(--tinta);box-shadow:3px 3px 0 var(--tinta)}
+.volver:hover{color:var(--rojo)}
+
+/* título con el sistema del sitio */
+.t-a,.t-b{position:absolute;z-index:3;display:grid;place-items:center}
+.t-a{left:96px;top:120px;width:470px;height:112px;transform:rotate(-2deg)}
+.t-b{left:580px;top:150px;width:250px;height:72px;transform:rotate(-1.2deg)}
+.t-a::before,.t-b::before{content:"";position:absolute;inset:-5px;z-index:-1;filter:url(#comido)}
+.t-a::before{background:var(--amarillo);box-shadow:12px 12px 0 var(--tinta)}
+.t-b::before{background:var(--tinta)}
+.t-a span{position:relative;font-family:var(--display);font-size:108px;line-height:.8;letter-spacing:.03em;padding-top:10px}
+.t-b span{position:relative;font-family:"PP NeueBit","Tiny5",monospace;font-size:40px;color:var(--crema);text-transform:uppercase}
+
+/* formulario y resumen */
+.hoja{position:absolute;left:96px;top:280px;width:1080px;height:760px;background:var(--crema);border:3px solid var(--tinta);
+  box-shadow:12px 12px 0 var(--tinta);padding:24px 38px;overflow:auto}
+.resumen{position:absolute;left:1230px;top:280px;width:594px;height:760px;background:#fffdf9;border:3px solid var(--tinta);
+  box-shadow:12px 12px 0 var(--tinta);padding:30px 34px;display:flex;flex-direction:column}
+h2{font-family:var(--display);font-size:30px;letter-spacing:.05em;margin:0 0 10px;display:flex;align-items:center;gap:12px}
+h2 i{font-style:normal;display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--tinta);color:var(--amarillo);font-size:24px;padding-top:3px}
+.bloque{margin-bottom:14px}
+.fila{display:grid;gap:18px;margin-bottom:10px}
+.f2{grid-template-columns:1fr 1fr}
+.f3{grid-template-columns:2fr .9fr 1fr}
+.f3b{grid-template-columns:1.4fr 1.2fr .8fr}
+label{display:block}
+label span{display:block;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+label span em{font-style:normal;font-weight:400;letter-spacing:.04em;text-transform:none;color:var(--gris)}
+input,select{width:100%;height:46px;border:2.5px solid var(--tinta);background:#fffdf9;padding:0 14px;font-family:var(--mono);font-size:18px;color:var(--tinta)}
+input:focus,select:focus{outline:3px solid var(--amarillo);outline-offset:0}
+input.mal,select.mal{border-color:var(--rojo);background:#fff1ee}
+.entrega{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px}
+.opcion{display:flex;align-items:center;gap:12px;border:2.5px solid var(--tinta);padding:10px 16px;background:#fffdf9;cursor:pointer;font-size:17px}
+.opcion input{width:22px;height:22px;margin:0;accent-color:var(--tinta)}
+.opcion > span{text-transform:none;letter-spacing:0;font-size:17px;font-weight:400;margin:0}
+.opcion b{display:block;font-size:17px}
+.opcion small{display:block;font-size:13px;color:var(--gris);margin-top:2px}
+.opcion.on{background:var(--amarillo)}
+.talles .t{display:grid;grid-template-columns:1fr 180px;align-items:center;gap:16px;padding:6px 0;border-bottom:1.5px dashed rgba(20,20,20,.3);font-size:17px}
+.items{flex:1;overflow:auto;margin:6px 0 10px}
+.item{display:grid;grid-template-columns:76px 1fr auto;gap:14px;align-items:center;padding:10px 0;border-bottom:1.5px dashed rgba(20,20,20,.3)}
+.item .mini{width:76px;height:76px;border:2px solid var(--tinta);background:var(--crema);display:grid;place-items:center}
+.item .mini img{max-width:88%;max-height:88%}
+.item b{display:block;font-family:var(--display);font-size:26px;letter-spacing:.03em;line-height:1}
+.item small{font-size:14px;color:var(--gris)}
+.item .p{font-weight:700;font-size:17px}
+.linea{display:flex;justify-content:space-between;font-size:17px;padding:5px 0}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:3px solid var(--tinta);margin-top:8px;padding-top:12px}
+.total span{font-family:var(--display);font-size:30px;letter-spacing:.06em}
+.total b{font-family:var(--display);font-size:52px}
+.pagar{height:70px;margin-top:18px;background:var(--amarillo);border:3px solid var(--tinta);box-shadow:7px 7px 0 var(--tinta);
+  font-family:var(--display);font-size:34px;letter-spacing:.1em;cursor:pointer;padding-top:5px;transition:transform .1s,box-shadow .1s}
+.pagar:hover{transform:translate(-2px,-2px);box-shadow:9px 9px 0 var(--tinta)}
+.pagar:disabled{opacity:.6;cursor:default;transform:none}
+.aclara{font-size:13px;color:var(--gris);line-height:1.5;margin:14px 0 0}
+.error{color:var(--rojo);font-weight:700;font-size:15px;min-height:20px;margin:4px 0 0}
+.vacio{position:absolute;left:50%;top:330px;transform:translateX(-50%);width:760px;background:var(--crema);border:3px solid var(--tinta);
+  box-shadow:12px 12px 0 var(--tinta);padding:50px;text-align:center}
+.vacio h3,.listo h3{font-family:var(--display);font-size:60px;margin:0 0 10px;letter-spacing:.03em}
+.vacio p,.listo p{font-size:18px;line-height:1.6;color:var(--gris);margin:6px 0}
+.boton{display:inline-grid;place-items:center;height:58px;padding:5px 34px 0;margin-top:22px;text-decoration:none;color:var(--tinta);
+  background:var(--amarillo);border:3px solid var(--tinta);box-shadow:6px 6px 0 var(--tinta);font-family:var(--display);font-size:28px;letter-spacing:.08em;cursor:pointer}
+.listo{position:absolute;left:50%;top:280px;transform:translateX(-50%);width:900px;background:var(--crema);border:3px solid var(--tinta);
+  box-shadow:14px 14px 0 var(--tinta);padding:56px;text-align:center}
+.listo .codigo{display:inline-block;margin:20px 0;padding:14px 30px;border:3px dashed var(--tinta);font-family:var(--display);font-size:50px;letter-spacing:.14em}
+[hidden]{display:none !important}
+</style>
+<script src="puente.js?v=20261102e"></script>
+<script src="productos.js?v=20261102e"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="comido" x="-5%" y="-12%" width="110%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="4" result="r"/>
+    <feDisplacementMap in="SourceGraphic" in2="r" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+<div class="stage">
+  <div class="screen" id="screen">
+    <nav class="nav">
+      <a href="index.html"   style="left:0;width:88px">Inicio</a>
+      <a href="sueter7.html" style="left:110px;width:111px">Sueter 7</a>
+      <a href="diario.html"  style="left:243px;width:92px">Diario</a>
+      <a href="discos.html"  style="left:357px;width:95px">Discos</a>
+      <a href="tienda.html"  class="on" style="left:474px;width:96px">Tienda</a>
+      <a href="fechas.html"  style="left:592px;width:98px">Fechas</a>
+      <a href="tu-version/" style="left:-148px;width:134px">Tu versión</a>
+    </nav>
+    <a class="volver" href="tienda.html">
+      <svg width="48" height="22" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="5" stroke-linecap="square"/></svg>
+      Volver a la tienda
+    </a>
+    <div class="t-a"><span>FINALIZAR</span></div>
+    <div class="t-b"><span>Compra</span></div>
+
+    <form class="hoja" id="form" novalidate>
+      <div class="bloque">
+        <h2><i>1</i> Tus datos</h2>
+        <div class="fila f2">
+          <label><span>Nombre</span><input id="nombre" autocomplete="given-name"></label>
+          <label><span>Apellido</span><input id="apellido" autocomplete="family-name"></label>
+        </div>
+        <div class="fila f2">
+          <label><span>Mail</span><input id="mail" type="email" autocomplete="email"></label>
+          <label><span>Teléfono <em>(opcional)</em></span><input id="tel" type="tel" autocomplete="tel"></label>
+        </div>
+      </div>
+
+      <div class="bloque" id="b-talles" hidden>
+        <h2><i>2</i> Talles</h2>
+        <div class="talles" id="talles"></div>
+      </div>
+
+      <div class="bloque">
+        <h2><i id="n-entrega">2</i> Entrega</h2>
+        <div class="entrega">
+          <label class="opcion on"><input type="radio" name="entrega" value="retiro" checked><span><b>Retiro en un show</b><small>Sin costo · lo retirás en la próxima fecha</small></span></label>
+          <label class="opcion"><input type="radio" name="entrega" value="envio"><span><b>Envío a domicilio</b><small>Correo a todo el país</small></span></label>
+        </div>
+        <div id="direccion" hidden>
+          <div class="fila f3">
+            <label><span>Calle</span><input id="calle" autocomplete="address-line1"></label>
+            <label><span>Altura</span><input id="altura" inputmode="numeric"></label>
+            <label><span>Piso / Depto <em>(opcional)</em></span><input id="depto" autocomplete="address-line2"></label>
+          </div>
+          <div class="fila f3b">
+            <label><span>Localidad</span><input id="localidad" autocomplete="address-level2"></label>
+            <label><span>Provincia</span>
+              <select id="provincia" autocomplete="address-level1">
+                <option value="">Elegí…</option>
+                <option>Ciudad Autónoma de Buenos Aires</option><option>Buenos Aires</option><option>Catamarca</option><option>Chaco</option>
+                <option>Chubut</option><option>Córdoba</option><option>Corrientes</option><option>Entre Ríos</option><option>Formosa</option>
+                <option>Jujuy</option><option>La Pampa</option><option>La Rioja</option><option>Mendoza</option><option>Misiones</option>
+                <option>Neuquén</option><option>Río Negro</option><option>Salta</option><option>San Juan</option><option>San Luis</option>
+                <option>Santa Cruz</option><option>Santa Fe</option><option>Santiago del Estero</option><option>Tierra del Fuego</option><option>Tucumán</option>
+              </select>
+            </label>
+            <label><span>Código postal</span><input id="cp" autocomplete="postal-code"></label>
+          </div>
+        </div>
+      </div>
+      <p class="error" id="error" role="alert"></p>
+    </form>
+
+    <aside class="resumen" id="resumen">
+      <h2>Tu pedido</h2>
+      <div class="items" id="items"></div>
+      <div class="linea"><span>Subtotal</span><span id="subtotal"></span></div>
+      <div class="linea" id="l-envio" hidden><span>Envío</span><span id="envio"></span></div>
+      <div class="total"><span>Total</span><b id="total"></b></div>
+      <button class="pagar" id="pagar" form="form" type="submit">Pagar con Mercado Pago</button>
+      <p class="aclara">Podés pagar con tarjeta, dinero en cuenta o efectivo.</p>
+    </aside>
+
+    <div class="vacio" id="vacio" hidden>
+      <h3>Tu carrito está vacío</h3>
+      <p>Pasá por la tienda y elegí algo del merch.</p>
+      <a class="boton" href="tienda.html">Ir a la tienda</a>
+    </div>
+    <div class="listo" id="listo" hidden></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const PRODUCTOS=window.S7_PRODUCTOS, API=window.S7_API_CHECKOUT, ENVIO=window.S7_ENVIO||0;
+const plata=n=>"$"+n.toLocaleString("es-AR");
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+let carrito={}; try{ carrito=JSON.parse(localStorage.getItem("s7-carrito")||"{}")||{}; }catch(e){}
+const lineas=Object.entries(carrito).map(([id,c])=>({p:PRODUCTOS.find(x=>x.id===id),c})).filter(l=>l.p&&l.c>0);
+const subtotal=lineas.reduce((a,l)=>a+l.p.precio*l.c,0);
+
+if(!lineas.length){
+  $("form").hidden=true; $("resumen").hidden=true; $("vacio").hidden=false;
+}else{
+  $("items").innerHTML=lineas.map(l=>`<div class="item"><div class="mini"><img src="${esc(l.p.img)}" alt=""></div>
+    <div><b>${esc(l.p.nombre)}</b><small>${esc(l.p.tipo)} · ${l.c} × ${plata(l.p.precio)}</small></div><span class="p">${plata(l.p.precio*l.c)}</span></div>`).join("");
+  /* talles: un selector por cada unidad de remera o buzo */
+  const conTalle=[]; lineas.forEach(l=>{ if(l.p.talles) for(let k=0;k<l.c;k++) conTalle.push({p:l.p,k}); });
+  if(conTalle.length){
+    $("b-talles").hidden=false; $("n-entrega").textContent="3";
+    $("talles").innerHTML=conTalle.map((t,i)=>`<div class="t"><span>${esc(t.p.nombre)}${t.p.talles&&lineas.find(l=>l.p===t.p).c>1?" · unidad "+(t.k+1):""}</span>
+      <select class="sel-talle" data-id="${t.p.id}" aria-label="Talle de ${esc(t.p.nombre)}"><option value="">Talle…</option>${t.p.talles.map(x=>`<option>${x}</option>`).join("")}</select></div>`).join("");
+  }
+  pintarTotal();
+}
+function esEnvio(){ return $("form").entrega.value==="envio"; }
+function pintarTotal(){
+  const e=esEnvio();
+  $("subtotal").textContent=plata(subtotal); $("envio").textContent=plata(ENVIO);
+  $("l-envio").hidden=!e; $("total").textContent=plata(subtotal+(e?ENVIO:0));
+}
+document.querySelectorAll('input[name=entrega]').forEach(r=>r.addEventListener("change",()=>{
+  document.querySelectorAll(".opcion").forEach(o=>o.classList.toggle("on", o.querySelector("input").checked));
+  $("direccion").hidden=!esEnvio(); pintarTotal();
+}));
+
+$("form").addEventListener("submit", async ev=>{
+  ev.preventDefault();
+  document.querySelectorAll(".mal").forEach(x=>x.classList.remove("mal"));
+  const req=["nombre","apellido","mail"], faltan=[];
+  if(esEnvio()) req.push("calle","altura","localidad","provincia","cp");
+  req.forEach(id=>{ if(!$(id).value.trim()){ $(id).classList.add("mal"); faltan.push(id); } });
+  if($("mail").value && !/^\S+@\S+\.\S+$/.test($("mail").value.trim())){ $("mail").classList.add("mal"); faltan.push("mail"); }
+  if(esEnvio() && $("cp").value && !/^[A-Za-z]?\d{4}[A-Za-z]{0,3}$/.test($("cp").value.trim())){ $("cp").classList.add("mal"); faltan.push("cp"); }
+  document.querySelectorAll(".sel-talle").forEach(s=>{ if(!s.value){ s.classList.add("mal"); faltan.push("talle"); } });
+  if(faltan.length){
+    $("error").textContent = faltan.includes("talle") && faltan.length===document.querySelectorAll(".sel-talle.mal").length
+      ? "Elegí el talle de cada prenda." : "Revisá los campos marcados en rojo.";
+    document.querySelector(".mal").focus(); return;
+  }
+  $("error").textContent="";
+  const comprador={nombre:$("nombre").value.trim(), apellido:$("apellido").value.trim(), mail:$("mail").value.trim(), tel:$("tel").value.trim(),
+    entrega: esEnvio()?"envio":"retiro",
+    direccion: esEnvio()?{calle:$("calle").value.trim(), altura:$("altura").value.trim(), depto:$("depto").value.trim(),
+      localidad:$("localidad").value.trim(), provincia:$("provincia").value, cp:$("cp").value.trim()}:null};
+  const talles=[...document.querySelectorAll(".sel-talle")].map(s=>({id:s.dataset.id, talle:s.value}));
+  const b=$("pagar"); b.disabled=true; b.textContent="Abriendo Mercado Pago…";
+  try{
+    if(!API) throw new Error("sin API");
+    const ctrl=new AbortController(), to=setTimeout(()=>ctrl.abort(),6000);
+    const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},signal:ctrl.signal,
+      body:JSON.stringify({items:lineas.map(l=>({id:l.p.id,cantidad:l.c})), talles, comprador})});
+    clearTimeout(to);
+    const data=await r.json();
+    if(!r.ok||!data.url) throw new Error(data.error||"sin respuesta");
+    (window.top||window).location.href=data.url;
+  }catch(e){
+    /* la función de cobro todavía no responde: se confirma el pedido igual (modo demostración) */
+    const cod="S7-"+Date.now().toString(36).slice(-5).toUpperCase();
+    const total=subtotal+(esEnvio()?ENVIO:0);
+    const dir=comprador.direccion;
+    $("form").hidden=true; $("resumen").hidden=true;
+    $("listo").hidden=false;
+    $("listo").innerHTML=`<h3>¡Gracias, ${esc(comprador.nombre)}!</h3>
+      <p>Tu pedido por <b>${plata(total)}</b> quedó registrado.</p>
+      <div class="codigo">${cod}</div>
+      <p>${dir ? `Lo enviamos a <b>${esc(dir.calle)} ${esc(dir.altura)}${dir.depto?" "+esc(dir.depto):""}, ${esc(dir.localidad)}, ${esc(dir.provincia)} (${esc(dir.cp)})</b>.`
+              : "Lo retirás en el próximo show: llevá este código."}</p>
+      <p>Te escribimos a <b>${esc(comprador.mail)}</b> con los detalles.</p>
+      <p style="font-size:14px;margin-top:16px">(Modo demostración: el cobro real se activa cuando esté conectada la función de Mercado Pago.)</p>
+      <a class="boton" href="tienda.html">Volver a la tienda</a>`;
+    try{ localStorage.removeItem("s7-carrito"); }catch(e){}
+  }
+});
+
+function fit(){
+  const s=$("screen"), stage=s.parentElement;
+  const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
+  s.style.transform="scale("+k+")"; stage.style.height=(1080*k)+"px";
+}
+addEventListener("resize", fit); fit();
+</script>
+</body>
+</html>

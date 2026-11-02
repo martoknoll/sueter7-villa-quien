@@ -14,6 +14,9 @@
     document.querySelector(".collage-panel-palette"),
     document.getElementById("resultado")
   ];
+  /* la guía de pasos va arriba del paso, grande, a todo el ancho */
+  var nav = document.querySelector(".process-nav");
+  if(nav){ nav.classList.add("guia-grande"); layout.insertBefore(nav, layout.firstChild); }
   var guia = [].slice.call(document.querySelectorAll(".process-nav span"));
   var actual = 0;
   layout.classList.add("de-a-uno");

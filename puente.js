@@ -18,7 +18,7 @@
   var PAGINAS = {
     "index.html":"", "home.html":"", "":"",
     "sueter7.html":"sueter7", "diario.html":"diario", "discos.html":"discos",
-    "tienda.html":"tienda", "fechas.html":"fechas", "letras.html":"letras", "compra.html":"compra"
+    "tienda.html":"tienda", "fechas.html":"fechas", "letras.html":"letras", "compra.html":"compra", "checkout.html":"checkout"
   };
   var archivo = location.pathname.split("/").pop();
   var EMBEBIDA = window.parent !== window;

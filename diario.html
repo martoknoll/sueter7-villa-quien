@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Geist+Mono:wght@400;700&display=swap">
-<script src="puente.js?v=20261102b"></script>
+<script src="puente.js?v=20261102e"></script>
 <script src="lib/page-flip.browser.js?v=2.0.7"></script>
 <style>
 :root{
@@ -47,11 +47,11 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
 @font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap}
 .t-diario{left:96px;top:112px;padding:20px 30px 6px;transform:rotate(-2.4deg);z-index:3;
   font-family:var(--display);font-weight:400;font-size:100px;line-height:.82;letter-spacing:.03em;text-transform:uppercase;margin:0}
-.t-sub{left:126px;top:214px;padding:8px 18px 6px;color:var(--crema);transform:rotate(-1.2deg);z-index:3;
-  font-family:"PP NeueBit","Tiny5",monospace;font-size:30px;line-height:1;text-transform:uppercase}
+.t-sub{left:150px;top:222px;padding:14px 26px 10px;color:var(--crema);transform:rotate(-1.2deg);z-index:3;
+  font-family:"PP NeueBit","Tiny5",monospace;font-size:48px;line-height:1;text-transform:uppercase}
 .t-diario::before,.t-sub::before{content:"";position:absolute;inset:-4px;z-index:-1;filter:url(#comido)}
 .t-diario::before{background:var(--amarillo);box-shadow:12px 12px 0 var(--tinta)}
-.t-sub::before{background:var(--tinta)}
+.t-sub::before{background:#0b0b0b}
 /* flechas grandes a los costados del libro */
 .flecha-pag{position:absolute;top:500px;width:92px;height:92px;z-index:6;display:grid;place-items:center;cursor:pointer;
   background:var(--crema);border:3px solid var(--tinta);border-radius:50%;box-shadow:6px 6px 0 var(--tinta);color:#c9452c;
@@ -61,7 +61,7 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
 .flecha-pag.izq{left:262px}
 .flecha-pag.der{left:1566px}
 /* instrucción en un papelito, para que se lea sobre el fondo tramado */
-.ayuda{left:92px;top:310px;width:262px;margin:0;padding:16px 18px 14px;background:var(--crema);border:2.5px solid var(--tinta);
+.ayuda{left:92px;top:336px;width:262px;margin:0;padding:16px 18px 14px;background:var(--crema);border:2.5px solid var(--tinta);
   box-shadow:6px 6px 0 var(--tinta);font-family:var(--mono);font-size:17px;font-weight:700;line-height:1.45;color:var(--tinta);transform:rotate(-2deg)}
 .ayuda::before{content:"";position:absolute;left:50%;top:-14px;width:84px;height:24px;transform:translateX(-50%) rotate(3deg);
   background:rgba(226,215,192,.86);border-left:1px solid rgba(20,20,20,.15);border-right:1px solid rgba(20,20,20,.15)}
