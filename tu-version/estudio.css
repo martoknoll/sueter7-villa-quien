@@ -333,3 +333,55 @@ html,body.avatar-studio-page{margin:0;background:#e7dfd3;overflow-x:hidden}
 @media (max-width:900px){
   .avatar-studio .process-nav{position:static;margin:12px 0 0;flex-wrap:wrap}
 }
+
+/* guía de pasos bien visible: franja negra con texto crema; el paso actual en amarillo.
+   (distinta al menú del sitio, que son botones rojos sueltos) */
+.avatar-studio .process-nav{position:static;display:inline-flex;align-items:center;gap:0;margin:16px 0 0 auto;
+  background:var(--negro);padding:8px 10px;border:2px solid var(--negro);box-shadow:5px 5px 0 rgba(10,10,10,.35);transform:rotate(-.6deg)}
+.avatar-studio .collage-header{display:flex;flex-direction:column}
+.avatar-studio .process-nav span{color:#f3ede2;opacity:1;font-size:.82rem;padding:4px 8px;border:0;gap:8px}
+.avatar-studio .process-nav span + span::before{content:"→";border:0;width:auto;height:auto;margin:0 6px 0 0;opacity:.7;color:#f3ede2}
+.avatar-studio .process-nav span b{border-color:#f3ede2;color:#f3ede2;width:24px;height:24px;font-size:.66rem}
+.avatar-studio .process-nav .process-nav-active{background:var(--amarillo);color:var(--negro);border:0}
+.avatar-studio .process-nav .process-nav-active b{background:var(--negro);border-color:var(--negro);color:var(--amarillo)}
+@media (max-width:900px){ .avatar-studio .process-nav{margin:12px 0 0;flex-wrap:wrap} }
+
+/* =====================================================================
+   PASO A PASO: un paso por pantalla, grande y centrado
+   ===================================================================== */
+.avatar-studio .studio-layout.de-a-uno{display:block;max-width:980px;padding-top:8px}
+.avatar-studio .de-a-uno .collage-arrow{display:none}
+.avatar-studio .de-a-uno .pasos{display:block}
+.avatar-studio .de-a-uno .paper-panel{display:none;margin:0 auto;transform:rotate(-.3deg);width:100%;max-width:880px;box-sizing:border-box}
+.avatar-studio .de-a-uno .paper-panel.paso-visible{display:flex;flex-direction:column;animation:paso-entra .35s ease}
+@keyframes paso-entra{from{opacity:0;transform:translateY(14px) rotate(-.3deg)}to{opacity:1;transform:rotate(-.3deg)}}
+.avatar-studio .de-a-uno .paper-panel.paso-visible{min-height:calc(100vh - 360px);padding:30px 36px 24px}
+.avatar-studio .de-a-uno .collage-panel-scenes{margin-left:auto}
+.avatar-studio .de-a-uno .result-panel,.avatar-studio .de-a-uno:not(.con-resultado) .result-panel{position:relative;top:0;height:auto;max-height:none;min-height:calc(100vh - 360px)}
+.avatar-studio .de-a-uno .upload-window{flex:1;min-height:300px}
+.avatar-studio .de-a-uno .paper-panel h1,.avatar-studio .de-a-uno .paper-panel h2{font-size:2.4rem}
+.avatar-studio .de-a-uno .escenas{flex:1;align-content:center}
+.avatar-studio .de-a-uno .paleta{flex:1;align-content:center}
+/* después de generar, sigue mostrando el resultado */
+.avatar-studio .de-a-uno.con-resultado .result-panel{display:flex}
+.avatar-studio .de-a-uno.con-resultado .pasos{display:none}
+/* barra Atrás / Siguiente */
+.avatar-studio .paso-barra{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-top:auto;padding-top:22px}
+.avatar-studio .paso-barra .paso-sig{justify-self:end}
+.avatar-studio .paso-barra .paso-atras{justify-self:start}
+.avatar-studio .paso-barra button{height:50px;padding:4px 26px 0;cursor:pointer;font-family:"Bebas Neue",Impact,sans-serif;font-size:1.45rem;letter-spacing:.08em;
+  border:2.5px solid var(--negro);box-shadow:5px 5px 0 var(--negro);background:#f3ede2;color:var(--negro);transition:transform .1s,box-shadow .1s}
+.avatar-studio .paso-barra .paso-sig{background:var(--amarillo)}
+.avatar-studio .paso-barra button:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--negro)}
+.avatar-studio .paso-barra button:disabled{opacity:.45;cursor:default;transform:none;box-shadow:5px 5px 0 var(--negro)}
+.avatar-studio .paso-cuenta{font-family:ui-monospace,"Geist Mono",monospace;font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.avatar-studio .paso-cuenta.alerta{color:var(--rojo);opacity:1}
+/* la guía de pasos: se ve siempre y se puede tocar */
+.avatar-studio .process-nav span{cursor:pointer}
+.avatar-studio .process-nav span.hecho b{background:#f3ede2;color:var(--negro)}
+.avatar-studio .process-nav span:focus-visible{outline:2px solid var(--amarillo);outline-offset:2px}
+@media (max-width:900px){
+  .avatar-studio .de-a-uno .paper-panel.paso-visible{min-height:0;padding:22px 18px}
+  .avatar-studio .de-a-uno .paper-panel h1,.avatar-studio .de-a-uno .paper-panel h2{font-size:1.8rem}
+  .avatar-studio .paso-barra button{padding:4px 16px 0;font-size:1.2rem}
+}

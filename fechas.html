@@ -98,8 +98,10 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .acciones .agendar{background:var(--crema);color:var(--tinta);height:40px;font-size:19px}
 .acciones a:hover,.acciones button:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--tinta)}
 .acciones .agendar:hover{background:#fffdf9}
-.acciones .pasada{background:transparent;color:var(--gris);border-style:dashed;box-shadow:none;cursor:default}
-.acciones .pasada:hover{transform:none;box-shadow:none}
+/* fechas pasadas: un texto tranquilo, centrado, que no parece botón */
+.acciones.fue{top:0;bottom:0;height:auto;justify-content:center;align-items:center}
+.acciones .pasada{display:block;font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gris);text-align:center;padding:0;border:0;background:none;box-shadow:none;cursor:default}
 
 /* ===== ventana de entradas ===== */
 .velo{position:absolute;inset:0;z-index:20;background:rgba(10,10,12,.55);opacity:0;pointer-events:none;transition:opacity .2s}
@@ -250,7 +252,7 @@ function linkAgenda(f){
 }
 function tarjeta(f, i){
   const boton = f.pasada
-    ? `<div class="acciones"><span class="pasada agendar" aria-disabled="true">Ya tocamos acá ✓</span></div>`
+    ? `<div class="acciones fue"><span class="pasada">Ya tocamos acá</span></div>`
     : `<div class="acciones">
         ${f.entradas ? `<a class="comprar" href="${esc(f.entradas)}" target="_blank" rel="noopener">Comprar entrada</a>`
                      : `<button class="comprar" data-i="${i}">Comprar entrada</button>`}
