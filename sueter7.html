@@ -42,6 +42,21 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .t-sub7{position:absolute;left:150px;top:286px;width:560px;height:132px;z-index:3;display:grid;place-items:center;transform:rotate(-1.4deg)}
 .t-sub7::before{content:"";position:absolute;inset:-5px;z-index:-1;background:#0b0b0b;filter:url(#comido)}
 .t-sub7 span{position:relative;font-family:"PP NeueBit","Tiny5",monospace;font-size:96px;line-height:1;color:var(--crema);text-transform:uppercase;letter-spacing:.02em}
+/* ---------- celular ---------- */
+.m-sobre{display:none}
+html.movil .fondo,html.movil .t-sub7,html.movil .btn-discos{display:none !important}
+html.movil .screen{background:#efe9de}
+html.movil .m-sobre{display:flex;flex-direction:column;gap:18px}
+html.movil .m-sobre .t-a,html.movil .m-sobre .t-b{position:relative;display:inline-grid;place-items:center;padding:12px 18px 6px;isolation:isolate}
+html.movil .m-sobre .t-a::before,html.movil .m-sobre .t-b::before{content:"";position:absolute;inset:0;z-index:-1;filter:url(#comido)}
+html.movil .m-sobre .t-a{transform:rotate(-2deg);font-family:var(--display);font-size:64px;line-height:.85;color:var(--tinta)}
+html.movil .m-sobre .t-a::before{background:#e8c340;box-shadow:7px 7px 0 var(--tinta)}
+html.movil .m-sobre .t-b{transform:rotate(-1deg);margin-left:18px;font-family:"PP NeueBit","Tiny5",monospace;font-size:40px;line-height:1;color:var(--crema);text-transform:uppercase;padding:10px 16px}
+html.movil .m-sobre .t-b::before{background:#0b0b0b}
+html.movil .m-sobre img{width:calc(100% + 36px);margin:0 -18px;display:block;mix-blend-mode:multiply}
+html.movil .m-sobre p{margin:0;font-family:var(--mono);font-size:17px;line-height:1.55;color:var(--tinta)}
+html.movil .m-sobre a.boton{display:grid;place-items:center;height:58px;margin-top:6px;background:#2c61b2;color:var(--crema);text-decoration:none;
+  border:3px solid var(--tinta);box-shadow:6px 6px 0 var(--tinta);font-family:var(--display);font-size:28px;letter-spacing:.12em;padding-top:4px}
 .btn-discos{position:absolute;left:160px;top:872px;width:424px;height:66px;z-index:4;
   display:flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;text-decoration:none;
   background:#2c61b2;color:var(--crema);border:3px solid var(--tinta);box-shadow:8px 8px 0 var(--tinta);
@@ -66,6 +81,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   background:#c9452c;color:#fffdf9;text-decoration:none;border:2px solid #141414;box-shadow:3px 3px 0 #141414}
 .nav-tv:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #141414}
 </style>
+<link rel="stylesheet" href="movil.css?v=1">
+<script src="movil.js?v=1"></script>
 <script src="puente.js?v=20261102e"></script>
 </head>
 <body>
@@ -93,6 +110,15 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
       <svg width="56" height="26" viewBox="0 0 72 32" fill="none" aria-hidden="true"><path d="M70 16H7M20 5L6 16l14 11" stroke="#c9452c" stroke-width="4" stroke-linecap="square"/></svg>
       Volver al andén
     </a>
+    <div class="m-sobre">
+      <div><span class="t-a">SOBRE</span></div>
+      <div><span class="t-b">Sueter 7</span></div>
+      <img src="img/sobre-movil.jpg" alt="Sueter 7 sentado con un buzo a rayas, al lado de un poste de luz">
+      <p><b>Sueter 7</b> es un proyecto personal que nace en la rutina, <b>entre cuadernos, caminatas y canciones.</b></p>
+      <p>Une música, dibujos y pensamientos como una <b>forma de mirar el mundo con más calma.</b></p>
+      <p>Este espacio es una recopilación de todo eso: canciones, ideas, lugares y pequeñas cosas que <b>también importan.</b></p>
+      <a class="boton" href="discos.html">Discos →</a>
+    </div>
     <div class="t-sub7" aria-hidden="true"><span>Sueter 7</span></div>
     <a class="btn-discos" href="discos.html">Discos <span aria-hidden="true">→</span></a>
 
@@ -109,6 +135,7 @@ const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function fit(){
   const s=$("screen"), stage=s.parentElement;
+  if(window.S7_MOVIL && S7_MOVIL()){ s.style.transform="none"; stage.style.height="auto"; return; }
   const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
   s.style.transform="scale("+k+")";
   stage.style.height=(1080*k)+"px";

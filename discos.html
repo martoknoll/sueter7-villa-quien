@@ -212,6 +212,44 @@ body{margin:0;background:#1b1b1b;color:#fffdf9;font-family:var(--mono);font-size
   font-family:var(--display);font-size:17px;letter-spacing:.08em;color:var(--tinta);cursor:pointer;padding-top:2px}
 .lanz .esc:hover{background:var(--amarillo)}
 .lanz{cursor:pointer;transition:transform .12s,box-shadow .12s}
+/* ---------- celular ---------- */
+html.movil .screen{gap:20px}
+html.movil .bg{display:none !important}
+html.movil .stage{background:var(--papel) url("fondo.png") center/cover}
+html.movil .t-discos{width:auto !important;height:auto !important;padding:14px 20px 4px;transform:rotate(-2deg) !important}
+html.movil .t-discos span{font-size:70px !important}
+html.movil .t-canciones{width:auto !important;height:auto !important;padding:10px 16px 8px;transform:rotate(-1deg) !important}
+html.movil .t-canciones span{font-size:28px !important}
+/* tapa + vinilo: el bloque de la compu, achicado al ancho del celu */
+html.movil .m-disco{position:relative;width:100%;}
+html.movil .m-disco .caja{position:absolute;left:0;top:0;width:760px;height:420px;transform-origin:0 0}
+html.movil .m-disco .caja > *{position:absolute !important}
+html.movil .m-disco .tapa{left:0 !important;top:12px !important}
+html.movil .m-disco .vinilo{left:230px !important;top:31px !important}
+html.movil .m-disco .pie{display:none}
+html.movil .m-disco .sticker{left:584px !important;top:-4px !important}
+/* ficha del disco en columna */
+html.movil .ficha{width:auto !important;height:auto !important;padding:18px 16px 20px !important;display:flex;flex-direction:column;gap:10px}
+html.movil .ficha > *{position:relative !important;left:auto !important;top:auto !important;right:auto !important}
+html.movil .ficha .anio{width:96px !important;height:96px !important;align-self:flex-start}
+html.movil .ficha .anio b{font-size:34px !important}
+html.movil .ficha h1{width:auto !important;white-space:normal !important;font-size:34px !important;line-height:1 !important}
+html.movil .ficha .meta{font-size:13px !important}
+html.movil .ficha .desc{font-size:14px !important}
+
+html.movil .btn-letras{align-self:flex-start;width:auto !important;padding:3px 16px 0}
+html.movil .ficha .rule{width:100% !important}
+html.movil .temas{width:auto !important;display:flex;flex-direction:column}
+html.movil .tema{position:relative !important;left:auto !important;top:auto !important;width:100% !important;height:auto !important;min-height:44px;grid-template-columns:38px 1fr 50px !important}
+html.movil .tema .t{font-size:15px !important}
+html.movil .btn{position:relative !important;left:auto !important;top:auto !important;width:100% !important;height:54px !important}
+html.movil .plats{position:relative !important;left:auto !important;top:auto !important;white-space:normal !important;text-align:center;font-size:14px !important;line-height:1.8}
+html.movil .otros-lbl{width:auto !important;height:auto !important;align-self:flex-start;padding:12px 18px 8px;margin-top:8px;transform:rotate(-1deg) !important}
+html.movil .otros-lbl span{font-size:22px !important}
+html.movil .lanz{width:100% !important;height:auto !important;min-height:92px;padding:10px 12px !important;gap:12px !important}
+html.movil .lanz h3{font-size:26px !important}
+html.movil .lanz p{font-size:12px !important}
+html.movil .lanz .esc{width:auto !important;padding:0 10px;font-size:13px}
 .lanz h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lanz:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--tinta)}
 .lanz:focus-visible{outline:3px solid var(--rojo);outline-offset:3px}
@@ -293,6 +331,8 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
   .shell{padding:0}
 }
 </style>
+<link rel="stylesheet" href="movil.css?v=1">
+<script src="movil.js?v=1"></script>
 <script src="puente.js?v=20261102e"></script>
 </head>
 <body>
@@ -419,6 +459,21 @@ body{background:var(--papel);color:var(--tinta);overflow-x:hidden}
 "use strict";
 function fit(){
   const s=document.getElementById("screen"), stage=s.parentElement;
+  if(window.S7_MOVIL && S7_MOVIL()){
+    s.style.transform="none"; stage.style.height="auto";
+    /* una sola vez: agrupa títulos y arma el bloque tapa + vinilo */
+    if(!document.querySelector(".m-disco")){
+      const tit=document.createElement("div"); tit.className="titulos-m";
+      s.insertBefore(tit, document.querySelector(".t-discos"));
+      tit.append(document.querySelector(".t-discos"), document.querySelector(".t-canciones"));
+      const md=document.createElement("div"); md.className="m-disco"; md.innerHTML='<div class="caja"></div>';
+      s.insertBefore(md, document.querySelector(".ficha"));
+      md.firstChild.append(document.querySelector(".tapa"), document.querySelector(".pie"), document.querySelector(".vinilo"), document.querySelector(".sticker"));
+    }
+    const md=document.querySelector(".m-disco"), k=md.clientWidth/760;
+    md.firstChild.style.transform="scale("+k+")"; md.style.height=(420*k)+"px";
+    return;
+  }
   const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
   s.style.transform="scale("+k+")";
   stage.style.height=(1080*k)+"px";

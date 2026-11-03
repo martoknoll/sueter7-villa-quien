@@ -120,6 +120,23 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
   -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 58px,#000 calc(100% - 90px),transparent 100%);
           mask-image:linear-gradient(180deg,transparent 0,#000 58px,#000 calc(100% - 90px),transparent 100%)}
 .rollo::-webkit-scrollbar{width:0;height:0}
+/* ---------- celular: la letra arriba, la lista de temas abajo ---------- */
+html.movil .bg{display:none !important}
+html.movil .stage{background:var(--papel) url("fondo.png") center/cover}
+html.movil .tira{order:1;width:auto !important;height:330px !important;box-shadow:6px 6px 0 var(--tinta) !important}
+html.movil .tira.completa{height:68vh !important}
+html.movil .tira .cabeza{padding:10px 14px 0 !important;height:58px !important}
+html.movil .cuerpo,html.movil .rollo{top:58px !important}
+html.movil .cuerpo{padding:22px 16px 0 !important}
+html.movil .rollo{padding:30px 16px 300px !important}
+html.movil .l1{font-size:19px !important;min-height:40px;box-shadow:4px 4px 0 var(--tinta) !important}
+html.movil .l2{font-size:15px !important;margin-top:14px !important}
+html.movil .nota{left:16px !important;right:16px !important;bottom:14px !important;font-size:11px !important}
+html.movil .verso{font-size:17px !important}
+html.movil .btn-cabeza{font-size:14px !important}
+html.movil .lista{order:2;width:auto !important}
+html.movil .tema{min-height:42px}
+html.movil .tema .t{font-size:15px !important;white-space:normal !important}
 .tira.completa .rollo{display:block}
 
 .verso{display:block;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;
@@ -207,6 +224,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--mono)
 
 @media (prefers-reduced-motion:reduce){ *{transition:none !important;scroll-behavior:auto !important} }
 </style>
+<link rel="stylesheet" href="movil.css?v=1">
+<script src="movil.js?v=1"></script>
 <script src="puente.js?v=20261102e"></script>
 </head>
 <body>
@@ -1015,6 +1034,7 @@ const mmss = s => isFinite(s) ? Math.floor(s/60)+":"+String(Math.floor(s%60)).pa
 /* ---------- escalado de la pantalla de 1920 ---------- */
 function fit(){
   const s=$("screen"), stage=s.parentElement;
+  if(window.S7_MOVIL && S7_MOVIL()){ s.style.transform="none"; stage.style.height="auto"; return; }
   const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
   s.style.transform="scale("+k+")";
   stage.style.height=(1080*k)+"px";

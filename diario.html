@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Geist+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="movil.css?v=1">
+<script src="movil.js?v=1"></script>
 <script src="puente.js?v=20261102e"></script>
 <script src="lib/page-flip.browser.js?v=2.0.7"></script>
 <style>
@@ -67,6 +69,16 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
   background:rgba(226,215,192,.86);border-left:1px solid rgba(20,20,20,.15);border-right:1px solid rgba(20,20,20,.15)}
 .ayuda b{color:var(--rojo);font-weight:700}
 
+/* ---------- celular: título, papelito, el libro a todo el ancho y los controles ---------- */
+html.movil .screen{background:var(--papel) url("fondo.png") center/cover;gap:18px}
+html.movil .flecha-pag{display:none !important}
+html.movil .t-diario{align-self:flex-start;font-size:66px !important;padding:16px 20px 4px !important;transform:rotate(-2.4deg) !important;margin-top:4px}
+html.movil .t-sub{align-self:flex-start;margin:-20px 0 0 34px;font-size:32px !important;padding:10px 16px 8px !important;transform:rotate(-1.2deg) !important}
+html.movil .ayuda{width:auto !important;transform:rotate(-1deg) !important;font-size:15px !important;margin-top:6px}
+html.movil #capa{position:relative !important;left:auto !important;top:auto !important;margin:0 auto;order:5}
+html.movil .ctrl{order:6;width:100% !important;height:auto !important;gap:10px !important;flex-wrap:nowrap}
+html.movil .ctrl button{padding:4px 12px 0 !important;font-size:18px !important;height:42px !important}
+html.movil .ctrl .pag{min-width:0 !important;font-size:12px !important;flex:1}
 /* controles abajo del libro */
 .ctrl{left:420px;top:968px;width:1080px;height:46px;display:flex;align-items:center;justify-content:center;gap:26px}
 .ctrl button{font-family:var(--display);font-size:22px;letter-spacing:.09em;height:44px;padding:4px 20px 0;cursor:pointer;
@@ -636,6 +648,15 @@ const screen=$("screen"), capa=$("capa");
 const BASE={x:400, y:150, w:1120, h:790};      // dónde va el libro en la pantalla de 1920
 
 function fit(){
+  if(window.S7_MOVIL && S7_MOVIL()){
+    /* celular: el libro entra en la columna, una página por vez */
+    screen.style.transform="none";
+    const ctrl=document.querySelector(".ctrl");
+    if(capa.parentElement!==screen) screen.insertBefore(capa, ctrl);
+    const w=Math.min(innerWidth-36, 520), h=Math.round(w*780/560);
+    capa.style.left=capa.style.top=""; capa.style.width=w+"px"; capa.style.height=h+"px";
+    return;
+  }
   const k=Math.min(innerWidth/1920, innerHeight/1080);
   screen.style.transform="scale("+k+")";
   const izq=(innerWidth-1920*k)/2;
@@ -646,7 +667,7 @@ fit();
 
 const libro=new St.PageFlip($("libro"), {
   width:560, height:780, size:"stretch",
-  minWidth:160, maxWidth:2400, minHeight:222, maxHeight:3340,
+  minWidth:(window.S7_MOVIL && S7_MOVIL()) ? 300 : 160, maxWidth:2400, minHeight:222, maxHeight:3340,
   showCover:true, maxShadowOpacity:.45, mobileScrollSupport:false,
   flippingTime:850, usePortrait:true, startZIndex:0, autoSize:true
 });

@@ -99,7 +99,25 @@ input.mal,select.mal{border-color:var(--rojo);background:#fff1ee}
   box-shadow:14px 14px 0 var(--tinta);padding:56px;text-align:center}
 .listo .codigo{display:inline-block;margin:20px 0;padding:14px 30px;border:3px dashed var(--tinta);font-family:var(--display);font-size:50px;letter-spacing:.14em}
 [hidden]{display:none !important}
+/* ---------- celular: formulario y resumen en columna ---------- */
+html.movil .t-a,html.movil .t-b{width:auto !important;height:auto !important}
+html.movil .t-a{padding:14px 18px 4px;align-self:flex-start}
+html.movil .t-a span{font-size:58px !important}
+html.movil .t-b{padding:10px 16px 6px;align-self:flex-start;margin:-12px 0 0 30px}
+html.movil .t-b span{font-size:26px !important}
+html.movil .hoja,html.movil .resumen{width:auto !important;height:auto !important;padding:18px 16px !important;overflow:visible !important;box-shadow:6px 6px 0 var(--tinta) !important}
+html.movil .f2,html.movil .f3,html.movil .f3b,html.movil .entrega{grid-template-columns:1fr !important;gap:10px !important}
+html.movil input,html.movil select{font-size:16px !important}
+html.movil .talles .t{grid-template-columns:1fr 120px !important;font-size:14px !important}
+html.movil .items{max-height:none !important}
+html.movil .total b{font-size:40px !important}
+html.movil .pagar{font-size:26px !important;height:62px !important}
+html.movil .vacio,html.movil .listo{width:auto !important;transform:none !important;padding:28px 20px !important}
+html.movil .vacio h3,html.movil .listo h3{font-size:42px !important}
+html.movil .listo .codigo{font-size:34px !important}
 </style>
+<link rel="stylesheet" href="movil.css?v=1">
+<script src="movil.js?v=1"></script>
 <script src="puente.js?v=20261102e"></script>
 <script src="productos.js?v=20261102e"></script>
 </head>
@@ -282,6 +300,7 @@ $("form").addEventListener("submit", async ev=>{
 
 function fit(){
   const s=$("screen"), stage=s.parentElement;
+  if(window.S7_MOVIL && S7_MOVIL()){ s.style.transform="none"; stage.style.height="auto"; return; }
   const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
   s.style.transform="scale("+k+")"; stage.style.height=(1080*k)+"px";
 }

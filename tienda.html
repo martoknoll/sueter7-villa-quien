@@ -80,6 +80,44 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 .puntos button{width:16px;height:16px;padding:0;border-radius:50%;border:2.5px solid var(--tinta);background:var(--crema);cursor:pointer}
 .puntos button.on{background:var(--rojo)}
 
+/* ---------- celular: grilla de productos de a dos y ventanas a pantalla completa ---------- */
+html.movil .stage{background:#dfe7f3 url("tienda-fondo-ancho.jpg") center top/cover fixed}
+html.movil .fondo,html.movil .flecha,html.movil .puntos,html.movil .velo-costados,html.movil .checkout{display:none !important}
+html.movil .t-tienda,html.movil .t-merch{width:auto !important;height:auto !important}
+html.movil .t-tienda{padding:14px 20px 4px}
+html.movil .t-tienda span{font-size:68px !important}
+html.movil .t-merch{padding:10px 16px 6px}
+html.movil .t-merch span{font-size:26px !important}
+html.movil #productos{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+html.movil .prod{position:relative !important;left:auto !important;top:auto !important;width:auto !important;height:auto !important;box-shadow:5px 5px 0 var(--tinta) !important}
+html.movil .prod .cont{position:relative !important;inset:auto;display:flex;flex-direction:column;align-items:stretch;padding:12px 10px 10px;gap:6px}
+html.movil .prod .cont > *{position:relative !important;left:auto !important;right:auto !important;top:auto !important}
+html.movil .prod .foto{width:100% !important;height:130px !important}
+html.movil .prod .tipo{font-size:10px !important}
+html.movil .prod h2{font-size:21px !important;white-space:normal !important;line-height:1 !important;min-height:2em}
+html.movil .prod .precio{font-size:14px !important}
+html.movil .prod .comprar{height:42px !important;font-size:19px !important;width:100% !important}
+html.movil .prod .leer{height:26px !important;font-size:12px !important}
+html.movil .chip{position:fixed !important;top:auto !important;bottom:14px !important;right:14px !important;left:auto !important;z-index:40;height:50px;box-shadow:4px 4px 0 var(--tinta)}
+html.movil .velo{position:fixed !important;inset:0 !important;z-index:45}
+html.movil .panel{position:fixed !important;top:0 !important;right:0 !important;bottom:0 !important;width:100% !important;z-index:46}
+html.movil .sumado{position:fixed !important;left:50% !important;top:50% !important;width:calc(100% - 28px) !important;z-index:47;transform:translate(-50%,-40%) rotate(-1deg) !important}
+html.movil .sumado.on{transform:translate(-50%,-50%) rotate(-1deg) !important}
+html.movil .sumado .cuerpo{grid-template-columns:80px 1fr !important;padding:16px !important}
+html.movil .sumado .cuerpo .mini{width:80px !important;height:80px !important}
+html.movil .sumado .acciones{padding:12px 16px 18px !important;gap:10px !important}
+html.movil .sumado .acciones button{font-size:18px !important}
+html.movil .ficha{position:fixed !important;left:0 !important;top:0 !important;width:100% !important;height:100% !important;z-index:47;
+  display:flex !important;flex-direction:column;overflow:auto;transform:translateY(30px) !important;box-shadow:none !important;border:0 !important}
+html.movil .ficha.on{transform:none !important}
+html.movil .ficha .foto-g{border-right:0 !important;border-bottom:3px solid var(--tinta);padding:30px 20px !important;flex:none}
+html.movil .ficha .foto-g img{max-height:260px !important}
+html.movil .ficha .info{padding:22px 20px 26px !important}
+html.movil .ficha h3{font-size:44px !important}
+html.movil .ficha .precio-f{font-size:34px !important}
+html.movil .ficha .desc-f{font-size:16px !important}
+html.movil .ficha .comprar-f{height:58px !important;font-size:26px !important}
+
 /* ===== botón "Leer descripción" y ficha del producto ===== */
 .prod .leer{position:absolute;left:28px;right:28px;top:510px;height:28px;background:none;border:0;cursor:pointer;
   font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--tinta);
@@ -245,6 +283,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
   background:#c9452c;color:#fffdf9;text-decoration:none;border:2px solid #141414;box-shadow:3px 3px 0 #141414}
 .nav-tv:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #141414}
 </style>
+<link rel="stylesheet" href="movil.css?v=1">
+<script src="movil.js?v=1"></script>
 <script src="puente.js?v=20261102e"></script>
 <script src="productos.js?v=20261102e"></script>
 </head>
@@ -345,7 +385,8 @@ const API = window.S7_API_CHECKOUT;
 
 const plata = n => "$" + n.toLocaleString("es-AR");
 
-const X0 = 173, PASO = 390, VISIBLES = 4;   /* dónde arranca la primera, cada cuánto va la siguiente, cuántas se ven */
+const X0 = 173, PASO = 390;
+const VISIBLES = (window.S7_MOVIL && S7_MOVIL()) ? window.S7_PRODUCTOS.length : 4;   /* en el celu se ven todos, en grilla */   /* dónde arranca la primera, cada cuánto va la siguiente, cuántas se ven */
 const esc = s => String(s).replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 
 /* ==========================================================
@@ -602,6 +643,7 @@ document.querySelectorAll(".zona").forEach(a=>{
 
 function fit(){
   const s=$("screen"), stage=s.parentElement;
+  if(window.S7_MOVIL && S7_MOVIL()){ s.style.transform="none"; stage.style.height="auto"; return; }
   const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
   s.style.transform="scale("+k+")";
   stage.style.height=(1080*k)+"px";

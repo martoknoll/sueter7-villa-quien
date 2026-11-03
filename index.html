@@ -382,15 +382,16 @@ puertasMobile.forEach(p=>{
 let Wv=W, OFF=0;
 let pasoMobile=innerWidth;
 function ordenarPuertasMobile(){
-  const altoEscena=innerHeight-132, cabecera=100, cta=78;
+  const altoEscena=innerHeight-132, cabecera=100, cta=96;
   const anchoMax=Math.max(...puertasMobile.map(p=>parseFloat(p.style.width)));
   const altoPuerta=Math.max(...puertasMobile.map(p=>parseFloat(p.style.height)));
-  const escala=Math.max(.36,Math.min(1.12,(innerWidth-48)/anchoMax,(altoEscena-cabecera-cta)/altoPuerta));
+  /* la puerta ocupa ~3/4 del ancho: se ven asomar las de los costados y no la tapa el cartel de abajo */
+  const escala=Math.max(.36,Math.min(1.12,(innerWidth*.74)/anchoMax,(altoEscena-cabecera-cta)/altoPuerta));
   const y=cabecera+Math.max(0,(altoEscena-cabecera-cta-altoPuerta*escala)/2);
-  pasoMobile=innerWidth*.72;               // la próxima puerta entra cerca de un cuarto de pantalla
+  pasoMobile=innerWidth*.8;                // la próxima puerta asoma por el costado
   puertasMobile.forEach((p,i)=>{
     const ancho=parseFloat(p.style.width)*escala;
-    const centro=innerWidth*.45+i*pasoMobile;
+    const centro=innerWidth*.5+i*pasoMobile;
     p.style.left=(centro-ancho/2)+"px";
     p.style.top=y+"px";
     p.style.transform=`scale(${escala})`;
@@ -435,7 +436,7 @@ $("escena").addEventListener("scroll", ()=>{
 }, {passive:true});
 
 /* ---------- navegación entre secciones ---------- */
-const VERSION="20261102f";             // cambiarla al publicar fuerza a recargar las secciones
+const VERSION="20261103a";             // cambiarla al publicar fuerza a recargar las secciones
 const PAGINAS={sueter7:"sueter7.html", diario:"diario.html", discos:"discos.html", tienda:"tienda.html",
   fechas:"fechas.html", letras:"letras.html", compra:"compra.html", checkout:"checkout.html", "tu-version":"tu-version/index.html"};
 const NOMBRES={sueter7:"Sueter7", diario:"Diario", discos:"Discos", tienda:"Tienda",

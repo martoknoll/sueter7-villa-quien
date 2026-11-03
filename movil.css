@@ -1,0 +1,26 @@
+/* =====================================================================
+   SECCIONES EN EL CELULAR (se activa con la clase html.movil de movil.js)
+   ===================================================================== */
+html.movil, html.movil body{height:auto !important;min-height:100%;overflow-x:hidden !important;overflow-y:auto !important}
+html.movil body{-webkit-text-size-adjust:100%}
+html.movil .stage{display:block !important;height:auto !important;position:relative !important;inset:auto !important;overflow:visible !important}
+html.movil .screen{width:100% !important;height:auto !important;min-height:calc(100dvh - 54px);transform:none !important;overflow:visible !important;
+  padding:16px 18px 56px;display:flex;flex-direction:column;gap:22px;background-size:cover}
+/* lo que en la compu está ubicado a mano, en el celular va en columna */
+html.movil :where(.screen > *){position:relative !important;left:auto !important;top:auto !important;right:auto !important;bottom:auto !important}
+/* el menú de la compu (y las zonas de la imagen) se esconden: va la tira de abajo */
+html.movil .nav, html.movil .zona, html.movil .nav-tv, html.movil .cinta, html.movil .garabato, html.movil .flecha{display:none !important}
+html.movil .nav-m{position:sticky;top:0;z-index:50;display:flex;gap:8px;overflow-x:auto;padding:10px 14px;
+  background:rgba(239,233,222,.96);border-bottom:2px solid #141414;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+html.movil .nav-m::-webkit-scrollbar{display:none}
+html.movil .nav-m a{flex:none;display:grid;place-items:center;height:34px;padding:3px 13px 0;text-decoration:none;white-space:nowrap;
+  font-family:"Bebas Neue","Arial Narrow",sans-serif;font-size:17px;letter-spacing:.08em;text-transform:uppercase;
+  background:#c9452c;color:#efe9de;border:2px solid #141414;box-shadow:2px 2px 0 #141414}
+html.movil .nav-m a.on{background:#e8c340;color:#141414}
+html.movil .volver{align-self:flex-start;transform:none !important;font-size:19px !important;padding:7px 12px 4px !important;
+  background:#efe9de;border:2px solid #141414;box-shadow:3px 3px 0 #141414}
+html.movil .volver svg{width:34px;height:16px}
+/* títulos de sección: mismo sistema, en tamaño celular */
+html.movil .titulos-m{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:4px 0 2px}
+html.movil .titulos-m > *{position:relative !important;left:auto !important;top:auto !important;width:auto !important;height:auto !important}
+html.movil .pronto, html.movil .fundido{display:none !important}

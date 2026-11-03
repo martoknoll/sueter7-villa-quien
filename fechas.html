@@ -51,6 +51,32 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 
 @font-face{font-family:"PP NeueBit";src:local("PP NeueBit Bold"),local("PPNeueBit-Bold"),url("tu-version/fonts/PPNeueBit-Bold.woff2") format("woff2");font-display:swap}
 @font-face{font-family:"Tiny5";src:url("tu-version/fonts/tiny5-latin.woff2") format("woff2");font-display:swap}
+/* ---------- celular: tarjetas en columna ---------- */
+html.movil .foto{position:fixed !important;inset:0 !important}
+html.movil .screen{gap:18px}
+html.movil .t-proximas,html.movil .t-fechas{width:auto !important;height:auto !important}
+html.movil .t-proximas{padding:14px 20px 6px;transform:rotate(-2deg) !important}
+html.movil .t-proximas span{font-size:60px !important}
+html.movil .t-fechas{padding:10px 16px 6px;transform:rotate(-2deg) !important}
+html.movil .t-fechas span{font-size:36px !important}
+html.movil .lista{width:auto !important}
+html.movil .fecha{height:auto !important;margin-bottom:18px !important;display:grid;grid-template-columns:78px 1fr;gap:6px 14px;padding:14px;align-items:start}
+html.movil .fecha > *{position:relative !important;left:auto !important;top:auto !important;width:auto !important}
+html.movil .dia{grid-row:1 / span 2;width:78px !important;height:92px !important}
+html.movil .dia .num{font-size:40px !important}
+html.movil .dia .sem,html.movil .dia .mes{font-size:10px !important}
+html.movil .fecha h2{font-size:22px !important;white-space:normal !important;line-height:1.1 !important;overflow:visible !important}
+html.movil .fecha .donde{font-size:14px !important;line-height:1.5}
+html.movil .acciones{grid-column:1 / -1;flex-direction:row !important;gap:10px !important;margin-top:6px}
+html.movil .acciones a,html.movil .acciones button{flex:1;height:46px !important;font-size:17px !important;white-space:nowrap}
+html.movil .acciones.fue{justify-content:flex-start !important}
+html.movil .anteriores{width:auto !important;height:54px !important}
+html.movil .velo{position:fixed !important;inset:0 !important}
+html.movil .ticket{position:fixed !important;left:50% !important;top:50% !important;width:calc(100% - 24px) !important;transform:translate(-50%,-44%) !important}
+html.movil .ticket.on{transform:translate(-50%,-50%) !important}
+html.movil .ticket .cuerpo{padding:18px !important}
+html.movil .ticket h3{font-size:26px !important}
+
 /* ===== volver ===== */
 .volver{position:absolute;left:74px;top:52px;z-index:5;display:flex;align-items:center;gap:12px;text-decoration:none;
   font-family:var(--display);font-size:24px;letter-spacing:.08em;color:var(--tinta);
@@ -143,6 +169,8 @@ body{margin:0;background:var(--papel);color:var(--tinta);overflow-x:hidden;font-
 
 @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
+<link rel="stylesheet" href="movil.css?v=1">
+<script src="movil.js?v=1"></script>
 <script src="puente.js?v=20261102e"></script>
 </head>
 <body>
@@ -343,6 +371,7 @@ document.addEventListener("keydown", ev=>{ if(ev.key==="Escape") cerrarTicket();
 
 function fit(){
   const s=document.getElementById("screen"), stage=s.parentElement;
+  if(window.S7_MOVIL && S7_MOVIL()){ s.style.transform="none"; stage.style.height="auto"; return; }
   const k=Math.min(stage.parentElement.clientWidth/1920, innerHeight/1080);
   s.style.transform="scale("+k+")";
   stage.style.height=(1080*k)+"px";

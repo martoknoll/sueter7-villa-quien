@@ -417,3 +417,25 @@ html,body.avatar-studio-page{margin:0;background:#e7dfd3;overflow-x:hidden}
 }
 .avatar-studio .brand-title-yellow,.avatar-studio .brand-title-black{white-space:nowrap}
 .avatar-studio .brand-title-black{margin-top:.5rem;padding:.25em .45em .15em}
+
+/* ---------- celular: menú en tira deslizable, como en las demás secciones ---------- */
+@media (max-width:760px){
+  .avatar-studio .sitio-nav:not(.nav-escala){position:sticky;top:0;z-index:50;display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;
+    max-width:none;margin:0;padding:10px 14px;background:rgba(239,233,222,.96);border-bottom:2px solid var(--negro);scrollbar-width:none}
+  .avatar-studio .sitio-nav:not(.nav-escala)::-webkit-scrollbar{display:none}
+  .avatar-studio .sitio-nav:not(.nav-escala) a{flex:none;height:34px;padding:3px 13px 0;font-size:17px !important;display:grid;place-items:center}
+  .avatar-studio .collage-header{margin-top:0 !important;padding:18px 18px 0 !important}
+  .avatar-studio .brand-title-yellow{font-size:3.2rem !important}
+  .avatar-studio .brand-title-black{font-size:1.9rem !important;margin-left:1rem}
+  .avatar-studio .edition-stamp{display:none}
+  .avatar-studio .studio-layout,.avatar-studio .studio-layout.de-a-uno{padding:10px 16px 60px !important}
+  .avatar-studio .de-a-uno .paper-panel.paso-visible{padding:18px 16px !important}
+  .avatar-studio .de-a-uno .upload-window{min-height:220px}
+  .avatar-studio .palette-grid,.avatar-studio .paleta{grid-template-columns:repeat(3,1fr) !important}
+  .avatar-studio .site-footer,.avatar-studio footer{font-size:.7rem}
+}
+@media (max-width:760px){
+  .avatar-studio .process-nav.guia-grande{flex-wrap:nowrap;padding:6px}
+  .avatar-studio .process-nav.guia-grande span{flex:1 1 0;flex-direction:column;gap:4px;padding:6px 2px;font-size:.6rem;letter-spacing:.06em}
+  .avatar-studio .process-nav.guia-grande span b{width:26px;height:26px}
+}
