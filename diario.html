@@ -71,7 +71,12 @@ body{background:var(--papel);color:var(--tinta);font-family:var(--mono)}
 
 /* ---------- celular: título, papelito, el libro a todo el ancho y los controles ---------- */
 html.movil .screen{background:var(--papel) url("fondo.png") center/cover;gap:18px}
-html.movil .flecha-pag{display:none !important}
+html.movil .flecha-pag{display:grid !important;position:fixed !important;top:50% !important;width:54px;height:54px;z-index:80;
+  transform:translateY(-50%);border-width:2px;box-shadow:4px 4px 0 var(--tinta);background:rgba(255,253,249,.94)}
+html.movil .flecha-pag.izq{left:8px !important}
+html.movil .flecha-pag.der{left:auto !important;right:8px !important}
+html.movil .flecha-pag svg{width:34px;height:20px}
+html.movil .flecha-pag:active:not(:disabled){transform:translateY(-50%) translate(3px,3px);box-shadow:1px 1px 0 var(--tinta)}
 html.movil .t-diario{align-self:flex-start;font-size:66px !important;padding:16px 20px 4px !important;transform:rotate(-2.4deg) !important;margin-top:4px}
 html.movil .t-sub{align-self:flex-start;margin:-20px 0 0 34px;font-size:32px !important;padding:10px 16px 8px !important;transform:rotate(-1.2deg) !important}
 html.movil .ayuda{width:auto !important;transform:rotate(-1deg) !important;font-size:15px !important;margin-top:6px}
@@ -267,10 +272,8 @@ html.movil .ctrl .pag{min-width:0 !important;font-size:12px !important;flex:1}
     <h1 class="t-diario">Diario</h1>
     <div class="t-sub">de Mari</div>
     <p class="ayuda">Arrastrá la esquina de la hoja o usá las <b>flechas</b> para dar vuelta las páginas.</p>
-    <div class="ctrl">
-      <button type="button" id="ant" aria-label="Página anterior">← Anterior</button>
+    <div class="ctrl" aria-live="polite">
       <span class="pag" id="pag">Tapa</span>
-      <button type="button" id="sig" aria-label="Página siguiente">Siguiente →</button>
     </div>
   </div>
 </div>
@@ -703,8 +706,8 @@ function actualizar(){
   const i=libro.getCurrentPageIndex();
   centrar(i);
   $("pag").textContent=rotulo(i);
-  $("ant").disabled=$("ant2").disabled=i===0;
-  $("sig").disabled=$("sig2").disabled=i>=TOTAL-1;
+  $("ant2").disabled=i===0;
+  $("sig2").disabled=i>=TOTAL-1;
   try{ sessionStorage.setItem("s7-diario-pag", String(i)); }catch(e){}
 }
 libro.on("flip", actualizar);
@@ -713,8 +716,6 @@ libro.on("init", ()=>{ escalarHojas(); actualizar(); });
 addEventListener("resize", ()=>{ fit(); setTimeout(()=>{ escalarHojas(); centrar(); }, 60); });
 escalarHojas(); actualizar();
 
-$("ant").addEventListener("click", ()=>libro.flipPrev());
-$("sig").addEventListener("click", ()=>libro.flipNext());
 $("ant2").addEventListener("click", ()=>libro.flipPrev());
 $("sig2").addEventListener("click", ()=>libro.flipNext());
 addEventListener("keydown", ev=>{
