@@ -180,19 +180,58 @@
     a.href = estado.resultUrl; a.download = "mi-version-sueter7.jpg";
     document.body.appendChild(a); a.click(); a.remove();
   }
+  function shareOk(){
+    estado.shareStatus = "Listo: abrimos las opciones para compartir.";
+    pintar();
+  }
+  function shareFallback(){
+    var texto = encodeURIComponent(shareCaption + " " + location.href);
+    var ventana = window.open("https://wa.me/?text=" + texto, "_blank", "noopener,noreferrer");
+    downloadResult();
+    estado.shareStatus = ventana
+      ? "Abrimos WhatsApp y descargamos la imagen para que la adjuntes."
+      : "Descargamos la imagen. Elegí WhatsApp o X abajo para compartirla.";
+    pintar();
+    $("compartir-panel").scrollIntoView({behavior:"smooth", block:"nearest"});
+  }
+  function fileFromDataUrl(url){
+    if(!/^data:/i.test(url)) return null;
+    try{
+      var partes = url.split(","), meta = partes[0], mime = (meta.match(/^data:([^;]+)/i)||[])[1] || "image/jpeg";
+      var bin = meta.indexOf(";base64") >= 0 ? atob(partes[1]) : decodeURIComponent(partes.slice(1).join(","));
+      var bytes = new Uint8Array(bin.length);
+      for(var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+      var ext = mime.indexOf("png") >= 0 ? "png" : mime.indexOf("webp") >= 0 ? "webp" : "jpg";
+      return new File([bytes], "mi-version-sueter7." + ext, {type:mime});
+    }catch(e){ return null; }
+  }
+  function nativeShare(file){
+    var conArchivo = {title:"Mi versión de Suéter 7", text:shareCaption, files:[file]};
+    var soloTexto = {title:"Mi versión de Suéter 7", text:shareCaption, url:location.href};
+    var datos = file && (!navigator.canShare || navigator.canShare(conArchivo)) ? conArchivo : soloTexto;
+    return navigator.share(datos).then(shareOk).catch(function(err){
+      if(err && err.name === "AbortError") return;
+      downloadResult();
+      estado.shareStatus = "El navegador no pudo abrir el panel. Descargamos la imagen y dejamos accesos para compartirla.";
+      pintar();
+      $("compartir-panel").scrollIntoView({behavior:"smooth", block:"nearest"});
+    });
+  }
   function shareResult(){
     if(!estado.resultUrl) return;
-    fetch(estado.resultUrl).then(function(r){ return r.blob(); }).then(function(blob){
-      var file = new File([blob], "mi-version-sueter7.jpg", {type: blob.type || "image/jpeg"});
-      var data = {title:"Mi versión de Suéter 7", text:shareCaption, files:[file]};
-      if(navigator.share && (!navigator.canShare || navigator.canShare(data))){
-        return navigator.share(data).then(function(){ estado.shareStatus = "Imagen lista para compartir."; pintar(); });
-      }
-      downloadResult(); estado.shareStatus = "Descargamos la imagen para que la subas a tus redes."; pintar();
-    }).catch(function(err){
-      if(err && err.name === "AbortError") return;
-      downloadResult(); estado.shareStatus = "Descargamos la imagen para que la subas a tus redes."; pintar();
-    });
+    if(!navigator.share){ shareFallback(); return; }
+
+    var directo = fileFromDataUrl(estado.resultUrl);
+    if(directo){ nativeShare(directo); return; }
+
+    estado.shareStatus = "Preparando la imagen para compartir…"; pintar();
+    fetch(estado.resultUrl).then(function(r){
+      if(!r.ok) throw new Error("No se pudo preparar la imagen.");
+      return r.blob();
+    }).then(function(blob){
+      var ext = blob.type.indexOf("png") >= 0 ? "png" : blob.type.indexOf("webp") >= 0 ? "webp" : "jpg";
+      return nativeShare(new File([blob], "mi-version-sueter7." + ext, {type:blob.type || "image/jpeg"}));
+    }).catch(function(){ shareFallback(); });
   }
   function copyCaption(){
     var ok = function(){ estado.shareStatus = "Texto copiado."; pintar(); };
@@ -210,6 +249,8 @@
   $("copiar").addEventListener("click", copyCaption);
   $("otra").addEventListener("click", startAnother);
   $("sugerido").textContent = shareCaption;
+  $("share-whatsapp").href = "https://wa.me/?text=" + encodeURIComponent(shareCaption + " " + location.href);
+  $("share-x").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareCaption + " " + location.href);
 
   /* ---------------- pintar la interfaz según el estado ---------------- */
   function mostrar(id, v){ $(id).hidden = !v; }
