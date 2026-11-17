@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
-<link rel="stylesheet" href="estudio.css?v=20261116a">
+<link rel="stylesheet" href="estudio.css?v=20261116b">
 </head>
 <body class="avatar-studio-page">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -217,6 +217,10 @@
           <button type="button" class="btn btn-papel" id="copiar"><svg class="icono" aria-hidden="true"><use href="#i-copy"/></svg> Copiar texto sugerido</button>
           <button type="button" class="btn btn-papel" id="otra"><svg class="icono" aria-hidden="true"><use href="#i-refresh-cw"/></svg> Crear otra imagen</button>
         </div>
+        <div class="muro-acciones">
+          <button type="button" class="btn btn-muro" id="publicar-muro">Publicar en el muro</button>
+          <a class="btn btn-papel" href="muro.html">Ver el muro</a>
+        </div>
         <div class="redes" aria-label="Opciones para compartir">
           <a id="share-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
           <a id="share-x" href="#" target="_blank" rel="noopener">X</a>
@@ -229,11 +233,35 @@
 
   <footer class="site-footer">
     <a href="../index.html">← Volver al andén</a>
+    <a href="muro.html">Ver el muro</a>
     <span>Suéter 7 · Experimento visual participativo</span>
   </footer>
 </main>
 
-<script src="estudio.js?v=20261116a"></script>
+<div class="muro-modal" id="muro-modal" hidden>
+  <button type="button" class="muro-modal-fondo" id="muro-modal-fondo" aria-label="Cerrar"></button>
+  <section class="muro-modal-papel" role="dialog" aria-modal="true" aria-labelledby="muro-modal-titulo">
+    <button type="button" class="muro-modal-cerrar" id="muro-modal-cerrar" aria-label="Cerrar">×</button>
+    <p class="step-label">Publicar resultado</p>
+    <h2 id="muro-modal-titulo">Sumalo al muro</h2>
+    <img class="muro-modal-vista" id="muro-modal-vista" alt="Imagen que vas a publicar">
+    <label>
+      <span>Tu nombre o alias</span>
+      <input id="muro-alias" maxlength="32" autocomplete="nickname" placeholder="Ej: Mari del andén">
+    </label>
+    <label>
+      <span>Comentario <i>opcional</i></span>
+      <textarea id="muro-comentario" maxlength="500" rows="4" placeholder="Podés contar algo sobre tu versión."></textarea>
+      <small><b id="muro-caracteres">0</b>/500</small>
+    </label>
+    <p class="muro-modal-error" id="muro-modal-error" role="alert" hidden></p>
+    <button type="button" class="btn btn-rojo muro-publicar" id="muro-confirmar">Publicar imagen</button>
+    <p class="muro-modal-nota">No necesitás una cuenta. Tu alias queda guardado solamente en este dispositivo.</p>
+  </section>
+</div>
+
+<script src="foro-config.js?v=20261116a"></script>
+<script src="estudio.js?v=20261116c"></script>
 <script src="pasos.js?v=20261116a"></script>
 </body>
 </html>

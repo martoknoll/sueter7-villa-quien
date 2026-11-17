@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="../favicon.png">
+<title>Muro del otro lado — Suéter 7</title>
+<meta name="description" content="Imágenes y mensajes compartidos por la comunidad de Suéter 7.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+<link rel="stylesheet" href="muro.css?v=20261116a">
+<script>
+(function(){
+  if(window.parent!==window){
+    document.documentElement.classList.add("embebida");
+    document.addEventListener("click",function(ev){
+      var a=ev.target.closest&&ev.target.closest("a[href]"); if(!a||a.target==="_blank") return;
+      var u; try{u=new URL(a.getAttribute("href"),location.href)}catch(e){return}
+      if(u.origin!==location.origin) return;
+      if(/\/index\.html$|\/$/.test(u.pathname) && !/\/tu-version\/?(index\.html)?$/.test(u.pathname)){
+        ev.preventDefault();
+        try{parent.postMessage({s7:"ir",a:u.hash.slice(1),q:""},"*")}catch(e){}
+      }
+    },true);
+  }
+})();
+</script>
+</head>
+<body>
+<main class="muro">
+  <div class="muro-fondo" aria-hidden="true"></div>
+  <div class="muro-grano" aria-hidden="true"></div>
+
+  <nav class="muro-nav" aria-label="Navegación">
+    <a href="index.html" class="nav-crear">← Crear mi versión</a>
+    <a href="../index.html">Andén</a>
+  </nav>
+
+  <header class="muro-header">
+    <div class="muro-titulo">
+      <span class="muro-kicker">Suéter 7 presenta</span>
+      <h1><span>MURO</span><strong>DEL OTRO LADO</strong></h1>
+    </div>
+    <div class="muro-intro">
+      <p>Un espacio para las versiones, ideas y mensajes que aparecen del otro lado.</p>
+      <button type="button" class="boton boton-amarillo" id="nuevo-texto">+ Publicar un texto</button>
+    </div>
+  </header>
+
+  <section class="muro-herramientas" aria-label="Opciones del muro">
+    <div class="muro-contador" id="contador">Cargando publicaciones…</div>
+    <button type="button" class="boton boton-papel" id="recargar">Actualizar</button>
+  </section>
+
+  <section class="feed" id="feed" aria-live="polite" aria-busy="true"></section>
+  <div class="estado" id="estado" role="status">Buscando señales del otro lado…</div>
+  <button type="button" class="boton boton-papel cargar-mas" id="cargar-mas" hidden>Ver más publicaciones</button>
+
+  <footer class="muro-footer">
+    <a href="index.html">Creá tu versión</a>
+    <span>Suéter 7 · Archivo comunitario</span>
+  </footer>
+</main>
+
+<div class="modal" id="modal" hidden>
+  <button type="button" class="modal-fondo" id="cerrar-fondo" aria-label="Cerrar"></button>
+  <section class="modal-papel" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <button type="button" class="modal-cerrar" id="cerrar" aria-label="Cerrar">×</button>
+    <p class="paso">Publicación de texto</p>
+    <h2 id="modal-titulo">Dejá algo del otro lado</h2>
+    <label>
+      <span>Tu nombre o alias</span>
+      <input id="alias" maxlength="32" autocomplete="nickname" placeholder="Ej: Mari del andén">
+    </label>
+    <label>
+      <span>Mensaje</span>
+      <textarea id="mensaje" maxlength="500" rows="6" placeholder="Escribí una idea, una sensación o lo que quieras compartir."></textarea>
+      <small><b id="caracteres">0</b>/500</small>
+    </label>
+    <p class="modal-error" id="modal-error" role="alert" hidden></p>
+    <button type="button" class="boton boton-rojo boton-publicar" id="publicar">Publicar en el muro</button>
+    <p class="modal-nota">No necesitás una cuenta. Tu alias queda guardado solamente en este dispositivo.</p>
+  </section>
+</div>
+
+<script src="foro-config.js?v=20261116a"></script>
+<script src="muro.js?v=20261116b"></script>
+</body>
+</html>

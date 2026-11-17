@@ -554,3 +554,42 @@ html,body.avatar-studio-page{margin:0;background:#e7dfd3;overflow-x:hidden}
   .avatar-studio .sitio-nav:not(.nav-escala){padding-inline:10px}
   .avatar-studio .studio-layout,.avatar-studio .studio-layout.de-a-uno{padding-inline:10px !important}
 }
+
+
+/* =====================================================================
+   MURO COMUNITARIO
+   ===================================================================== */
+.avatar-studio .muro-acciones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;padding-top:16px;border-top:2px dashed rgb(9 9 9/.3)}
+.avatar-studio .btn-muro{background:var(--amarillo);color:var(--negro)}
+.avatar-studio .muro-acciones a{height:56px}
+
+.muro-modal{--negro:#090909;--papel:#f7f1e8;--crema:#e7dfd3;--rojo:#d24426;--amarillo:#e8c229;--azul:#2c61b2;--titulo:"PP NeueBit","Tiny5",monospace;
+  position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;font-family:Arial,Helvetica,sans-serif}
+.muro-modal[hidden]{display:none!important}
+.muro-modal *{box-sizing:border-box}
+.muro-modal-fondo{position:absolute;inset:0;border:0;background:rgb(0 0 0/.74);cursor:pointer}
+.muro-modal-papel{position:relative;width:min(570px,100%);max-height:calc(100dvh - 32px);overflow:auto;padding:27px;background:var(--papel);border:3px solid var(--negro);box-shadow:10px 10px 0 var(--amarillo);transform:rotate(-.25deg)}
+.muro-modal-cerrar{position:absolute;right:10px;top:8px;width:42px;height:42px;border:0;background:transparent;font-size:2rem;line-height:1;cursor:pointer}
+.muro-modal .step-label{display:inline-block;width:auto;margin:0 0 13px;padding:.3rem .6rem;border:2px solid var(--negro);background:var(--rojo);color:#fff;
+  font-family:"Bebas Neue","Arial Narrow",sans-serif;font-size:.78rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.muro-modal h2{margin:0 48px 18px 0;font-family:var(--titulo);font-size:2.6rem;font-weight:400;line-height:.9;text-transform:uppercase}
+.muro-modal-vista{display:block;width:100%;max-height:300px;object-fit:cover;border:3px solid var(--negro);background:var(--azul);box-shadow:5px 5px 0 var(--negro)}
+.muro-modal label{display:block;margin-top:17px}
+.muro-modal label>span{display:block;margin-bottom:7px;font-size:.75rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.muro-modal label i{font-style:normal;font-weight:500;color:rgb(0 0 0/.6)}
+.muro-modal input,.muro-modal textarea{display:block;width:100%;border:2px solid var(--negro);border-radius:0;background:#fffdf9;padding:12px;color:var(--negro);box-shadow:3px 3px 0 var(--negro);outline:none;font:inherit}
+.muro-modal textarea{resize:vertical;min-height:100px}
+.muro-modal input:focus,.muro-modal textarea:focus{box-shadow:4px 4px 0 var(--azul)}
+.muro-modal label small{display:block;margin-top:7px;text-align:right;font-family:ui-monospace,monospace}
+.muro-modal-error{margin:14px 0 0;padding:10px;background:#ffd8cf;border:2px solid var(--rojo);font-weight:800}
+.muro-modal .muro-publicar{width:100%;min-height:56px;margin-top:20px;border:2px solid var(--negro);box-shadow:4px 4px 0 var(--negro);font-weight:900;cursor:pointer}
+.muro-modal .muro-publicar:disabled{opacity:.55;cursor:wait}
+.muro-modal-nota{margin:14px 0 0;font-size:.76rem;line-height:1.4;color:rgb(0 0 0/.65)}
+
+@media(max-width:760px){
+  .avatar-studio .muro-acciones{grid-template-columns:1fr}
+  .muro-modal{padding:12px}
+  .muro-modal-papel{padding:22px 17px}
+  .muro-modal h2{font-size:2rem}
+  .muro-modal-vista{max-height:240px}
+}
