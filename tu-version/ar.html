@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#090909">
+  <title>Activá el otro lado — Suéter 7</title>
+  <meta name="description" content="Experiencia de realidad aumentada de Suéter 7. Apuntá a la portada y activá el otro lado.">
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <style>
+    :root{--amarillo:#e8c229;--rojo:#d24426;--azul:#2c61b2;--crema:#e7dfd3;--negro:#090909}
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--negro);font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif;color:var(--negro)}
+    button,a{font:inherit}
+    .grano{position:fixed;inset:0;z-index:30;pointer-events:none;opacity:.16;mix-blend-mode:multiply;background-image:radial-gradient(#000 1px,transparent 1.2px);background-size:4px 4px}
+    .capa{position:fixed;inset:0;z-index:20;pointer-events:none}
+    .barra{position:absolute;left:max(14px,env(safe-area-inset-left));right:max(14px,env(safe-area-inset-right));top:max(14px,env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .marca{display:flex;flex-direction:column;filter:drop-shadow(3px 3px 0 #090909)}
+    .marca b{align-self:flex-start;background:var(--rojo);color:#fff;border:2px solid #090909;padding:4px 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;transform:rotate(-1deg)}
+    .marca strong{background:var(--amarillo);border:3px solid #090909;padding:6px 10px 4px;font-size:clamp(24px,7vw,42px);line-height:.82;text-transform:uppercase;letter-spacing:-.04em;transform:rotate(.6deg)}
+    .salir{pointer-events:auto;background:var(--crema);color:#090909;border:2px solid #090909;box-shadow:3px 3px 0 #090909;text-decoration:none;padding:9px 12px;font-weight:900;text-transform:uppercase;font-size:12px;letter-spacing:.08em}
+    .estado{position:absolute;left:50%;bottom:max(22px,calc(env(safe-area-inset-bottom) + 12px));transform:translateX(-50%);min-width:min(88vw,420px);background:var(--crema);border:3px solid #090909;box-shadow:5px 5px 0 #090909;padding:11px 14px;text-align:center;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;transition:.2s}
+    .estado::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--amarillo);margin-right:8px;box-shadow:0 0 0 2px #090909;animation:latido 1s steps(2,end) infinite}
+    .estado.encontrado{background:var(--amarillo)}.estado.encontrado::before{background:var(--azul);animation:none}
+    .cta{position:absolute;left:50%;bottom:max(86px,calc(env(safe-area-inset-bottom) + 76px));transform:translateX(-50%) rotate(-1deg);pointer-events:auto;display:none;background:var(--rojo);color:#fff;border:3px solid #090909;box-shadow:5px 5px 0 #090909;padding:12px 16px;text-decoration:none;font-weight:900;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+    .cta.visible{display:block}
+    .intro{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:22px;background:var(--crema);background-image:radial-gradient(rgba(9,9,9,.24) 1px,transparent 1.3px);background-size:5px 5px}
+    .intro[hidden]{display:none}
+    .papel{position:relative;width:min(520px,100%);background:#f4ede2;border:3px solid #090909;box-shadow:10px 10px 0 #090909;padding:22px;transform:rotate(-.5deg)}
+    .papel::before{content:"";position:absolute;top:-13px;left:34%;width:32%;height:24px;background:rgba(232,194,41,.75);border-left:1px solid #090909;border-right:1px solid #090909;transform:rotate(2deg)}
+    .kicker{display:inline-block;background:var(--rojo);color:#fff;border:2px solid #090909;padding:4px 7px;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    h1{margin:13px 0 8px;font-size:clamp(38px,12vw,68px);line-height:.78;text-transform:uppercase;letter-spacing:-.055em}
+    .bajada{margin:16px 0;font-size:17px;line-height:1.25;font-weight:700;max-width:42ch}
+    .objetivo{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;margin:18px 0;padding:10px;background:var(--azul);color:#fff;border:2px solid #090909;box-shadow:3px 3px 0 #090909}
+    .objetivo img{width:96px;height:96px;object-fit:cover;border:2px solid #090909}
+    .objetivo b{display:block;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}.objetivo span{font-size:13px;line-height:1.3}
+    .iniciar{width:100%;border:3px solid #090909;background:var(--amarillo);box-shadow:5px 5px 0 #090909;padding:13px 18px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;cursor:pointer}
+    .iniciar:active{transform:translate(3px,3px);box-shadow:2px 2px 0 #090909}
+    .nota{margin:13px 0 0;font:12px/1.35 ui-monospace,SFMono-Regular,Consolas,monospace}
+    .error{margin-top:12px;padding:10px;background:var(--rojo);color:#fff;border:2px solid #090909;font-weight:800}
+    .error[hidden]{display:none}
+    .mindar-ui-overlay{z-index:10!important}
+    @keyframes latido{50%{opacity:.35}}
+    @media (max-width:520px){.papel{padding:18px}.objetivo{grid-template-columns:76px 1fr}.objetivo img{width:76px;height:76px}.marca b{font-size:9px}.salir{font-size:10px;padding:8px}}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+</head>
+<body>
+  <div class="intro" id="intro">
+    <section class="papel" aria-labelledby="titulo-intro">
+      <span class="kicker">Experimento 02 · Realidad aumentada</span>
+      <h1 id="titulo-intro">Activá<br>el otro lado</h1>
+      <p class="bajada">Apuntá la cámara a la portada de <i>Todo salió bien en la Sencilla Villa Quién</i> y descubrí la capa visual escondida.</p>
+      <div class="objetivo">
+        <img src="../img/tapa-800.jpg" alt="Portada que debe escanearse">
+        <div><b>Buscá esta portada</b><span>Puede estar impresa o abierta en otra pantalla. Mantenela completa dentro del encuadre.</span></div>
+      </div>
+      <button class="iniciar" id="iniciar" type="button">Permitir cámara y empezar</button>
+      <p class="nota">La cámara se procesa en tu dispositivo. No grabamos ni guardamos imágenes.</p>
+      <p class="error" id="error" role="alert" hidden></p>
+    </section>
+  </div>
+
+  <a-scene id="escena" mindar-image="imageTargetSrc: ./targets-sueter7.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no; warmupTolerance: 5; missTolerance: 5" color-space="sRGB" renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" embedded>
+    <a-assets>
+      <img id="textura" src="sueter7-halftone-bg.webp">
+    </a-assets>
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-entity id="objetivo-ar" mindar-image-target="targetIndex: 0">
+      <a-plane position="0 0 0.015" width="1.08" height="1.08" material="color:#2c61b2; opacity:.22; transparent:true; side:double" animation="property:rotation; from:0 0 -2; to:0 0 2; dur:1800; dir:alternate; loop:true; easing:easeInOutSine"></a-plane>
+      <a-plane position="-.43 .38 .035" width=".43" height=".12" material="color:#e8c229" rotation="0 0 5" animation="property:position; from:-.43 .38 .035; to:-.34 .42 .035; dur:1100; dir:alternate; loop:true; easing:easeInOutQuad"></a-plane>
+      <a-plane position=".38 -.37 .04" width=".48" height=".14" material="color:#d24426" rotation="0 0 -4" animation="property:position; from:.38 -.37 .04; to:.3 -.41 .04; dur:1400; dir:alternate; loop:true; easing:easeInOutQuad"></a-plane>
+      <a-ring position="0 0 .055" radius-inner=".48" radius-outer=".505" material="color:#e7dfd3; side:double" animation="property:rotation; to:0 0 360; dur:8500; loop:true; easing:linear"></a-ring>
+      <a-circle position=".41 .34 .065" radius=".075" material="color:#d24426" animation="property:scale; from:.8 .8 .8; to:1.3 1.3 1.3; dur:700; dir:alternate; loop:true"></a-circle>
+      <a-circle position="-.39 -.31 .066" radius=".05" material="color:#e8c229" animation="property:scale; from:1.2 1.2 1.2; to:.7 .7 .7; dur:900; dir:alternate; loop:true"></a-circle>
+      <a-text value="DEL OTRO LADO" position="-.47 .05 .08" width="1.45" color="#e7dfd3" align="left" wrap-count="18" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" shader="msdf" rotation="0 0 -3"></a-text>
+      <a-text value="SUETER 7 // ARCHIVO EN MOVIMIENTO" position="-.46 -.08 .081" width=".95" color="#e8c229" align="left" wrap-count="34" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" shader="msdf"></a-text>
+    </a-entity>
+  </a-scene>
+
+  <div class="capa" id="interfaz" hidden>
+    <div class="barra">
+      <div class="marca"><b>Suéter 7 presenta</b><strong>El otro lado</strong></div>
+      <a class="salir" href="index.html">Cerrar</a>
+    </div>
+    <a class="cta" id="cta" href="index.html">Creá tu versión →</a>
+    <div class="estado" id="estado" role="status">Buscando la portada…</div>
+  </div>
+  <div class="grano" aria-hidden="true"></div>
+
+  <script>
+    const intro=document.getElementById('intro');
+    const iniciar=document.getElementById('iniciar');
+    const error=document.getElementById('error');
+    const interfaz=document.getElementById('interfaz');
+    const estado=document.getElementById('estado');
+    const cta=document.getElementById('cta');
+    const escena=document.getElementById('escena');
+    const objetivo=document.getElementById('objetivo-ar');
+
+    function mostrarError(mensaje){
+      error.textContent=mensaje; error.hidden=false; iniciar.disabled=false; iniciar.textContent='Intentar otra vez';
+    }
+
+    iniciar.addEventListener('click',async()=>{
+      iniciar.disabled=true; iniciar.textContent='Iniciando cámara…'; error.hidden=true;
+      try{
+        if(!navigator.mediaDevices?.getUserMedia) throw new Error('Tu navegador no permite acceder a la cámara.');
+        intro.hidden=true; interfaz.hidden=false;
+        await escena.systems['mindar-image-system'].start();
+      }catch(e){
+        intro.hidden=false; interfaz.hidden=true;
+        mostrarError('No pudimos abrir la cámara. Revisá el permiso del navegador y volvé a intentar.');
+      }
+    });
+
+    escena.addEventListener('arError',()=>{
+      intro.hidden=false; interfaz.hidden=true;
+      mostrarError('La cámara no está disponible o el permiso fue rechazado.');
+    });
+    objetivo.addEventListener('targetFound',()=>{
+      estado.textContent='Portada detectada · Estás del otro lado'; estado.classList.add('encontrado'); cta.classList.add('visible');
+      navigator.vibrate?.(80);
+    });
+    objetivo.addEventListener('targetLost',()=>{
+      estado.textContent='Volvé a enfocar la portada'; estado.classList.remove('encontrado'); cta.classList.remove('visible');
+    });
+    document.addEventListener('visibilitychange',()=>{
+      if(document.hidden && escena.systems?.['mindar-image-system']){
+        try{escena.systems['mindar-image-system'].pause();}catch(e){}
+      }
+    });
+  </script>
+</body>
+</html>
