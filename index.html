@@ -36,7 +36,9 @@ body{font-family:var(--mono);color:var(--tinta);-webkit-font-smoothing:antialias
 
 /* ---------- escena: la estación ---------- */
 .escena{position:absolute;left:var(--off);top:0;width:var(--W);height:var(--escena)}
+.brand-title{margin:0}
 .logo{position:absolute;left:41px;top:36px;width:350px;height:90px;border-radius:2px}
+.logo-word,.logo-seven{display:none}
 .proyecto{position:absolute;left:18px;top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
   text-transform:uppercase;color:rgba(20,20,20,.5);text-decoration:none;padding:2px 4px}
 .proyecto:hover{color:var(--rojo)}
@@ -205,9 +207,10 @@ button{font:inherit;color:inherit}
   .escena::-webkit-scrollbar{display:none}
   .escena::after{content:"";position:absolute;left:calc(var(--mobile-track-width,400vw) - 1px);top:0;width:1px;height:1px}
 
-  .logo{position:fixed;left:16px;top:15px;width:145px;height:47px;z-index:5;color:var(--tinta);text-decoration:none}
-  .logo::before{content:"SUETER";font-family:var(--display);font-size:35px;line-height:47px;letter-spacing:.01em}
-  .logo::after{content:"7";margin-left:7px;font-family:var(--display);font-size:35px;line-height:47px;color:var(--rojo)}
+  .logo{position:fixed;left:16px;top:15px;width:145px;height:47px;z-index:5;color:var(--tinta);text-decoration:none;
+    display:flex;align-items:flex-start;gap:7px;font-family:var(--display);font-size:35px;line-height:47px;letter-spacing:.01em}
+  .logo-word,.logo-seven{display:inline-block}
+  .logo-seven{color:var(--rojo)}
   .proyecto{position:fixed;left:auto;right:12px;top:17px;z-index:5;font-size:8px;background:rgba(255,253,249,.88);
     border:1.5px solid var(--tinta);padding:5px 7px;box-shadow:3px 3px 0 var(--tinta)}
 
@@ -291,14 +294,13 @@ button{font:inherit;color:inherit}
   </filter>
 </svg>
 <div class="lienzo" id="lienzo">
-  <div class="fondo-ancho" aria-hidden="true">
+  <div class="fondo-ancho">
     <img class="fondo-mobile-lcp" src="fondo.png" width="1920" height="1080"
-         alt="" loading="eager" decoding="async" fetchpriority="high">
+         alt="Estación de la Sencilla Villa Quién" loading="eager" decoding="async" fetchpriority="high">
   </div>
 
   <main class="escena" id="escena" aria-label="Andén de la Sencilla Villa Quién">
-    <h1 hidden>sueter7 — Todo salió bien en la Sencilla Villa Quién</h1>
-    <a class="logo" href="#" aria-label="sueter7 — volver al andén" data-ir=""></a>
+    <h1 class="brand-title"><a class="logo" href="#" aria-label="sueter7 — volver al andén" data-ir=""><span class="logo-word">SUETER</span><span class="logo-seven">7</span></a></h1>
     <div class="mobile-swipe" aria-hidden="true">
       <span>deslizá</span><i class="activo"></i><i></i><i></i><i></i><i></i><span>→</span>
     </div>
