@@ -244,6 +244,94 @@
     pintar();
     window.scrollTo({top:0, behavior:"smooth"});
   }
+  /* ---------------- publicar en el muro ---------------- */
+  function foroHeaders(extra){
+    var cfg=window.S7_FORO_CONFIG, h={"apikey":cfg.key,"Authorization":"Bearer "+cfg.key};
+    Object.keys(extra||{}).forEach(function(k){h[k]=extra[k]});
+    return h;
+  }
+  function foroFetch(path, opciones){
+    var cfg=window.S7_FORO_CONFIG;
+    opciones=opciones||{}; opciones.headers=foroHeaders(opciones.headers);
+    return fetch(cfg.url+path,opciones).then(function(r){
+      if(r.ok)return r;
+      return r.json().catch(function(){return {}}).then(function(d){
+        throw new Error(d.message||d.error_description||d.error||"No pudimos publicar en el muro.");
+      });
+    });
+  }
+  function abrirMuro(){
+    if(!estado.resultUrl)return;
+    var modal=$("muro-modal"), nombre="";
+    try{nombre=localStorage.getItem("s7-foro-alias")||""}catch(e){}
+    $("muro-alias").value=nombre;
+    $("muro-comentario").value="";
+    $("muro-caracteres").textContent="0";
+    $("muro-modal-error").hidden=true;
+    $("muro-modal-vista").src=estado.resultUrl;
+    modal.hidden=false; document.body.style.overflow="hidden";
+    setTimeout(function(){(nombre?$("muro-comentario"):$("muro-alias")).focus()},20);
+  }
+  function cerrarMuro(){
+    $("muro-modal").hidden=true; document.body.style.overflow="";
+  }
+  function errorMuro(txt){
+    $("muro-modal-error").textContent=txt; $("muro-modal-error").hidden=false;
+  }
+  function idMuro(){
+    if(window.crypto&&crypto.randomUUID)return crypto.randomUUID().replace(/-/g,"");
+    return (Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)).slice(0,32);
+  }
+  function archivoResultado(){
+    var directo=fileFromDataUrl(estado.resultUrl);
+    if(directo)return Promise.resolve(directo);
+    return fetch(estado.resultUrl).then(function(r){
+      if(!r.ok)throw new Error("No pudimos preparar la imagen.");
+      return r.blob();
+    }).then(function(blob){
+      var ext=blob.type.indexOf("png")>=0?"png":blob.type.indexOf("webp")>=0?"webp":"jpg";
+      return new File([blob],"mi-version-sueter7."+ext,{type:blob.type||"image/jpeg"});
+    });
+  }
+  function publicarMuro(){
+    var cfg=window.S7_FORO_CONFIG;
+    var nombre=$("muro-alias").value.trim(), comentario=$("muro-comentario").value.trim();
+    $("muro-modal-error").hidden=true;
+    if(nombre.length<2){errorMuro("El alias tiene que tener al menos 2 caracteres.");$("muro-alias").focus();return}
+    var boton=$("muro-confirmar"); boton.disabled=true; boton.textContent="Publicando…";
+    var ruta="";
+    archivoResultado().then(function(file){
+      if(file.size>5*1024*1024)throw new Error("La imagen supera los 5 MB.");
+      var ext=file.type.indexOf("png")>=0?"png":file.type.indexOf("webp")>=0?"webp":"jpg";
+      ruta="posts/"+idMuro()+"."+ext;
+      return foroFetch("/storage/v1/object/"+cfg.bucket+"/"+ruta,{
+        method:"POST",
+        headers:{"Content-Type":file.type||"image/jpeg","x-upsert":"false"},
+        body:file
+      });
+    }).then(function(){
+      return foroFetch("/rest/v1/forum_posts",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Prefer":"return=minimal"},
+        body:JSON.stringify({author_name:nombre,comment:comentario,image_path:ruta,post_type:"image"})
+      });
+    }).then(function(){
+      try{localStorage.setItem("s7-foro-alias",nombre)}catch(e){}
+      location.href="muro.html";
+    }).catch(function(err){
+      errorMuro(err.message||"No pudimos publicar la imagen.");
+      boton.disabled=false; boton.textContent="Publicar imagen";
+    });
+  }
+  $("publicar-muro").addEventListener("click",abrirMuro);
+  $("muro-modal-cerrar").addEventListener("click",cerrarMuro);
+  $("muro-modal-fondo").addEventListener("click",cerrarMuro);
+  $("muro-confirmar").addEventListener("click",publicarMuro);
+  $("muro-comentario").addEventListener("input",function(){
+    $("muro-caracteres").textContent=String($("muro-comentario").value.length);
+  });
+  document.addEventListener("keydown",function(ev){if(ev.key==="Escape"&&!$("muro-modal").hidden)cerrarMuro()});
+
   $("descargar").addEventListener("click", downloadResult);
   $("compartir").addEventListener("click", shareResult);
   $("copiar").addEventListener("click", copyCaption);
