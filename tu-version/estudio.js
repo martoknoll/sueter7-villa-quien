@@ -246,7 +246,7 @@
   }
   /* ---------------- publicar en el muro ---------------- */
   function foroHeaders(extra){
-    var cfg=window.S7_FORO_CONFIG, h={"apikey":cfg.key,"Authorization":"Bearer "+cfg.key};
+    var cfg=window.S7_FORO_CONFIG, h={"apikey":cfg.key};
     Object.keys(extra||{}).forEach(function(k){h[k]=extra[k]});
     return h;
   }
