@@ -14,7 +14,7 @@
   var pagina=0, limite=18, cargando=false, total=0;
 
   function headers(extra){
-    var h={"apikey":cfg.key,"Authorization":"Bearer "+cfg.key};
+    var h={"apikey":cfg.key};
     Object.keys(extra||{}).forEach(function(k){h[k]=extra[k]});
     return h;
   }
